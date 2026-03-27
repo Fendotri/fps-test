@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "reference": "cs2-live",
+  "updatedAt": "2026-03-20T00:00:00Z",
+  "notes": "Provide real captured CS2 Live wall-pattern data here. Missing entries fallback to deterministic simulation.",
+  "patterns": {}
+}

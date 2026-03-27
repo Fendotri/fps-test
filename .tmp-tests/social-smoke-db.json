@@ -1,0 +1,1690 @@
+{
+  "meta": {
+    "version": 5,
+    "createdAt": "2026-03-27T01:32:16.639Z",
+    "updatedAt": "2026-03-27T01:32:19.819Z"
+  },
+  "liveops": {
+    "currency": "coin",
+    "revision": 1,
+    "updatedAt": "2026-03-27T01:32:16.639Z",
+    "economy": {
+      "starterWallet": 1200,
+      "killBonus": 6,
+      "placementRewards": {
+        "1": 220,
+        "2": 140,
+        "3": 90,
+        "other": 0
+      },
+      "winBonus": 120
+    },
+    "weaponsCatalog": [
+      {
+        "weaponId": "glock18",
+        "displayName": "Glock-18",
+        "category": "Pistols",
+        "priceCoin": 200,
+        "slot": "secondary",
+        "placeholderRig": "usp",
+        "stats": {
+          "damage": 30,
+          "fireRate": 0.15,
+          "magazine": 20,
+          "reserve": 120,
+          "speed": 240,
+          "classification": "pistol"
+        }
+      },
+      {
+        "weaponId": "usp_s",
+        "displayName": "USP-S",
+        "category": "Pistols",
+        "priceCoin": 200,
+        "slot": "secondary",
+        "placeholderRig": "usp",
+        "stats": {
+          "damage": 35,
+          "fireRate": 0.17045454545454544,
+          "magazine": 12,
+          "reserve": 24,
+          "speed": 240,
+          "classification": "pistol"
+        }
+      },
+      {
+        "weaponId": "deagle",
+        "displayName": "Desert Eagle",
+        "category": "Pistols",
+        "priceCoin": 700,
+        "slot": "secondary",
+        "placeholderRig": "usp",
+        "stats": {
+          "damage": 53,
+          "fireRate": 0.2247191011235955,
+          "magazine": 7,
+          "reserve": 35,
+          "speed": 230,
+          "classification": "pistol"
+        }
+      },
+      {
+        "weaponId": "mac10",
+        "displayName": "MAC-10",
+        "category": "SMG",
+        "priceCoin": 1050,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 29,
+          "fireRate": 0.075,
+          "magazine": 30,
+          "reserve": 100,
+          "speed": 240,
+          "classification": "smg"
+        }
+      },
+      {
+        "weaponId": "mp9",
+        "displayName": "MP9",
+        "category": "SMG",
+        "priceCoin": 1250,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 26,
+          "fireRate": 0.07001166861143523,
+          "magazine": 30,
+          "reserve": 120,
+          "speed": 240,
+          "classification": "smg"
+        }
+      },
+      {
+        "weaponId": "p90",
+        "displayName": "P90",
+        "category": "SMG",
+        "priceCoin": 2350,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 26,
+          "fireRate": 0.07001166861143523,
+          "magazine": 50,
+          "reserve": 100,
+          "speed": 230,
+          "classification": "smg"
+        }
+      },
+      {
+        "weaponId": "ak47",
+        "displayName": "AK-47",
+        "category": "Rifles",
+        "priceCoin": 2700,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 36,
+          "fireRate": 0.1,
+          "magazine": 30,
+          "reserve": 90,
+          "speed": 215,
+          "classification": "rifle"
+        }
+      },
+      {
+        "weaponId": "m4a1_s",
+        "displayName": "M4A1-S",
+        "category": "Rifles",
+        "priceCoin": 2900,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 38,
+          "fireRate": 0.1,
+          "magazine": 20,
+          "reserve": 80,
+          "speed": 225,
+          "classification": "rifle"
+        }
+      },
+      {
+        "weaponId": "sg553",
+        "displayName": "SG 553",
+        "category": "Rifles",
+        "priceCoin": 3000,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 30,
+          "fireRate": 0.11009174311926606,
+          "magazine": 30,
+          "reserve": 90,
+          "speed": 210,
+          "classification": "rifle"
+        }
+      },
+      {
+        "weaponId": "aug",
+        "displayName": "AUG",
+        "category": "Rifles",
+        "priceCoin": 3300,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 28,
+          "fireRate": 0.1,
+          "magazine": 30,
+          "reserve": 90,
+          "speed": 220,
+          "classification": "rifle"
+        }
+      },
+      {
+        "weaponId": "awp",
+        "displayName": "AWP",
+        "category": "Sniper",
+        "priceCoin": 4750,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 115,
+          "fireRate": 1.4634146341463414,
+          "magazine": 5,
+          "reserve": 30,
+          "speed": 200,
+          "classification": "sniper"
+        }
+      },
+      {
+        "weaponId": "xm1014",
+        "displayName": "XM1014",
+        "category": "Shotgun",
+        "priceCoin": 2000,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 20,
+          "fireRate": 0.3508771929824561,
+          "magazine": 7,
+          "reserve": 32,
+          "speed": 215,
+          "classification": "shotgun"
+        }
+      },
+      {
+        "weaponId": "negev",
+        "displayName": "Negev",
+        "category": "Machinegun",
+        "priceCoin": 1700,
+        "slot": "primary",
+        "placeholderRig": "ak",
+        "stats": {
+          "damage": 35,
+          "fireRate": 0.075,
+          "magazine": 150,
+          "reserve": 200,
+          "speed": 195,
+          "classification": "machinegun"
+        }
+      },
+      {
+        "weaponId": "m9",
+        "displayName": "M9 Knife",
+        "category": "Knife",
+        "priceCoin": 0,
+        "slot": "knife",
+        "placeholderRig": "m9",
+        "stats": {
+          "damage": 55,
+          "fireRate": 0.5,
+          "magazine": 1,
+          "reserve": 0,
+          "speed": 250,
+          "classification": "knife"
+        }
+      }
+    ],
+    "defaultLoadout": {
+      "primary": "ak47",
+      "secondary": "usp_s",
+      "knife": "m9"
+    },
+    "cases": {
+      "falcon_case": {
+        "id": "falcon_case",
+        "title": "Falcon Case",
+        "openPriceCoin": 180,
+        "drops": [
+          {
+            "skin": "AK-47 | Forest Camo",
+            "weaponId": "ak47",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 15
+          },
+          {
+            "skin": "AK-47 | Obsidian Rail",
+            "weaponId": "ak47",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "AK-47 | Copper Burst",
+            "weaponId": "ak47",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 9
+          },
+          {
+            "skin": "USP-S | Crimson Thread",
+            "weaponId": "usp_s",
+            "slot": "secondary",
+            "rarity": "milspec",
+            "weight": 15
+          },
+          {
+            "skin": "USP-S | Nightline",
+            "weaponId": "usp_s",
+            "slot": "secondary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "USP-S | Arctic Veil",
+            "weaponId": "usp_s",
+            "slot": "secondary",
+            "rarity": "classified",
+            "weight": 9
+          },
+          {
+            "skin": "MP9 | Neon Flux",
+            "weaponId": "mp9",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 15
+          },
+          {
+            "skin": "MP9 | Frost Circuit",
+            "weaponId": "mp9",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "MP9 | Delta Carbon",
+            "weaponId": "mp9",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 9
+          },
+          {
+            "skin": "XM1014 | Quarry",
+            "weaponId": "xm1014",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 15
+          },
+          {
+            "skin": "XM1014 | Black Tape",
+            "weaponId": "xm1014",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "XM1014 | Frostmark",
+            "weaponId": "xm1014",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 9
+          },
+          {
+            "skin": "Operator | Urban Heavy",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "classified",
+            "weight": 4
+          },
+          {
+            "skin": "Operator | Dust Patrol",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "restricted",
+            "weight": 3
+          },
+          {
+            "skin": "Operator | Mirage Ghost",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "covert",
+            "weight": 2
+          }
+        ]
+      },
+      "mirage_case": {
+        "id": "mirage_case",
+        "title": "Mirage Case",
+        "openPriceCoin": 320,
+        "drops": [
+          {
+            "skin": "M4A1-S | White Fang",
+            "weaponId": "m4a1_s",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 13
+          },
+          {
+            "skin": "M4A1-S | Night Pulse",
+            "weaponId": "m4a1_s",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "M4A1-S | Blue Fiber",
+            "weaponId": "m4a1_s",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 7
+          },
+          {
+            "skin": "Desert Eagle | Brass Viper",
+            "weaponId": "deagle",
+            "slot": "secondary",
+            "rarity": "restricted",
+            "weight": 13
+          },
+          {
+            "skin": "Desert Eagle | Obsidian Edge",
+            "weaponId": "deagle",
+            "slot": "secondary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "Desert Eagle | Sand Strike",
+            "weaponId": "deagle",
+            "slot": "secondary",
+            "rarity": "classified",
+            "weight": 7
+          },
+          {
+            "skin": "P90 | Ion Bloom",
+            "weaponId": "p90",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 13
+          },
+          {
+            "skin": "P90 | Amber Mesh",
+            "weaponId": "p90",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "P90 | Deep Scope",
+            "weaponId": "p90",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 7
+          },
+          {
+            "skin": "SG 553 | Mirage Sand",
+            "weaponId": "sg553",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 13
+          },
+          {
+            "skin": "SG 553 | Signal Jam",
+            "weaponId": "sg553",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "SG 553 | Polar Front",
+            "weaponId": "sg553",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 7
+          },
+          {
+            "skin": "M9 | Night Stripe",
+            "weaponId": "m9",
+            "slot": "knife",
+            "rarity": "classified",
+            "weight": 3
+          },
+          {
+            "skin": "M9 | Fade Wire",
+            "weaponId": "m9",
+            "slot": "knife",
+            "rarity": "covert",
+            "weight": 2
+          },
+          {
+            "skin": "M9 | Gold Spine",
+            "weaponId": "m9",
+            "slot": "knife",
+            "rarity": "contraband",
+            "weight": 1
+          }
+        ]
+      },
+      "arsenal_case": {
+        "id": "arsenal_case",
+        "title": "Arsenal Case",
+        "openPriceCoin": 420,
+        "drops": [
+          {
+            "skin": "AWP | Carbon Fade",
+            "weaponId": "awp",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "AWP | Icecore",
+            "weaponId": "awp",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 9
+          },
+          {
+            "skin": "AWP | Ember Crown",
+            "weaponId": "awp",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "AUG | Stormline",
+            "weaponId": "aug",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "AUG | Cobalt Trace",
+            "weaponId": "aug",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 9
+          },
+          {
+            "skin": "AUG | Desert Cell",
+            "weaponId": "aug",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "Negev | Heavy Alloy",
+            "weaponId": "negev",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "Negev | Hazard Mesh",
+            "weaponId": "negev",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 9
+          },
+          {
+            "skin": "Negev | Crimson Plate",
+            "weaponId": "negev",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "MAC-10 | Reactor",
+            "weaponId": "mac10",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 12
+          },
+          {
+            "skin": "MAC-10 | Urban Grid",
+            "weaponId": "mac10",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 9
+          },
+          {
+            "skin": "MAC-10 | Ember Wire",
+            "weaponId": "mac10",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "Operator | Urban Heavy",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "classified",
+            "weight": 3
+          },
+          {
+            "skin": "Operator | Dust Patrol",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "classified",
+            "weight": 2
+          },
+          {
+            "skin": "Operator | Mirage Ghost",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "covert",
+            "weight": 1
+          }
+        ]
+      },
+      "vortex_case": {
+        "id": "vortex_case",
+        "title": "Vortex Case",
+        "openPriceCoin": 520,
+        "drops": [
+          {
+            "skin": "Glock-18 | Pulse",
+            "weaponId": "glock18",
+            "slot": "secondary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "Glock-18 | Carbon Dot",
+            "weaponId": "glock18",
+            "slot": "secondary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "Glock-18 | Sunset Drift",
+            "weaponId": "glock18",
+            "slot": "secondary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "USP-S | Crimson Thread",
+            "weaponId": "usp_s",
+            "slot": "secondary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "USP-S | Nightline",
+            "weaponId": "usp_s",
+            "slot": "secondary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "USP-S | Arctic Veil",
+            "weaponId": "usp_s",
+            "slot": "secondary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "Desert Eagle | Brass Viper",
+            "weaponId": "deagle",
+            "slot": "secondary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "Desert Eagle | Obsidian Edge",
+            "weaponId": "deagle",
+            "slot": "secondary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "Desert Eagle | Sand Strike",
+            "weaponId": "deagle",
+            "slot": "secondary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "MAC-10 | Reactor",
+            "weaponId": "mac10",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "MAC-10 | Urban Grid",
+            "weaponId": "mac10",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "MAC-10 | Ember Wire",
+            "weaponId": "mac10",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "MP9 | Neon Flux",
+            "weaponId": "mp9",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "MP9 | Frost Circuit",
+            "weaponId": "mp9",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "MP9 | Delta Carbon",
+            "weaponId": "mp9",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "P90 | Ion Bloom",
+            "weaponId": "p90",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "P90 | Amber Mesh",
+            "weaponId": "p90",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "P90 | Deep Scope",
+            "weaponId": "p90",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "AK-47 | Forest Camo",
+            "weaponId": "ak47",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "AK-47 | Obsidian Rail",
+            "weaponId": "ak47",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "AK-47 | Copper Burst",
+            "weaponId": "ak47",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "M4A1-S | White Fang",
+            "weaponId": "m4a1_s",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "M4A1-S | Night Pulse",
+            "weaponId": "m4a1_s",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "M4A1-S | Blue Fiber",
+            "weaponId": "m4a1_s",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "SG 553 | Mirage Sand",
+            "weaponId": "sg553",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "SG 553 | Signal Jam",
+            "weaponId": "sg553",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "SG 553 | Polar Front",
+            "weaponId": "sg553",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "AUG | Stormline",
+            "weaponId": "aug",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "AUG | Cobalt Trace",
+            "weaponId": "aug",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "AUG | Desert Cell",
+            "weaponId": "aug",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "AWP | Carbon Fade",
+            "weaponId": "awp",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "AWP | Icecore",
+            "weaponId": "awp",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "AWP | Ember Crown",
+            "weaponId": "awp",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "XM1014 | Quarry",
+            "weaponId": "xm1014",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "XM1014 | Black Tape",
+            "weaponId": "xm1014",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "XM1014 | Frostmark",
+            "weaponId": "xm1014",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "Negev | Heavy Alloy",
+            "weaponId": "negev",
+            "slot": "primary",
+            "rarity": "milspec",
+            "weight": 14
+          },
+          {
+            "skin": "Negev | Hazard Mesh",
+            "weaponId": "negev",
+            "slot": "primary",
+            "rarity": "restricted",
+            "weight": 10
+          },
+          {
+            "skin": "Negev | Crimson Plate",
+            "weaponId": "negev",
+            "slot": "primary",
+            "rarity": "classified",
+            "weight": 6
+          },
+          {
+            "skin": "M9 | Night Stripe",
+            "weaponId": "m9",
+            "slot": "knife",
+            "rarity": "classified",
+            "weight": 4
+          },
+          {
+            "skin": "M9 | Fade Wire",
+            "weaponId": "m9",
+            "slot": "knife",
+            "rarity": "covert",
+            "weight": 3
+          },
+          {
+            "skin": "M9 | Gold Spine",
+            "weaponId": "m9",
+            "slot": "knife",
+            "rarity": "contraband",
+            "weight": 2
+          },
+          {
+            "skin": "Operator | Urban Heavy",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "classified",
+            "weight": 4
+          },
+          {
+            "skin": "Operator | Dust Patrol",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "restricted",
+            "weight": 3
+          },
+          {
+            "skin": "Operator | Mirage Ghost",
+            "weaponId": "",
+            "slot": "character",
+            "rarity": "covert",
+            "weight": 2
+          }
+        ]
+      }
+    },
+    "progression": {
+      "quests": {
+        "daily": [
+          {
+            "id": "daily_kills_15",
+            "title": "Daily Hunter",
+            "description": "Get 15 total kills.",
+            "metric": "kills",
+            "goal": 15,
+            "rewardCoin": 140,
+            "weaponId": ""
+          },
+          {
+            "id": "daily_ak47_6",
+            "title": "AK Task",
+            "description": "Get 6 kills with AK-47.",
+            "metric": "weapon_kills",
+            "goal": 6,
+            "rewardCoin": 160,
+            "weaponId": "ak47"
+          },
+          {
+            "id": "daily_assist_8",
+            "title": "Support Player",
+            "description": "Make 8 assists.",
+            "metric": "assists",
+            "goal": 8,
+            "rewardCoin": 130,
+            "weaponId": ""
+          }
+        ],
+        "weekly": [
+          {
+            "id": "weekly_flawless_20",
+            "title": "Flawless Round",
+            "description": "Get 20 kills without dying in one match.",
+            "metric": "flawless_20",
+            "goal": 1,
+            "rewardCoin": 700,
+            "weaponId": ""
+          },
+          {
+            "id": "weekly_headshot_30",
+            "title": "Sharpshooter",
+            "description": "Hit 30 headshots total.",
+            "metric": "headshots",
+            "goal": 30,
+            "rewardCoin": 520,
+            "weaponId": ""
+          },
+          {
+            "id": "weekly_awp_20",
+            "title": "AWP Master",
+            "description": "Get 20 kills with AWP.",
+            "metric": "weapon_kills",
+            "goal": 20,
+            "rewardCoin": 560,
+            "weaponId": "awp"
+          }
+        ]
+      },
+      "achievements": [
+        {
+          "id": "ach_kill_10",
+          "title": "Trigger Finger I",
+          "description": "Toplam 10 kill.",
+          "metric": "total_kills",
+          "goal": 10,
+          "rewardTitle": "Trigger Finger",
+          "rewardNameColor": "",
+          "rewardAvatar": "dust_raider",
+          "rewardAvatarFrame": "",
+          "rewardCoin": 0
+        },
+        {
+          "id": "ach_kill_100",
+          "title": "Entry Fragger",
+          "description": "Toplam 100 kill.",
+          "metric": "total_kills",
+          "goal": 100,
+          "rewardTitle": "Entry Fragger",
+          "rewardNameColor": "cyan",
+          "rewardAvatar": "",
+          "rewardAvatarFrame": "",
+          "rewardCoin": 0
+        },
+        {
+          "id": "ach_kill_1000",
+          "title": "Death Dealer",
+          "description": "Toplam 1000 kill.",
+          "metric": "total_kills",
+          "goal": 1000,
+          "rewardTitle": "Death Dealer",
+          "rewardNameColor": "gold",
+          "rewardAvatar": "",
+          "rewardAvatarFrame": "legend",
+          "rewardCoin": 0
+        },
+        {
+          "id": "ach_hs_250",
+          "title": "Headhunter",
+          "description": "Toplam 250 headshot.",
+          "metric": "total_headshots",
+          "goal": 250,
+          "rewardTitle": "Headhunter",
+          "rewardNameColor": "red",
+          "rewardAvatar": "hawk_eye",
+          "rewardAvatarFrame": "",
+          "rewardCoin": 0
+        },
+        {
+          "id": "ach_streak_20",
+          "title": "Unstoppable",
+          "description": "Tek maçta 20 kill streak yap.",
+          "metric": "max_killstreak",
+          "goal": 20,
+          "rewardTitle": "Unstoppable",
+          "rewardNameColor": "",
+          "rewardAvatar": "night_viper",
+          "rewardAvatarFrame": "royal",
+          "rewardCoin": 0
+        },
+        {
+          "id": "ach_assist_150",
+          "title": "Playmaker",
+          "description": "Toplam 150 asist yap.",
+          "metric": "total_assists",
+          "goal": 150,
+          "rewardTitle": "Playmaker",
+          "rewardNameColor": "emerald",
+          "rewardAvatar": "",
+          "rewardAvatarFrame": "steel",
+          "rewardCoin": 0
+        },
+        {
+          "id": "ach_wins_50",
+          "title": "Clutch Winner",
+          "description": "Toplam 50 mac kazan.",
+          "metric": "wins",
+          "goal": 50,
+          "rewardTitle": "Clutch Winner",
+          "rewardNameColor": "",
+          "rewardAvatar": "captain_royal",
+          "rewardAvatarFrame": "neon",
+          "rewardCoin": 0
+        },
+        {
+          "id": "ach_score_250k",
+          "title": "Premier Grinder",
+          "description": "Toplam 250000 score topla.",
+          "metric": "total_score",
+          "goal": 250000,
+          "rewardTitle": "Premier Grinder",
+          "rewardNameColor": "pink",
+          "rewardAvatar": "premier_ace",
+          "rewardAvatarFrame": "",
+          "rewardCoin": 0
+        }
+      ],
+      "weeklyLoginRewards": [
+        {
+          "day": 1,
+          "title": "Monday",
+          "rewardCoin": 120
+        },
+        {
+          "day": 2,
+          "title": "Tuesday",
+          "rewardCoin": 140
+        },
+        {
+          "day": 3,
+          "title": "Wednesday",
+          "rewardCoin": 160
+        },
+        {
+          "day": 4,
+          "title": "Thursday",
+          "rewardCoin": 180
+        },
+        {
+          "day": 5,
+          "title": "Friday",
+          "rewardCoin": 220
+        },
+        {
+          "day": 6,
+          "title": "Saturday",
+          "rewardCoin": 260
+        },
+        {
+          "day": 7,
+          "title": "Sunday",
+          "rewardCoin": 320
+        }
+      ]
+    },
+    "storefront": {
+      "offers": [
+        {
+          "id": "case_falcon",
+          "title": "Falcon Case",
+          "type": "case",
+          "caseId": "falcon_case",
+          "priceCoin": 180,
+          "description": "Balanced drops for core rifles and pistols."
+        },
+        {
+          "id": "case_mirage",
+          "title": "Mirage Case",
+          "type": "case",
+          "caseId": "mirage_case",
+          "priceCoin": 320,
+          "description": "Higher tier drops with knife chance."
+        },
+        {
+          "id": "case_arsenal",
+          "title": "Arsenal Case",
+          "type": "case",
+          "caseId": "arsenal_case",
+          "priceCoin": 420,
+          "description": "Heavy and sniper focused pool."
+        },
+        {
+          "id": "case_vortex",
+          "title": "Vortex Case",
+          "type": "case",
+          "caseId": "vortex_case",
+          "priceCoin": 520,
+          "description": "Premium mixed pool with covert cosmetics."
+        },
+        {
+          "id": "skin_weapon_1",
+          "title": "Glock-18 | Pulse",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "Glock-18 | Pulse",
+          "weaponId": "glock18",
+          "rarity": "milspec",
+          "priceCoin": 260,
+          "description": "GLOCK18 demo skin."
+        },
+        {
+          "id": "skin_weapon_2",
+          "title": "Glock-18 | Carbon Dot",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "Glock-18 | Carbon Dot",
+          "weaponId": "glock18",
+          "rarity": "restricted",
+          "priceCoin": 285,
+          "description": "GLOCK18 demo skin."
+        },
+        {
+          "id": "skin_weapon_3",
+          "title": "Glock-18 | Sunset Drift",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "Glock-18 | Sunset Drift",
+          "weaponId": "glock18",
+          "rarity": "classified",
+          "priceCoin": 310,
+          "description": "GLOCK18 demo skin."
+        },
+        {
+          "id": "skin_weapon_4",
+          "title": "USP-S | Crimson Thread",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "USP-S | Crimson Thread",
+          "weaponId": "usp_s",
+          "rarity": "milspec",
+          "priceCoin": 335,
+          "description": "USP_S demo skin."
+        },
+        {
+          "id": "skin_weapon_5",
+          "title": "USP-S | Nightline",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "USP-S | Nightline",
+          "weaponId": "usp_s",
+          "rarity": "restricted",
+          "priceCoin": 360,
+          "description": "USP_S demo skin."
+        },
+        {
+          "id": "skin_weapon_6",
+          "title": "USP-S | Arctic Veil",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "USP-S | Arctic Veil",
+          "weaponId": "usp_s",
+          "rarity": "classified",
+          "priceCoin": 385,
+          "description": "USP_S demo skin."
+        },
+        {
+          "id": "skin_weapon_7",
+          "title": "Desert Eagle | Brass Viper",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "Desert Eagle | Brass Viper",
+          "weaponId": "deagle",
+          "rarity": "milspec",
+          "priceCoin": 410,
+          "description": "DEAGLE demo skin."
+        },
+        {
+          "id": "skin_weapon_8",
+          "title": "Desert Eagle | Obsidian Edge",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "Desert Eagle | Obsidian Edge",
+          "weaponId": "deagle",
+          "rarity": "restricted",
+          "priceCoin": 435,
+          "description": "DEAGLE demo skin."
+        },
+        {
+          "id": "skin_weapon_9",
+          "title": "Desert Eagle | Sand Strike",
+          "type": "skin",
+          "slot": "secondary",
+          "skin": "Desert Eagle | Sand Strike",
+          "weaponId": "deagle",
+          "rarity": "classified",
+          "priceCoin": 460,
+          "description": "DEAGLE demo skin."
+        },
+        {
+          "id": "skin_weapon_10",
+          "title": "MAC-10 | Reactor",
+          "type": "skin",
+          "slot": "primary",
+          "skin": "MAC-10 | Reactor",
+          "weaponId": "mac10",
+          "rarity": "milspec",
+          "priceCoin": 485,
+          "description": "MAC10 demo skin."
+        },
+        {
+          "id": "skin_weapon_11",
+          "title": "MAC-10 | Urban Grid",
+          "type": "skin",
+          "slot": "primary",
+          "skin": "MAC-10 | Urban Grid",
+          "weaponId": "mac10",
+          "rarity": "restricted",
+          "priceCoin": 510,
+          "description": "MAC10 demo skin."
+        },
+        {
+          "id": "skin_weapon_12",
+          "title": "MAC-10 | Ember Wire",
+          "type": "skin",
+          "slot": "primary",
+          "skin": "MAC-10 | Ember Wire",
+          "weaponId": "mac10",
+          "rarity": "classified",
+          "priceCoin": 535,
+          "description": "MAC10 demo skin."
+        },
+        {
+          "id": "skin_character_1",
+          "title": "Operator | Urban Heavy",
+          "type": "skin",
+          "slot": "character",
+          "skin": "Operator | Urban Heavy",
+          "rarity": "classified",
+          "priceCoin": 640,
+          "description": "Character cosmetic demo."
+        },
+        {
+          "id": "skin_character_2",
+          "title": "Operator | Dust Patrol",
+          "type": "skin",
+          "slot": "character",
+          "skin": "Operator | Dust Patrol",
+          "rarity": "restricted",
+          "priceCoin": 720,
+          "description": "Character cosmetic demo."
+        },
+        {
+          "id": "skin_character_3",
+          "title": "Operator | Mirage Ghost",
+          "type": "skin",
+          "slot": "character",
+          "skin": "Operator | Mirage Ghost",
+          "rarity": "covert",
+          "priceCoin": 800,
+          "description": "Character cosmetic demo."
+        },
+        {
+          "id": "skin_knife_1",
+          "title": "M9 | Night Stripe",
+          "type": "skin",
+          "slot": "knife",
+          "skin": "M9 | Night Stripe",
+          "weaponId": "m9",
+          "rarity": "classified",
+          "priceCoin": 760,
+          "description": "Knife cosmetic demo."
+        },
+        {
+          "id": "skin_knife_2",
+          "title": "M9 | Fade Wire",
+          "type": "skin",
+          "slot": "knife",
+          "skin": "M9 | Fade Wire",
+          "weaponId": "m9",
+          "rarity": "covert",
+          "priceCoin": 860,
+          "description": "Knife cosmetic demo."
+        },
+        {
+          "id": "skin_knife_3",
+          "title": "M9 | Gold Spine",
+          "type": "skin",
+          "slot": "knife",
+          "skin": "M9 | Gold Spine",
+          "weaponId": "m9",
+          "rarity": "contraband",
+          "priceCoin": 960,
+          "description": "Knife cosmetic demo."
+        }
+      ]
+    }
+  },
+  "premier": {
+    "currentSeasonId": "2026-Q1",
+    "seasons": {
+      "2026-Q1": {
+        "id": "2026-Q1",
+        "label": "Q1 2026",
+        "startAt": "2026-01-01T00:00:00.000Z",
+        "endAt": "2026-04-01T00:00:00.000Z",
+        "players": {}
+      }
+    }
+  },
+  "users": [
+    {
+      "id": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+      "username": "social_alpha_59926",
+      "passwordHash": "6f5880c110f8a56e8544a09521f547b69d44e2523a8e9cb0321630211118dbc7ee6b94b1abeed293b069b09ae468189a56f4e02a20f7574718227e5d0909b532",
+      "passwordSalt": "249faf74d709ed98667843af9fcde53b",
+      "createdAt": "2026-03-27T01:32:19.701Z",
+      "wallet": 1100,
+      "inventory": {
+        "cases": {
+          "falcon_case": 1,
+          "mirage_case": 0
+        },
+        "skins": [],
+        "skinMeta": {},
+        "equipped": {
+          "character": "Heavy",
+          "rifle": "Default AK",
+          "pistol": "Default USP",
+          "knife": "Default Knife"
+        }
+      },
+      "loadout": {
+        "primary": "ak47",
+        "secondary": "usp_s",
+        "knife": "m9"
+      },
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "assists": 0,
+        "headshots": 0,
+        "damage": 0,
+        "score": 0,
+        "wins": 0,
+        "maxKillStreak": 0,
+        "matchesPlayed": 0,
+        "lastMatchAt": null
+      },
+      "premier": {
+        "rating": 5000,
+        "matchesPlayed": 0,
+        "calibrationMatches": 5,
+        "calibrated": false,
+        "tier": "unranked"
+      },
+      "progression": {
+        "quests": {
+          "daily": {
+            "key": "2026-03-27",
+            "progress": {
+              "daily_kills_15": 0,
+              "daily_ak47_6": 0,
+              "daily_assist_8": 0
+            },
+            "rewarded": {
+              "daily_kills_15": false,
+              "daily_ak47_6": false,
+              "daily_assist_8": false
+            }
+          },
+          "weekly": {
+            "key": "2026-W13",
+            "progress": {
+              "weekly_flawless_20": 0,
+              "weekly_headshot_30": 0,
+              "weekly_awp_20": 0
+            },
+            "rewarded": {
+              "weekly_flawless_20": false,
+              "weekly_headshot_30": false,
+              "weekly_awp_20": false
+            }
+          }
+        },
+        "achievements": {
+          "unlocked": {}
+        },
+        "weeklyLogin": {
+          "key": "2026-W13",
+          "claimed": {}
+        },
+        "cosmetics": {
+          "title": "Rookie",
+          "nameColor": "default",
+          "avatar": "rookie_ops",
+          "avatarFrame": "default",
+          "unlockedTitles": [
+            "Rookie"
+          ],
+          "unlockedNameColors": [
+            "default"
+          ],
+          "unlockedAvatars": [
+            "rookie_ops"
+          ],
+          "unlockedAvatarFrames": [
+            "default"
+          ]
+        }
+      },
+      "friends": {
+        "friends": [
+          "8d34d666-19f4-4a99-ac8a-ee32233834e9"
+        ],
+        "incoming": [],
+        "outgoing": []
+      },
+      "tokenVersion": 1,
+      "usernameLower": "social_alpha_59926"
+    },
+    {
+      "id": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+      "username": "social_bravo_58586",
+      "passwordHash": "045278dbeeabd2c9b85abe89e4cc6325781db9098e355d4ff99344752ac1dc5097451c4574f29b2cc532a869c5ef9d6234ad73f1cae0b2501c5b85ebc370a2a1",
+      "passwordSalt": "0d58f5a4b22b561b57b00365aed1e5b8",
+      "createdAt": "2026-03-27T01:32:19.772Z",
+      "wallet": 1300,
+      "inventory": {
+        "cases": {
+          "falcon_case": 1,
+          "mirage_case": 0
+        },
+        "skins": [],
+        "skinMeta": {},
+        "equipped": {
+          "character": "Heavy",
+          "rifle": "Default AK",
+          "pistol": "Default USP",
+          "knife": "Default Knife"
+        }
+      },
+      "loadout": {
+        "primary": "ak47",
+        "secondary": "usp_s",
+        "knife": "m9"
+      },
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "assists": 0,
+        "headshots": 0,
+        "damage": 0,
+        "score": 0,
+        "wins": 0,
+        "maxKillStreak": 0,
+        "matchesPlayed": 0,
+        "lastMatchAt": null
+      },
+      "premier": {
+        "rating": 5000,
+        "matchesPlayed": 0,
+        "calibrationMatches": 5,
+        "calibrated": false,
+        "tier": "unranked"
+      },
+      "progression": {
+        "quests": {
+          "daily": {
+            "key": "2026-03-27",
+            "progress": {
+              "daily_kills_15": 0,
+              "daily_ak47_6": 0,
+              "daily_assist_8": 0
+            },
+            "rewarded": {
+              "daily_kills_15": false,
+              "daily_ak47_6": false,
+              "daily_assist_8": false
+            }
+          },
+          "weekly": {
+            "key": "2026-W13",
+            "progress": {
+              "weekly_flawless_20": 0,
+              "weekly_headshot_30": 0,
+              "weekly_awp_20": 0
+            },
+            "rewarded": {
+              "weekly_flawless_20": false,
+              "weekly_headshot_30": false,
+              "weekly_awp_20": false
+            }
+          }
+        },
+        "achievements": {
+          "unlocked": {}
+        },
+        "weeklyLogin": {
+          "key": "2026-W13",
+          "claimed": {}
+        },
+        "cosmetics": {
+          "title": "Rookie",
+          "nameColor": "default",
+          "avatar": "rookie_ops",
+          "avatarFrame": "default",
+          "unlockedTitles": [
+            "Rookie"
+          ],
+          "unlockedNameColors": [
+            "default"
+          ],
+          "unlockedAvatars": [
+            "rookie_ops"
+          ],
+          "unlockedAvatarFrames": [
+            "default"
+          ]
+        }
+      },
+      "friends": {
+        "friends": [
+          "e6613841-a93e-4b96-a5d0-ea100068e8bb"
+        ],
+        "incoming": [],
+        "outgoing": []
+      },
+      "tokenVersion": 1,
+      "usernameLower": "social_bravo_58586"
+    }
+  ],
+  "matches": [],
+  "leaderboards": {
+    "all": {},
+    "daily": {},
+    "weekly": {}
+  },
+  "chat": {
+    "nextId": 1,
+    "lobby": []
+  },
+  "social": {
+    "rooms": [
+      {
+        "id": "8bbab7e5-108c-4790-950c-cfefe2f8bc14",
+        "hostUserId": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+        "memberIds": [
+          "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+          "8d34d666-19f4-4a99-ac8a-ee32233834e9"
+        ],
+        "capacity": 10,
+        "label": "SOCIAL_ALPHA_59926 SQUAD",
+        "createdAt": "2026-03-27T01:32:19.787Z",
+        "updatedAt": "2026-03-27T01:32:19.800Z"
+      }
+    ],
+    "roomInvites": [
+      {
+        "id": "be5ce2d3-48eb-4664-9869-9e3afb6830e3",
+        "fromUserId": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+        "toUserId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+        "roomId": "8bbab7e5-108c-4790-950c-cfefe2f8bc14",
+        "status": "accepted",
+        "createdAt": "2026-03-27T01:32:19.787Z",
+        "expiresAt": "2026-03-27T02:02:19.787Z",
+        "respondedAt": "2026-03-27T01:32:19.800Z"
+      }
+    ],
+    "gifts": [
+      {
+        "id": "f9da140d-2a47-4604-99ab-6a9d97669514",
+        "fromUserId": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+        "toUserId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+        "type": "coin",
+        "amount": 100,
+        "caseId": "",
+        "note": "For next queue",
+        "cost": 100,
+        "createdAt": "2026-03-27T01:32:19.804Z",
+        "claimedAt": "2026-03-27T01:32:19.811Z",
+        "status": "claimed"
+      }
+    ],
+    "directMessages": [
+      {
+        "id": "d6a804af-1f2b-4974-b195-79719928edd4",
+        "fromUserId": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+        "toUserId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+        "text": "Ready for queue?",
+        "createdAt": "2026-03-27T01:32:19.815Z",
+        "readAt": "2026-03-27T01:32:19.819Z"
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "id": "1cd85f71-a844-4fd7-a09d-bfab3329e12d",
+      "userId": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+      "type": "social_room_invite",
+      "targetUserId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+      "roomId": "8bbab7e5-108c-4790-950c-cfefe2f8bc14",
+      "inviteId": "be5ce2d3-48eb-4664-9869-9e3afb6830e3",
+      "reason": "invite-sent",
+      "createdAt": "2026-03-27T01:32:19.787Z"
+    },
+    {
+      "id": "85441e33-4c6e-4ad1-aa76-6a1e42bdb0c5",
+      "userId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+      "type": "social_room_invite_response",
+      "inviteId": "be5ce2d3-48eb-4664-9869-9e3afb6830e3",
+      "roomId": "8bbab7e5-108c-4790-950c-cfefe2f8bc14",
+      "action": "accept",
+      "reason": "joined-room",
+      "createdAt": "2026-03-27T01:32:19.801Z"
+    },
+    {
+      "id": "24b78aae-ae71-4981-a421-7d6010adc7f7",
+      "userId": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+      "type": "social_gift_send",
+      "targetUserId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+      "giftId": "f9da140d-2a47-4604-99ab-6a9d97669514",
+      "giftKey": "coin_100",
+      "amount": 100,
+      "currency": "coin",
+      "createdAt": "2026-03-27T01:32:19.804Z"
+    },
+    {
+      "id": "f57dd95d-544f-40f1-8662-0e510f30044a",
+      "userId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+      "type": "social_gift_claim",
+      "giftId": "f9da140d-2a47-4604-99ab-6a9d97669514",
+      "rewardType": "coin",
+      "rewardAmount": 100,
+      "caseId": null,
+      "createdAt": "2026-03-27T01:32:19.812Z"
+    },
+    {
+      "id": "648bb81f-a0dc-4f0c-b56d-5f2c056b0dcb",
+      "userId": "e6613841-a93e-4b96-a5d0-ea100068e8bb",
+      "type": "social_dm_send",
+      "targetUserId": "8d34d666-19f4-4a99-ac8a-ee32233834e9",
+      "messageId": "d6a804af-1f2b-4974-b195-79719928edd4",
+      "createdAt": "2026-03-27T01:32:19.815Z"
+    }
+  ]
+}

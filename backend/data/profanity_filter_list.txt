@@ -1,0 +1,20 @@
+; One item per line.
+; Matching is token-based (word/phrase), not substring-based.
+; Example:
+; pain in the ass   -> blocked
+; assassin          -> allowed
+; horde             -> allowed
+
+pain in the ass
+piece of shit
+son of a bitch
+motherfucker
+fuck
+fucking
+shit
+bitch
+bastard
+asshole
+amk
+aq
+siktir

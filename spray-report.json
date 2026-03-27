@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-03-23T20:50:35.161Z",
+  "referencePath": "C:\\Users\\endle\\Downloads\\cube-gunman-master\\cube-gunman-master\\src\\gameplay\\combat\\sprayReference.csgo128.json",
+  "reference": "csgo-128",
+  "referenceSourceType": "external",
+  "referenceVersion": "2026.03.ak47.gif.v12-compact-esports",
+  "referenceUpdatedAt": "2026-03-23T14:29:01.292Z",
+  "strictReference": true,
+  "selectedWeapons": [
+    "ak47"
+  ],
+  "rows": [
+    {
+      "weaponId": "ak47",
+      "state": "unscoped",
+      "distance": 10,
+      "classification": "rifle",
+      "sampleCount": 30,
+      "rmseFirst10": 0.1841908641486875,
+      "rmseFirst30": 0.6415627138160443,
+      "rmseAll": 0.6415627138160443,
+      "maxError": 1.053705371922368,
+      "pass": true,
+      "thresholds": {
+        "rmseFirst10": 2,
+        "rmseAll": 4,
+        "max": 9
+      },
+      "invalid": false,
+      "invalidReason": ""
+    },
+    {
+      "weaponId": "ak47",
+      "state": "unscoped",
+      "distance": 20,
+      "classification": "rifle",
+      "sampleCount": 30,
+      "rmseFirst10": 0.18419099294505964,
+      "rmseFirst30": 0.6415627226378565,
+      "rmseAll": 0.6415627226378565,
+      "maxError": 1.053704872426189,
+      "pass": true,
+      "thresholds": {
+        "rmseFirst10": 2,
+        "rmseAll": 4,
+        "max": 9
+      },
+      "invalid": false,
+      "invalidReason": ""
+    }
+  ],
+  "passCount": 2,
+  "totalCount": 2
+}

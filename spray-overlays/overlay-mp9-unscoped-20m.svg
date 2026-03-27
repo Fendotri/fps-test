@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640">
+  <rect x="0" y="0" width="960" height="640" fill="#0b111a"/>
+  <rect x="64" y="64" width="832" height="512" fill="#101a28" stroke="#2a3f5f" stroke-width="1.2"/>
+  <line x1="64.00" y1="64" x2="64.00" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="64.00" x2="896" y2="64.00" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="147.20" y1="64" x2="147.20" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="115.20" x2="896" y2="115.20" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="230.40" y1="64" x2="230.40" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="166.40" x2="896" y2="166.40" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="313.60" y1="64" x2="313.60" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="217.60" x2="896" y2="217.60" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="396.80" y1="64" x2="396.80" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="268.80" x2="896" y2="268.80" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="480.00" y1="64" x2="480.00" y2="576" stroke="rgba(181,208,247,0.35)" stroke-width="1.4"/>
+  <line x1="64" y1="320.00" x2="896" y2="320.00" stroke="rgba(181,208,247,0.35)" stroke-width="1.4"/>
+  <line x1="563.20" y1="64" x2="563.20" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="371.20" x2="896" y2="371.20" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="646.40" y1="64" x2="646.40" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="422.40" x2="896" y2="422.40" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="729.60" y1="64" x2="729.60" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="473.60" x2="896" y2="473.60" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="812.80" y1="64" x2="812.80" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="524.80" x2="896" y2="524.80" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="896.00" y1="64" x2="896.00" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="576.00" x2="896" y2="576.00" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="480.00" y1="345.60" x2="480.00" y2="345.60" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="479.97" y1="345.62" x2="479.97" y2="345.62" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="479.72" y1="348.81" x2="479.72" y2="348.81" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="478.96" y1="355.82" x2="478.96" y2="355.82" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="477.20" y1="361.98" x2="477.20" y2="361.98" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="476.09" y1="374.04" x2="476.09" y2="374.04" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="474.95" y1="386.21" x2="474.95" y2="386.21" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="475.04" y1="401.97" x2="475.04" y2="401.97" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="473.00" y1="416.67" x2="473.00" y2="416.67" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="469.27" y1="437.03" x2="469.27" y2="437.03" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="467.68" y1="459.29" x2="467.68" y2="459.29" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="467.90" y1="473.79" x2="467.90" y2="473.79" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="466.66" y1="478.79" x2="466.66" y2="478.79" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="461.97" y1="481.39" x2="461.97" y2="481.39" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="460.91" y1="502.56" x2="460.91" y2="502.56" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="456.51" y1="542.52" x2="456.51" y2="542.52" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="444.94" y1="571.29" x2="444.94" y2="571.29" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="439.25" y1="579.08" x2="439.25" y2="579.08" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="435.45" y1="576.08" x2="435.45" y2="576.08" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="446.64" y1="573.51" x2="446.64" y2="573.51" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="433.65" y1="577.45" x2="433.65" y2="577.45" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="438.01" y1="580.24" x2="438.01" y2="580.24" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="438.76" y1="581.12" x2="438.76" y2="581.12" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="435.68" y1="575.57" x2="435.68" y2="575.57" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="439.22" y1="579.02" x2="439.22" y2="579.02" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="444.37" y1="569.43" x2="444.37" y2="569.43" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="439.30" y1="579.11" x2="439.30" y2="579.11" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="437.55" y1="575.52" x2="437.55" y2="575.52" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="439.22" y1="579.03" x2="439.22" y2="579.03" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="439.23" y1="579.04" x2="439.23" y2="579.04" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <polyline points="480.00,345.60 479.97,345.62 479.72,348.81 478.96,355.82 477.20,361.98 476.09,374.04 474.95,386.21 475.04,401.97 473.00,416.67 469.27,437.03 467.68,459.29 467.90,473.79 466.66,478.79 461.97,481.39 460.91,502.56 456.51,542.52 444.94,571.29 439.25,579.08 435.45,576.08 446.64,573.51 433.65,577.45 438.01,580.24 438.76,581.12 435.68,575.57 439.22,579.02 444.37,569.43 439.30,579.11 437.55,575.52 439.22,579.03 439.23,579.04" fill="none" stroke="#f2ca61" stroke-width="2.1"/>
+  <polyline points="480.00,345.60 479.97,345.62 479.72,348.81 478.96,355.82 477.20,361.98 476.09,374.04 474.95,386.21 475.04,401.97 473.00,416.67 469.27,437.03 467.68,459.29 467.90,473.79 466.66,478.79 461.97,481.39 460.91,502.56 456.51,542.52 444.94,571.29 439.25,579.08 435.45,576.08 446.64,573.51 433.65,577.45 438.01,580.24 438.76,581.12 435.68,575.57 439.22,579.02 444.37,569.43 439.30,579.11 437.55,575.52 439.22,579.03 439.23,579.04" fill="none" stroke="#63daff" stroke-width="2.1"/>
+  <text x="486.00" y="339.60" fill="#d7ecff" font-size="10">1</text>
+  <text x="483.20" y="355.98" fill="#d7ecff" font-size="10">5</text>
+  <text x="475.27" y="431.03" fill="#d7ecff" font-size="10">10</text>
+  <text x="466.91" y="496.56" fill="#d7ecff" font-size="10">15</text>
+  <text x="452.64" y="567.51" fill="#d7ecff" font-size="10">20</text>
+  <text x="445.22" y="573.02" fill="#d7ecff" font-size="10">25</text>
+  <text x="445.23" y="573.04" fill="#d7ecff" font-size="10">30</text>
+  <text x="64" y="28" fill="#e6f0ff" font-size="20" font-family="Consolas, monospace">MP9 20m UNSCOPED</text>
+  <text x="64" y="50" fill="#b9d0ef" font-size="13" font-family="Consolas, monospace">weapon=mp9 state=unscoped distance=20m | shots=30</text>
+  <text x="64" y="70" fill="#9dc0e8" font-size="12" font-family="Consolas, monospace">RMSE10=0.000 RMSE(all)=0.000 MAX=0.000</text>
+  <rect x="700" y="18" width="232" height="70" rx="8" fill="#0f1826" stroke="#2a3b57"/>
+  <circle cx="718" cy="38" r="5" fill="#63daff"/>
+  <text x="730" y="42" fill="#cfeaff" font-size="12" font-family="Consolas, monospace">Current</text>
+  <circle cx="718" cy="58" r="5" fill="#f2ca61"/>
+  <text x="730" y="62" fill="#fff2cf" font-size="12" font-family="Consolas, monospace">Reference</text>
+  <circle cx="718" cy="78" r="5" fill="#ff7a7a"/>
+  <text x="730" y="82" fill="#ffc8c8" font-size="12" font-family="Consolas, monospace">Delta</text>
+</svg>

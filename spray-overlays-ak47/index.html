@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Spray Overlay Export</title>
+<style>
+body{margin:0;padding:18px;background:#09111b;color:#e7efff;font-family:Consolas,monospace}
+h1{margin:0 0 8px 0}
+.sub{opacity:.85;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(420px,1fr));gap:14px}
+.card{background:#0e1623;border:1px solid #243856;border-radius:10px;padding:10px}
+.meta{font-size:12px;color:#b8cff0;margin-bottom:8px}
+img{width:100%;height:auto;border:1px solid #2a3f5f;border-radius:8px;background:#0b111a}
+</style>
+</head>
+<body>
+<h1>Spray Overlay Export</h1>
+<div class="sub">Reference: csgo-128 (external @ 2026.03.ak47.gif.v12-compact-esports)</div>
+<div class="sub">Compensation Overlay: ON (enable with --include-compensation)</div>
+<div class="grid">
+<div class="card">
+      <div class="meta">ak47 10m unscoped | RMSE10=0.028 RMSE=0.088 MAX=0.200 | SPACING=0.1628/0.2806 | SILH=26/30 (0.867)</div>
+      <img src="./overlay-ak47-unscoped-10m.svg" alt="ak47 10m unscoped"/>
+    </div>
+<div class="card">
+      <div class="meta">ak47 20m unscoped | RMSE10=0.028 RMSE=0.088 MAX=0.200 | SPACING=0.3256/0.5613 | SILH=0/30 (0.000)</div>
+      <img src="./overlay-ak47-unscoped-20m.svg" alt="ak47 20m unscoped"/>
+    </div>
+</div>
+</body>
+</html>

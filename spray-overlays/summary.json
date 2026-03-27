@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-03-22T15:42:58.990Z",
+  "reference": "csgo-128",
+  "referenceSourceType": "external",
+  "referenceVersion": "2026.03.ak-m4-mp9.v4",
+  "referencePath": "C:\\Users\\endle\\Downloads\\cube-gunman-master\\cube-gunman-master\\src\\gameplay\\combat\\sprayReference.csgo128.json",
+  "combos": [
+    {
+      "weaponId": "ak47",
+      "state": "unscoped",
+      "distance": 10,
+      "shots": 30,
+      "fileName": "overlay-ak47-unscoped-10m.svg",
+      "rmseFirst10": 4.006208196649965e-7,
+      "rmseAll": 4.462998552027736e-7,
+      "maxError": 6.679450315507479e-7
+    },
+    {
+      "weaponId": "ak47",
+      "state": "unscoped",
+      "distance": 20,
+      "shots": 30,
+      "fileName": "overlay-ak47-unscoped-20m.svg",
+      "rmseFirst10": 1.8168482291430874e-7,
+      "rmseAll": 1.8099851969134802e-7,
+      "maxError": 3.043410799780982e-7
+    },
+    {
+      "weaponId": "m4a1_s",
+      "state": "unscoped",
+      "distance": 10,
+      "shots": 25,
+      "fileName": "overlay-m4a1_s-unscoped-10m.svg",
+      "rmseFirst10": 2.928044629468739e-7,
+      "rmseAll": 3.583034646904382e-7,
+      "maxError": 5.523730895856853e-7
+    },
+    {
+      "weaponId": "m4a1_s",
+      "state": "unscoped",
+      "distance": 20,
+      "shots": 25,
+      "fileName": "overlay-m4a1_s-unscoped-20m.svg",
+      "rmseFirst10": 2.330337437891442e-7,
+      "rmseAll": 2.2606519091104607e-7,
+      "maxError": 3.0697189120009367e-7
+    },
+    {
+      "weaponId": "mp9",
+      "state": "unscoped",
+      "distance": 10,
+      "shots": 30,
+      "fileName": "overlay-mp9-unscoped-10m.svg",
+      "rmseFirst10": 3.678103254123839e-7,
+      "rmseAll": 4.028075471010078e-7,
+      "maxError": 6.216529554391671e-7
+    },
+    {
+      "weaponId": "mp9",
+      "state": "unscoped",
+      "distance": 20,
+      "shots": 30,
+      "fileName": "overlay-mp9-unscoped-20m.svg",
+      "rmseFirst10": 1.7036903292705002e-7,
+      "rmseAll": 1.8950533989443097e-7,
+      "maxError": 3.1527253072019565e-7
+    }
+  ]
+}

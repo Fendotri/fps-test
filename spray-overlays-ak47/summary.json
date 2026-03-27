@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-03-23T16:13:36.874Z",
+  "reference": "csgo-128",
+  "referenceSourceType": "external",
+  "referenceVersion": "2026.03.ak47.gif.v12-compact-esports",
+  "referencePath": "C:\\Users\\endle\\Downloads\\cube-gunman-master\\cube-gunman-master\\src\\gameplay\\combat\\sprayReference.csgo128.json",
+  "includeCompensation": true,
+  "combos": [
+    {
+      "weaponId": "ak47",
+      "state": "unscoped",
+      "distance": 10,
+      "shots": 30,
+      "fileName": "overlay-ak47-unscoped-10m.svg",
+      "rmseFirst10": 0.027774418515223057,
+      "rmseAll": 0.08802081304839288,
+      "maxError": 0.19984608718043717,
+      "shotSpacingMean": 0.1627998575576558,
+      "shotSpacingMax": 0.280628739665482,
+      "silhouetteHitCount": 26,
+      "silhouetteHitRatio": 0.8666666666666667
+    },
+    {
+      "weaponId": "ak47",
+      "state": "unscoped",
+      "distance": 20,
+      "shots": 30,
+      "fileName": "overlay-ak47-unscoped-20m.svg",
+      "rmseFirst10": 0.02777434860685087,
+      "rmseAll": 0.08802083957124122,
+      "maxError": 0.1998463192545836,
+      "shotSpacingMean": 0.3255997151153116,
+      "shotSpacingMax": 0.561257479330964,
+      "silhouetteHitCount": 0,
+      "silhouetteHitRatio": 0
+    }
+  ]
+}

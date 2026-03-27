@@ -1,0 +1,219 @@
+{
+  "generatedAt": "2026-03-22T16:43:53.525Z",
+  "weaponId": "ak47",
+  "distanceMeters": 10,
+  "shots": 30,
+  "note": "Normalized to shot #1 origin. compensationX/Y represent cumulative mouse drag direction inverse to recoil kick.",
+  "rows": [
+    {
+      "shot": 1,
+      "spreadX": 0,
+      "spreadY": 0,
+      "compensationX": 0,
+      "compensationY": 0
+    },
+    {
+      "shot": 2,
+      "spreadX": -0.05169,
+      "spreadY": -0.459704,
+      "compensationX": 0.000006,
+      "compensationY": 0.002324
+    },
+    {
+      "shot": 3,
+      "spreadX": 0.036904,
+      "spreadY": -1.00532,
+      "compensationX": 0,
+      "compensationY": 0.004811
+    },
+    {
+      "shot": 4,
+      "spreadX": 0.084485,
+      "spreadY": -1.557648,
+      "compensationX": -0.000013,
+      "compensationY": 0.007461
+    },
+    {
+      "shot": 5,
+      "spreadX": -0.088193,
+      "spreadY": -2.329801,
+      "compensationX": 0,
+      "compensationY": 0.010305
+    },
+    {
+      "shot": 6,
+      "spreadX": -0.271383,
+      "spreadY": -3.052369,
+      "compensationX": 0.000037,
+      "compensationY": 0.013327
+    },
+    {
+      "shot": 7,
+      "spreadX": -0.539204,
+      "spreadY": -3.736507,
+      "compensationX": 0.000112,
+      "compensationY": 0.016513
+    },
+    {
+      "shot": 8,
+      "spreadX": -0.971877,
+      "spreadY": -4.108933,
+      "compensationX": 0.000237,
+      "compensationY": 0.019758
+    },
+    {
+      "shot": 9,
+      "spreadX": -1.392375,
+      "spreadY": -4.433696,
+      "compensationX": 0.000412,
+      "compensationY": 0.023048
+    },
+    {
+      "shot": 10,
+      "spreadX": -1.613046,
+      "spreadY": -4.631817,
+      "compensationX": 0.000612,
+      "compensationY": 0.026352
+    },
+    {
+      "shot": 11,
+      "spreadX": -1.485579,
+      "spreadY": -4.850203,
+      "compensationX": 0.000788,
+      "compensationY": 0.029672
+    },
+    {
+      "shot": 12,
+      "spreadX": -0.953555,
+      "spreadY": -5.060505,
+      "compensationX": 0.0009,
+      "compensationY": 0.033006
+    },
+    {
+      "shot": 13,
+      "spreadX": -0.425593,
+      "spreadY": -5.286437,
+      "compensationX": 0.00095,
+      "compensationY": 0.036355
+    },
+    {
+      "shot": 14,
+      "spreadX": 0.121207,
+      "spreadY": -5.468796,
+      "compensationX": 0.000937,
+      "compensationY": 0.039719
+    },
+    {
+      "shot": 15,
+      "spreadX": 0.715751,
+      "spreadY": -5.759303,
+      "compensationX": 0.000862,
+      "compensationY": 0.043098
+    },
+    {
+      "shot": 16,
+      "spreadX": 1.475199,
+      "spreadY": -6.002775,
+      "compensationX": 0.000713,
+      "compensationY": 0.046492
+    },
+    {
+      "shot": 17,
+      "spreadX": 2.055858,
+      "spreadY": -6.069564,
+      "compensationX": 0.000512,
+      "compensationY": 0.049871
+    },
+    {
+      "shot": 18,
+      "spreadX": 2.344165,
+      "spreadY": -6.200975,
+      "compensationX": 0.000287,
+      "compensationY": 0.053235
+    },
+    {
+      "shot": 19,
+      "spreadX": 2.542993,
+      "spreadY": -6.306263,
+      "compensationX": 0.00005,
+      "compensationY": 0.056584
+    },
+    {
+      "shot": 20,
+      "spreadX": 2.372662,
+      "spreadY": -6.372262,
+      "compensationX": -0.000163,
+      "compensationY": 0.059918
+    },
+    {
+      "shot": 21,
+      "spreadX": 1.730832,
+      "spreadY": -6.474066,
+      "compensationX": -0.000313,
+      "compensationY": 0.063237
+    },
+    {
+      "shot": 22,
+      "spreadX": 0.873535,
+      "spreadY": -6.687435,
+      "compensationX": -0.000388,
+      "compensationY": 0.066572
+    },
+    {
+      "shot": 23,
+      "spreadX": 0.168216,
+      "spreadY": -6.970106,
+      "compensationX": -0.0004,
+      "compensationY": 0.069921
+    },
+    {
+      "shot": 24,
+      "spreadX": -0.582203,
+      "spreadY": -7.26293,
+      "compensationX": -0.00035,
+      "compensationY": 0.073285
+    },
+    {
+      "shot": 25,
+      "spreadX": -1.380014,
+      "spreadY": -7.557092,
+      "compensationX": -0.000238,
+      "compensationY": 0.076664
+    },
+    {
+      "shot": 26,
+      "spreadX": -2.259759,
+      "spreadY": -7.675468,
+      "compensationX": -0.000063,
+      "compensationY": 0.080028
+    },
+    {
+      "shot": 27,
+      "spreadX": -2.617286,
+      "spreadY": -7.725402,
+      "compensationX": 0.000138,
+      "compensationY": 0.083377
+    },
+    {
+      "shot": 28,
+      "spreadX": -2.172572,
+      "spreadY": -7.828767,
+      "compensationX": 0.0003,
+      "compensationY": 0.086711
+    },
+    {
+      "shot": 29,
+      "spreadX": -1.218006,
+      "spreadY": -7.958919,
+      "compensationX": 0.000388,
+      "compensationY": 0.090031
+    },
+    {
+      "shot": 30,
+      "spreadX": -0.000041,
+      "spreadY": -8.259945,
+      "compensationX": 0.000388,
+      "compensationY": 0.093365
+    }
+  ]
+}

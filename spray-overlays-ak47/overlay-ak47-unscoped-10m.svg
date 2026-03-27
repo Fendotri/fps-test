@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640">
+  <rect x="0" y="0" width="960" height="640" fill="#0b111a"/>
+  <rect x="64" y="64" width="832" height="512" fill="#101a28" stroke="#2a3f5f" stroke-width="1.2"/>
+  <line x1="64.00" y1="64" x2="64.00" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="64.00" x2="896" y2="64.00" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="147.20" y1="64" x2="147.20" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="115.20" x2="896" y2="115.20" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="230.40" y1="64" x2="230.40" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="166.40" x2="896" y2="166.40" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="313.60" y1="64" x2="313.60" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="217.60" x2="896" y2="217.60" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="396.80" y1="64" x2="396.80" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="268.80" x2="896" y2="268.80" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="480.00" y1="64" x2="480.00" y2="576" stroke="rgba(181,208,247,0.35)" stroke-width="1.4"/>
+  <line x1="64" y1="320.00" x2="896" y2="320.00" stroke="rgba(181,208,247,0.35)" stroke-width="1.4"/>
+  <line x1="563.20" y1="64" x2="563.20" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="371.20" x2="896" y2="371.20" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="646.40" y1="64" x2="646.40" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="422.40" x2="896" y2="422.40" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="729.60" y1="64" x2="729.60" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="473.60" x2="896" y2="473.60" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="812.80" y1="64" x2="812.80" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="524.80" x2="896" y2="524.80" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="896.00" y1="64" x2="896.00" y2="576" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="64" y1="576.00" x2="896" y2="576.00" stroke="rgba(124,153,195,0.18)" stroke-width="1"/>
+  <line x1="480.00" y1="345.60" x2="480.00" y2="345.60" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="480.17" y1="347.79" x2="480.87" y2="351.97" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="480.81" y1="355.88" x2="481.81" y2="358.65" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="481.59" y1="364.14" x2="482.59" y2="365.36" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="479.85" y1="371.62" x2="479.85" y2="372.42" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="477.57" y1="379.09" x2="477.55" y2="380.16" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="475.50" y1="386.82" x2="475.40" y2="387.90" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="472.78" y1="395.00" x2="472.50" y2="396.48" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="471.21" y1="403.75" x2="470.88" y2="405.62" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="470.06" y1="412.60" x2="469.92" y2="414.79" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="467.19" y1="421.93" x2="466.84" y2="424.53" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="463.53" y1="431.51" x2="463.11" y2="434.36" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="459.23" y1="437.90" x2="463.16" y2="434.68" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="454.62" y1="444.07" x2="456.09" y2="444.02" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="449.95" y1="451.36" x2="448.87" y2="455.13" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="451.57" y1="460.18" x2="441.80" y2="465.83" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="453.55" y1="469.02" x2="440.37" y2="475.92" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="455.09" y1="478.75" x2="454.13" y2="483.76" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="469.40" y1="486.11" x2="469.09" y2="491.54" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="484.63" y1="493.37" x2="484.93" y2="499.11" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="496.61" y1="502.05" x2="492.95" y2="509.70" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="508.82" y1="510.48" x2="510.05" y2="516.88" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="523.74" y1="520.45" x2="525.49" y2="527.42" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="539.85" y1="530.09" x2="541.47" y2="538.32" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="556.50" y1="539.95" x2="559.75" y2="548.03" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="542.53" y1="547.47" x2="547.91" y2="555.52" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="528.62" y1="554.53" x2="530.81" y2="563.37" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="509.99" y1="559.97" x2="510.78" y2="568.99" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="490.27" y1="565.77" x2="489.53" y2="574.83" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <line x1="470.12" y1="571.30" x2="469.78" y2="581.12" stroke="rgba(255,108,108,0.45)" stroke-width="1"/>
+  <polyline points="480.00,345.60 480.87,351.97 481.81,358.65 482.59,365.36 479.85,372.42 477.55,380.16 475.40,387.90 472.50,396.48 470.88,405.62 469.92,414.79 466.84,424.53 463.11,434.36 463.16,434.68 456.09,444.02 448.87,455.13 441.80,465.83 440.37,475.92 454.13,483.76 469.09,491.54 484.93,499.11 492.95,509.70 510.05,516.88 525.49,527.42 541.47,538.32 559.75,548.03 547.91,555.52 530.81,563.37 510.78,568.99 489.53,574.83 469.78,581.12" fill="none" stroke="#f2ca61" stroke-width="2.1"/>
+  <polyline points="480.00,345.60 480.17,347.79 480.81,355.88 481.59,364.14 479.85,371.62 477.57,379.09 475.50,386.82 472.78,395.00 471.21,403.75 470.06,412.60 467.19,421.93 463.53,431.51 459.23,437.90 454.62,444.07 449.95,451.36 451.57,460.18 453.55,469.02 455.09,478.75 469.40,486.11 484.63,493.37 496.61,502.05 508.82,510.48 523.74,520.45 539.85,530.09 556.50,539.95 542.53,547.47 528.62,554.53 509.99,559.97 490.27,565.77 470.12,571.30" fill="none" stroke="#63daff" stroke-width="2.1"/>
+  <polyline points="480.00,345.60 479.13,339.23 478.19,332.55 477.41,325.84 480.15,318.78 482.45,311.04 484.60,303.30 487.50,294.72 489.12,285.58 490.08,276.41 493.16,266.67 496.89,256.84 496.84,256.52 503.91,247.18 511.13,236.07 518.20,225.37 519.63,215.28 505.87,207.44 490.91,199.66 475.07,192.09 467.05,181.50 449.95,174.32 434.51,163.78 418.53,152.88 400.25,143.17 412.09,135.68 429.19,127.83 449.22,122.21 470.47,116.37 490.22,110.08" fill="none" stroke="#ff6a9d" stroke-width="1.8"/>
+  <text x="486.00" y="339.60" fill="#d7ecff" font-size="10">1</text>
+  <text x="485.85" y="365.62" fill="#d7ecff" font-size="10">5</text>
+  <text x="476.06" y="406.60" fill="#d7ecff" font-size="10">10</text>
+  <text x="455.95" y="445.36" fill="#d7ecff" font-size="10">15</text>
+  <text x="490.63" y="487.37" fill="#d7ecff" font-size="10">20</text>
+  <text x="562.50" y="533.95" fill="#d7ecff" font-size="10">25</text>
+  <text x="476.12" y="565.30" fill="#d7ecff" font-size="10">30</text>
+  <text x="64" y="28" fill="#e6f0ff" font-size="20" font-family="Consolas, monospace">AK47 10m UNSCOPED</text>
+  <text x="64" y="50" fill="#b9d0ef" font-size="13" font-family="Consolas, monospace">weapon=ak47 state=unscoped distance=10m | shots=30</text>
+  <text x="64" y="70" fill="#9dc0e8" font-size="12" font-family="Consolas, monospace">RMSE10=0.028 RMSE(all)=0.088 MAX=0.200</text>
+  <rect x="700" y="18" width="232" height="90" rx="8" fill="#0f1826" stroke="#2a3b57"/>
+  <circle cx="718" cy="38" r="5" fill="#63daff"/>
+  <text x="730" y="42" fill="#cfeaff" font-size="12" font-family="Consolas, monospace">Current</text>
+  <circle cx="718" cy="58" r="5" fill="#f2ca61"/>
+  <text x="730" y="62" fill="#fff2cf" font-size="12" font-family="Consolas, monospace">Reference</text>
+  <circle cx="718" cy="78" r="5" fill="#ff7a7a"/>
+  <text x="730" y="82" fill="#ffc8c8" font-size="12" font-family="Consolas, monospace">Delta</text>
+  <circle cx="718" cy="98" r="5" fill="#ff6a9d"/><text x="730" y="102" fill="#ffd0e2" font-size="12" font-family="Consolas, monospace">Compensation</text>
+</svg>
