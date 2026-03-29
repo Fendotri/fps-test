@@ -16,6 +16,14 @@ const ensureString = (value, fallback = '') => {
     return trimmed || fallback;
 };
 
+const ensureVec3 = (value, fallback = [0, 0, 0]) => {
+    const source = Array.isArray(value) ? value : fallback;
+    return [0, 1, 2].map((index) => {
+        const numeric = Number(source?.[index]);
+        return Number.isFinite(numeric) ? numeric : Number(fallback?.[index] || 0);
+    });
+};
+
 const RARITY_SET = new Set([
     'consumer',
     'industrial',
@@ -33,8 +41,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'glock18',
         displayName: 'Glock-18',
+        description: 'Sidearm pistol profile.',
         category: 'Pistols',
         priceCoin: 200,
+        rarity: 'milspec',
+        dropWeight: 10,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'secondary',
         placeholderRig: 'usp',
         stats: { damage: 30, fireRate: 60 / 400, magazine: 20, reserve: 120, speed: 240, classification: 'pistol' },
@@ -42,8 +56,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'usp_s',
         displayName: 'USP-S',
+        description: 'Silenced pistol profile.',
         category: 'Pistols',
         priceCoin: 200,
+        rarity: 'milspec',
+        dropWeight: 10,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'secondary',
         placeholderRig: 'usp',
         stats: { damage: 35, fireRate: 60 / 352, magazine: 12, reserve: 24, speed: 240, classification: 'pistol' },
@@ -51,8 +71,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'deagle',
         displayName: 'Desert Eagle',
+        description: 'Heavy pistol profile.',
         category: 'Pistols',
         priceCoin: 700,
+        rarity: 'restricted',
+        dropWeight: 9,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'secondary',
         placeholderRig: 'usp',
         stats: { damage: 53, fireRate: 60 / 267, magazine: 7, reserve: 35, speed: 230, classification: 'pistol' },
@@ -60,8 +86,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'mac10',
         displayName: 'MAC-10',
+        description: 'Fast SMG profile.',
         category: 'SMG',
         priceCoin: 1050,
+        rarity: 'milspec',
+        dropWeight: 12,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 29, fireRate: 60 / 800, magazine: 30, reserve: 100, speed: 240, classification: 'smg' },
@@ -69,8 +101,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'mp9',
         displayName: 'MP9',
+        description: 'Mobile SMG profile.',
         category: 'SMG',
         priceCoin: 1250,
+        rarity: 'milspec',
+        dropWeight: 12,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 26, fireRate: 60 / 857, magazine: 30, reserve: 120, speed: 240, classification: 'smg' },
@@ -78,8 +116,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'p90',
         displayName: 'P90',
+        description: 'Large mag SMG profile.',
         category: 'SMG',
         priceCoin: 2350,
+        rarity: 'restricted',
+        dropWeight: 8,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 26, fireRate: 60 / 857, magazine: 50, reserve: 100, speed: 230, classification: 'smg' },
@@ -87,8 +131,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'ak47',
         displayName: 'AK-47',
+        description: 'Main rifle profile.',
         category: 'Rifles',
         priceCoin: 2700,
+        rarity: 'classified',
+        dropWeight: 7,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 36, fireRate: 60 / 600, magazine: 30, reserve: 90, speed: 215, classification: 'rifle' },
@@ -96,8 +146,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'm4a1_s',
         displayName: 'M4A1-S',
+        description: 'Silenced rifle profile.',
         category: 'Rifles',
         priceCoin: 2900,
+        rarity: 'classified',
+        dropWeight: 7,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 38, fireRate: 60 / 600, magazine: 20, reserve: 80, speed: 225, classification: 'rifle' },
@@ -105,8 +161,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'sg553',
         displayName: 'SG 553',
+        description: 'Scoped rifle profile.',
         category: 'Rifles',
         priceCoin: 3000,
+        rarity: 'restricted',
+        dropWeight: 7,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 30, fireRate: 60 / 545, magazine: 30, reserve: 90, speed: 210, classification: 'rifle' },
@@ -114,8 +176,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'aug',
         displayName: 'AUG',
+        description: 'Scoped CT rifle profile.',
         category: 'Rifles',
         priceCoin: 3300,
+        rarity: 'restricted',
+        dropWeight: 7,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 28, fireRate: 60 / 600, magazine: 30, reserve: 90, speed: 220, classification: 'rifle' },
@@ -123,8 +191,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'awp',
         displayName: 'AWP',
+        description: 'High damage sniper profile.',
         category: 'Sniper',
         priceCoin: 4750,
+        rarity: 'covert',
+        dropWeight: 4,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 115, fireRate: 60 / 41, magazine: 5, reserve: 30, speed: 200, classification: 'sniper' },
@@ -132,8 +206,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'xm1014',
         displayName: 'XM1014',
+        description: 'Auto shotgun profile.',
         category: 'Shotgun',
         priceCoin: 2000,
+        rarity: 'milspec',
+        dropWeight: 9,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 20, fireRate: 60 / 171, magazine: 7, reserve: 32, speed: 215, classification: 'shotgun' },
@@ -141,8 +221,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'negev',
         displayName: 'Negev',
+        description: 'Machinegun profile.',
         category: 'Machinegun',
         priceCoin: 1700,
+        rarity: 'restricted',
+        dropWeight: 8,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'primary',
         placeholderRig: 'ak',
         stats: { damage: 35, fireRate: 60 / 800, magazine: 150, reserve: 200, speed: 195, classification: 'machinegun' },
@@ -150,8 +236,14 @@ const BASE_WEAPON_CATALOG = [
     {
         weaponId: 'm9',
         displayName: 'M9 Knife',
+        description: 'Knife profile.',
         category: 'Knife',
         priceCoin: 0,
+        rarity: 'covert',
+        dropWeight: 2,
+        iconPath: '',
+        modelPath: '',
+        enabled: true,
         slot: 'knife',
         placeholderRig: 'm9',
         stats: { damage: 55, fireRate: 0.5, magazine: 1, reserve: 0, speed: 250, classification: 'knife' },
@@ -163,6 +255,25 @@ const DEFAULT_LOADOUT = {
     secondary: 'usp_s',
     knife: 'm9',
 };
+
+const createDefaultContentStudio = () => ({
+    packs: [
+        {
+            id: 'rifle_core_pack',
+            title: 'Rifle Core Pack',
+            description: 'Main rifle bundle for liveops editing.',
+            priceCoin: 6900,
+            enabled: true,
+            weaponIds: ['ak47', 'm4a1_s', 'sg553', 'aug', 'awp'],
+        },
+    ],
+    players: [
+        { id: 'default_ct_operator', title: 'CT Operator', description: 'Future player content slot.', enabled: true },
+    ],
+    maps: [
+        { id: 'mirage_map', title: 'Mirage', description: 'Future map content slot.', enabled: true },
+    ],
+});
 
 const createWeaponSkinPool = () => {
     const perWeapon = {
@@ -267,25 +378,41 @@ const createDefaultCases = () => {
         falcon_case: {
             id: 'falcon_case',
             title: 'Falcon Case',
+            description: 'Balanced drops for core rifles and pistols.',
+            offerId: 'case_falcon',
             openPriceCoin: 180,
+            priceCoin: 180,
+            enabled: true,
             drops: buildCaseDrops(caseAlpha),
         },
         mirage_case: {
             id: 'mirage_case',
             title: 'Mirage Case',
+            description: 'Higher tier drops with knife chance.',
+            offerId: 'case_mirage',
             openPriceCoin: 320,
+            priceCoin: 320,
+            enabled: true,
             drops: buildCaseDrops(caseBravo),
         },
         arsenal_case: {
             id: 'arsenal_case',
             title: 'Arsenal Case',
+            description: 'Heavy and sniper focused pool.',
+            offerId: 'case_arsenal',
             openPriceCoin: 420,
+            priceCoin: 420,
+            enabled: true,
             drops: buildCaseDrops(caseCharlie),
         },
         vortex_case: {
             id: 'vortex_case',
             title: 'Vortex Case',
+            description: 'Premium mixed pool with covert cosmetics.',
+            offerId: 'case_vortex',
             openPriceCoin: 520,
+            priceCoin: 520,
+            enabled: true,
             drops: buildCaseDrops(caseDelta),
         },
     };
@@ -369,8 +496,17 @@ const sanitizeWeaponCatalog = (rawCatalog, fallbackCatalog) => {
         output.push({
             weaponId,
             displayName: ensureString(item?.displayName, fallback.displayName || weaponId),
+            description: ensureString(item?.description, fallback.description || `${fallback.displayName || weaponId} profile.`),
             category: ensureString(item?.category, fallback.category || 'Rifles'),
             priceCoin: toInt(item?.priceCoin, fallback.priceCoin || 0, 0),
+            rarity: ensureString(item?.rarity, fallback.rarity || 'milspec').toLowerCase(),
+            dropWeight: toInt(item?.dropWeight, fallback.dropWeight || 10, 0),
+            iconPath: ensureString(item?.iconPath, fallback.iconPath || ''),
+            modelPath: ensureString(item?.modelPath, fallback.modelPath || ''),
+            modelPosition: ensureVec3(item?.modelPosition, fallback.modelPosition || [0.02, 0.98, 0.44]),
+            modelRotation: ensureVec3(item?.modelRotation, fallback.modelRotation || [0, 180, 0]),
+            modelScale: ensureVec3(item?.modelScale, fallback.modelScale || [1, 1, 1]),
+            enabled: item?.enabled !== false,
             slot,
             placeholderRig,
             stats: {
@@ -415,8 +551,64 @@ const sanitizeCaseDef = (rawCase, fallbackCase) => {
     return {
         id: ensureString(rawCase?.id, fallbackCase.id),
         title: ensureString(rawCase?.title, fallbackCase.title),
+        description: ensureString(rawCase?.description, fallbackCase.description || ''),
+        offerId: ensureString(rawCase?.offerId, fallbackCase.offerId || `offer_${fallbackCase.id}`),
         openPriceCoin: toPositiveInt(rawCase?.openPriceCoin, fallbackCase.openPriceCoin || 180),
+        priceCoin: toPositiveInt(rawCase?.priceCoin ?? rawCase?.openPriceCoin, fallbackCase.priceCoin || fallbackCase.openPriceCoin || 180),
+        enabled: rawCase?.enabled !== false,
         drops: sanitizeDrops(rawCase?.drops, fallbackCase.drops || []),
+    };
+};
+
+const sanitizeContentEntity = (raw, fallback = {}, prefix = 'item') => ({
+    id: ensureString(raw?.id, fallback.id || `${prefix}_1`).toLowerCase(),
+    title: ensureString(raw?.title, fallback.title || fallback.id || prefix),
+    description: ensureString(raw?.description, fallback.description || ''),
+    enabled: raw?.enabled !== false,
+});
+
+const sanitizePlayerEntity = (raw, fallback = {}, index = 0) => {
+    const base = sanitizeContentEntity(raw, fallback, 'player');
+    const meshVisibility = raw?.meshVisibility && typeof raw.meshVisibility === 'object' ? raw.meshVisibility : {};
+    const normalizedVisibility = {};
+    Object.keys(meshVisibility).forEach((key) => {
+        const safeKey = ensureString(key, '');
+        if (!safeKey) return;
+        normalizedVisibility[safeKey] = meshVisibility[key] !== false;
+    });
+    const variantPresets = Array.isArray(raw?.variantPresets) ? raw.variantPresets : [];
+    return {
+        ...base,
+        iconPath: ensureString(raw?.iconPath, fallback.iconPath || ''),
+        modelPath: ensureString(raw?.modelPath, fallback.modelPath || ''),
+        animationPath: ensureString(raw?.animationPath, fallback.animationPath || ''),
+        modelPosition: ensureVec3(raw?.modelPosition, fallback.modelPosition || [0, 0, 0]),
+        modelRotation: ensureVec3(raw?.modelRotation, fallback.modelRotation || [0, 180, 0]),
+        modelScale: ensureVec3(raw?.modelScale, fallback.modelScale || [1, 1, 1]),
+        meshVisibility: normalizedVisibility,
+        variantPresets: variantPresets.map((preset, presetIndex) => ({
+            id: ensureString(preset?.id, `variant_${presetIndex + 1}`).toLowerCase(),
+            title: ensureString(preset?.title, preset?.id || `Variant ${presetIndex + 1}`),
+            visibleMeshes: Array.isArray(preset?.visibleMeshes) ? preset.visibleMeshes.map((item) => ensureString(item, '')).filter(Boolean) : [],
+        })),
+        activeVariantId: ensureString(raw?.activeVariantId, fallback.activeVariantId || '').toLowerCase(),
+    };
+};
+
+const sanitizeContentStudio = (raw, weaponsCatalog, fallback) => {
+    const source = raw && typeof raw === 'object' ? raw : {};
+    const packs = Array.isArray(source.packs) ? source.packs : fallback.packs;
+    const players = Array.isArray(source.players) ? source.players : fallback.players;
+    const maps = Array.isArray(source.maps) ? source.maps : fallback.maps;
+    const weaponIds = new Set((Array.isArray(weaponsCatalog) ? weaponsCatalog : []).map((item) => item.weaponId));
+    return {
+        packs: packs.map((item, index) => ({
+            ...sanitizeContentEntity(item, fallback.packs[index] || { id: `pack_${index + 1}`, title: `Pack ${index + 1}` }, 'pack'),
+            priceCoin: toInt(item?.priceCoin, fallback.packs[index]?.priceCoin || 0, 0),
+            weaponIds: Array.isArray(item?.weaponIds) ? item.weaponIds.map((weaponId) => ensureString(weaponId, '').toLowerCase()).filter((weaponId) => weaponIds.has(weaponId)) : [],
+        })),
+        players: players.map((item, index) => sanitizePlayerEntity(item, fallback.players[index] || { id: `player_${index + 1}`, title: `Player ${index + 1}` }, index)),
+        maps: maps.map((item, index) => sanitizeContentEntity(item, fallback.maps[index] || { id: `map_${index + 1}`, title: `Map ${index + 1}` }, 'map')),
     };
 };
 
@@ -515,6 +707,7 @@ export const createDefaultLiveops = () => {
         weaponsCatalog: clone(BASE_WEAPON_CATALOG),
         defaultLoadout: clone(DEFAULT_LOADOUT),
         cases: createDefaultCases(),
+        contentStudio: createDefaultContentStudio(),
         progression: createDefaultProgressionConfig(),
         storefront: {
             offers: createStorefrontOffers(),
@@ -564,6 +757,7 @@ export const normalizeLiveops = (raw) => {
     };
 
     const progression = normalizeProgressionConfig(raw.progression);
+    const contentStudio = sanitizeContentStudio(raw.contentStudio, weaponsCatalog, fallback.contentStudio);
 
     return {
         currency: ensureString(raw.currency, fallback.currency).toLowerCase() === 'coin' ? 'coin' : fallback.currency,
@@ -573,6 +767,7 @@ export const normalizeLiveops = (raw) => {
         weaponsCatalog,
         defaultLoadout,
         cases,
+        contentStudio,
         progression,
         storefront,
     };
@@ -587,8 +782,7 @@ export const getCaseById = (liveops, caseId) => {
 
 export const getShopOffers = (liveops) => {
     const offers = liveops?.storefront?.offers;
-    if (!Array.isArray(offers)) return [];
-    return offers.filter((item) => item && item.type === 'case' && item.caseId);
+    return Array.isArray(offers) ? offers.filter(Boolean) : [];
 };
 
 export const getWeaponsCatalog = (liveops) => {
@@ -688,7 +882,11 @@ export const buildCasesCatalogResponse = (liveops) => {
         return {
             id: caseDef.id,
             title: caseDef.title,
+            description: caseDef.description || '',
+            offerId: caseDef.offerId || '',
             openPriceCoin: Math.max(1, Number(caseDef.openPriceCoin) || 180),
+            priceCoin: Math.max(1, Number(caseDef.priceCoin) || Math.max(1, Number(caseDef.openPriceCoin) || 180)),
+            enabled: caseDef.enabled !== false,
             drops,
         };
     });

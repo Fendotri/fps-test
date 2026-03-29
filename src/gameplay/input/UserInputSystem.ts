@@ -1,6 +1,7 @@
 import { UserInputEventEnum } from '../abstract/EventsEnum';
 import { UserInputEventPipe, UserInputEvent } from '../pipes/UserinputEventPipe';
 import { getModeRules, setActiveGameMode } from '../modes/modeRules';
+import { isDebugFreeCameraActive } from '@src/debug/DebugFreeCamera';
 
 type PlayNowDetail = {
     mode?: string;
@@ -29,6 +30,7 @@ export class UserInputSystem {
         });
 
         document.addEventListener('mousedown', (e: MouseEvent) => {
+            if (isDebugFreeCameraActive()) return;
             if (e.button === 0) {
                 UserInputEvent.detail.enum = UserInputEventEnum.BUTTON_TRIGGLE_DOWN;
                 UserInputEventPipe.dispatchEvent(UserInputEvent);
@@ -41,6 +43,7 @@ export class UserInputSystem {
         });
 
         document.addEventListener('mouseup', (e: MouseEvent) => {
+            if (isDebugFreeCameraActive()) return;
             if (e.button === 0) {
                 UserInputEvent.detail.enum = UserInputEventEnum.BUTTON_TRIGGLE_UP;
                 UserInputEventPipe.dispatchEvent(UserInputEvent);
@@ -48,10 +51,11 @@ export class UserInputSystem {
         });
 
         document.addEventListener('contextmenu', (e: MouseEvent) => {
-            if (this.matchLive || document.pointerLockElement) e.preventDefault();
+            if (isDebugFreeCameraActive() || this.matchLive || document.pointerLockElement) e.preventDefault();
         });
 
         document.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (isDebugFreeCameraActive()) return;
             if (e.code === 'Space' && e.repeat) return;
 
             switch (e.code) {
@@ -85,6 +89,10 @@ export class UserInputSystem {
                     }
                     break;
                 }
+                case 'KeyE':
+                    UserInputEvent.detail.enum = UserInputEventEnum.BUTTON_INTERACT;
+                    UserInputEventPipe.dispatchEvent(UserInputEvent);
+                    break;
                 case 'KeyW':
                     UserInputEvent.detail.enum = UserInputEventEnum.MOVE_FORWARD_DOWN;
                     UserInputEventPipe.dispatchEvent(UserInputEvent);
@@ -118,6 +126,7 @@ export class UserInputSystem {
         });
 
         document.addEventListener('keyup', (e: KeyboardEvent) => {
+            if (isDebugFreeCameraActive()) return;
             switch (e.code) {
                 case 'KeyW':
                     UserInputEvent.detail.enum = UserInputEventEnum.MOVE_FORWARD_UP;

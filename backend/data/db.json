@@ -1,13 +1,13 @@
 {
   "meta": {
     "version": 5,
-    "createdAt": "2026-03-27T06:54:23.520Z",
-    "updatedAt": "2026-03-27T08:02:02.759Z"
+    "createdAt": "2026-03-29T10:20:18.876Z",
+    "updatedAt": "2026-03-29T11:16:47.046Z"
   },
   "liveops": {
     "currency": "coin",
-    "revision": 1,
-    "updatedAt": "2026-03-20T00:16:08.993Z",
+    "revision": 19,
+    "updatedAt": "2026-03-29T10:35:31.957Z",
     "economy": {
       "starterWallet": 1200,
       "killBonus": 6,
@@ -23,8 +23,29 @@
       {
         "weaponId": "glock18",
         "displayName": "Glock-18",
-        "category": "Pistols",
-        "priceCoin": 200,
+        "description": "Glock-18 gameplay profile.",
+        "category": "2",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "secondary",
         "placeholderRig": "usp",
         "stats": {
@@ -33,14 +54,35 @@
           "magazine": 20,
           "reserve": 120,
           "speed": 240,
-          "classification": "pistol"
+          "classification": "2"
         }
       },
       {
         "weaponId": "usp_s",
         "displayName": "USP-S",
-        "category": "Pistols",
-        "priceCoin": 200,
+        "description": "USP-S gameplay profile.",
+        "category": "2",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "secondary",
         "placeholderRig": "usp",
         "stats": {
@@ -49,14 +91,35 @@
           "magazine": 12,
           "reserve": 24,
           "speed": 240,
-          "classification": "pistol"
+          "classification": "2"
         }
       },
       {
         "weaponId": "deagle",
         "displayName": "Desert Eagle",
-        "category": "Pistols",
-        "priceCoin": 700,
+        "description": "Desert Eagle gameplay profile.",
+        "category": "2",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "secondary",
         "placeholderRig": "usp",
         "stats": {
@@ -65,14 +128,35 @@
           "magazine": 7,
           "reserve": 35,
           "speed": 230,
-          "classification": "pistol"
+          "classification": "2"
         }
       },
       {
         "weaponId": "mac10",
         "displayName": "MAC-10",
-        "category": "SMG",
-        "priceCoin": 1050,
+        "description": "MAC-10 gameplay profile.",
+        "category": "4",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -81,14 +165,35 @@
           "magazine": 30,
           "reserve": 100,
           "speed": 240,
-          "classification": "smg"
+          "classification": "4"
         }
       },
       {
         "weaponId": "mp9",
         "displayName": "MP9",
-        "category": "SMG",
-        "priceCoin": 1250,
+        "description": "MP9 gameplay profile.",
+        "category": "4",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -97,14 +202,35 @@
           "magazine": 30,
           "reserve": 120,
           "speed": 240,
-          "classification": "smg"
+          "classification": "4"
         }
       },
       {
         "weaponId": "p90",
         "displayName": "P90",
-        "category": "SMG",
-        "priceCoin": 2350,
+        "description": "P90 gameplay profile.",
+        "category": "4",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -113,14 +239,35 @@
           "magazine": 50,
           "reserve": 100,
           "speed": 230,
-          "classification": "smg"
+          "classification": "4"
         }
       },
       {
         "weaponId": "ak47",
         "displayName": "AK-47",
-        "category": "Rifles",
-        "priceCoin": 2700,
+        "description": "AK-47 gameplay profile.",
+        "category": "Custom",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -129,30 +276,72 @@
           "magazine": 30,
           "reserve": 90,
           "speed": 215,
-          "classification": "rifle"
+          "classification": "2"
         }
       },
       {
         "weaponId": "m4a1_s",
         "displayName": "M4A1-S",
-        "category": "Rifles",
-        "priceCoin": 2900,
+        "description": "M4A1-S gameplay profile.",
+        "category": "Custom",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
           "damage": 38,
           "fireRate": 0.1,
-          "magazine": 20,
-          "reserve": 80,
+          "magazine": 25,
+          "reserve": 75,
           "speed": 225,
-          "classification": "rifle"
+          "classification": "2"
         }
       },
       {
         "weaponId": "sg553",
         "displayName": "SG 553",
-        "category": "Rifles",
-        "priceCoin": 3000,
+        "description": "SG 553 gameplay profile.",
+        "category": "Custom",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -161,14 +350,35 @@
           "magazine": 30,
           "reserve": 90,
           "speed": 210,
-          "classification": "rifle"
+          "classification": "2"
         }
       },
       {
         "weaponId": "aug",
         "displayName": "AUG",
-        "category": "Rifles",
-        "priceCoin": 3300,
+        "description": "AUG gameplay profile.",
+        "category": "Custom",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -177,30 +387,72 @@
           "magazine": 30,
           "reserve": 90,
           "speed": 220,
-          "classification": "rifle"
+          "classification": "2"
         }
       },
       {
         "weaponId": "awp",
         "displayName": "AWP",
-        "category": "Sniper",
-        "priceCoin": 4750,
+        "description": "AWP gameplay profile.",
+        "category": "1",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
           "damage": 115,
           "fireRate": 1.4634146341463414,
-          "magazine": 5,
+          "magazine": 10,
           "reserve": 30,
           "speed": 200,
-          "classification": "sniper"
+          "classification": "1"
         }
       },
       {
         "weaponId": "xm1014",
         "displayName": "XM1014",
-        "category": "Shotgun",
-        "priceCoin": 2000,
+        "description": "XM1014 gameplay profile.",
+        "category": "5",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -209,14 +461,35 @@
           "magazine": 7,
           "reserve": 32,
           "speed": 215,
-          "classification": "shotgun"
+          "classification": "5"
         }
       },
       {
         "weaponId": "negev",
         "displayName": "Negev",
-        "category": "Machinegun",
-        "priceCoin": 1700,
+        "description": "Negev gameplay profile.",
+        "category": "6",
+        "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "primary",
         "placeholderRig": "ak",
         "stats": {
@@ -225,14 +498,35 @@
           "magazine": 150,
           "reserve": 200,
           "speed": 195,
-          "classification": "machinegun"
+          "classification": "6"
         }
       },
       {
         "weaponId": "m9",
         "displayName": "M9 Knife",
-        "category": "Knife",
+        "description": "M9 Knife gameplay profile.",
+        "category": "3",
         "priceCoin": 0,
+        "rarity": "milspec",
+        "dropWeight": 10,
+        "iconPath": "",
+        "modelPath": "",
+        "modelPosition": [
+          0.02,
+          0.98,
+          0.44
+        ],
+        "modelRotation": [
+          0,
+          180,
+          0
+        ],
+        "modelScale": [
+          1,
+          1,
+          1
+        ],
+        "enabled": true,
         "slot": "knife",
         "placeholderRig": "m9",
         "stats": {
@@ -241,7 +535,7 @@
           "magazine": 1,
           "reserve": 0,
           "speed": 250,
-          "classification": "knife"
+          "classification": "3"
         }
       }
     ],
@@ -254,231 +548,131 @@
       "falcon_case": {
         "id": "falcon_case",
         "title": "Falcon Case",
+        "description": "Balanced rifle and pistol pool.",
+        "offerId": "case_falcon",
         "openPriceCoin": 180,
+        "priceCoin": 180,
+        "enabled": true,
         "drops": [
           {
-            "skin": "AK-47 | Forest Camo",
+            "skin": "Forest Camo AK",
             "weaponId": "ak47",
             "rarity": "milspec",
-            "weight": 15,
+            "weight": 24,
             "slot": "primary"
           },
           {
-            "skin": "AK-47 | Obsidian Rail",
-            "weaponId": "ak47",
-            "rarity": "restricted",
-            "weight": 12,
-            "slot": "primary"
-          },
-          {
-            "skin": "AK-47 | Copper Burst",
-            "weaponId": "ak47",
-            "rarity": "classified",
-            "weight": 9,
-            "slot": "primary"
-          },
-          {
-            "skin": "USP-S | Crimson Thread",
+            "skin": "Crimson USP",
             "weaponId": "usp_s",
             "rarity": "milspec",
-            "weight": 15,
-            "slot": "secondary"
+            "weight": 24,
+            "slot": "primary"
           },
           {
-            "skin": "USP-S | Nightline",
-            "weaponId": "usp_s",
+            "skin": "Ice Nova",
+            "weaponId": "xm1014",
+            "rarity": "milspec",
+            "weight": 18,
+            "slot": "primary"
+          },
+          {
+            "skin": "Carbon AWP",
+            "weaponId": "awp",
             "rarity": "restricted",
             "weight": 12,
             "slot": "secondary"
           },
           {
-            "skin": "USP-S | Arctic Veil",
-            "weaponId": "usp_s",
-            "rarity": "classified",
-            "weight": 9,
+            "skin": "Neon MP9",
+            "weaponId": "mp9",
+            "rarity": "restricted",
+            "weight": 12,
             "slot": "secondary"
           },
           {
-            "skin": "MP9 | Neon Flux",
-            "weaponId": "mp9",
-            "rarity": "milspec",
-            "weight": 15,
-            "slot": "primary"
-          },
-          {
-            "skin": "MP9 | Frost Circuit",
-            "weaponId": "mp9",
-            "rarity": "restricted",
-            "weight": 12,
-            "slot": "primary"
-          },
-          {
-            "skin": "MP9 | Delta Carbon",
-            "weaponId": "mp9",
+            "skin": "Night M9",
+            "weaponId": "m9",
             "rarity": "classified",
-            "weight": 9,
-            "slot": "primary"
+            "weight": 6,
+            "slot": "secondary"
           },
           {
-            "skin": "XM1014 | Quarry",
-            "weaponId": "xm1014",
-            "rarity": "milspec",
-            "weight": 15,
-            "slot": "primary"
-          },
-          {
-            "skin": "XM1014 | Black Tape",
-            "weaponId": "xm1014",
-            "rarity": "restricted",
-            "weight": 12,
-            "slot": "primary"
-          },
-          {
-            "skin": "XM1014 | Frostmark",
-            "weaponId": "xm1014",
-            "rarity": "classified",
-            "weight": 9,
-            "slot": "primary"
-          },
-          {
-            "skin": "Operator | Urban Heavy",
-            "weaponId": "",
-            "rarity": "classified",
-            "weight": 4,
-            "slot": "character"
-          },
-          {
-            "skin": "Operator | Dust Patrol",
-            "weaponId": "",
-            "rarity": "restricted",
-            "weight": 3,
-            "slot": "character"
-          },
-          {
-            "skin": "Operator | Mirage Ghost",
-            "weaponId": "",
+            "skin": "Bronze Mirage Gloves",
+            "weaponId": "mp9",
             "rarity": "covert",
-            "weight": 2,
-            "slot": "character"
+            "weight": 4,
+            "slot": "primary"
           }
         ]
       },
       "mirage_case": {
         "id": "mirage_case",
         "title": "Mirage Case",
+        "description": "Higher-tier drop pool with rarer finishes.",
+        "offerId": "case_mirage",
         "openPriceCoin": 320,
+        "priceCoin": 320,
+        "enabled": true,
         "drops": [
           {
-            "skin": "M4A1-S | White Fang",
-            "weaponId": "m4a1_s",
+            "skin": "Obsidian AK",
+            "weaponId": "ak47",
             "rarity": "restricted",
-            "weight": 13,
+            "weight": 18,
             "slot": "primary"
           },
           {
-            "skin": "M4A1-S | Night Pulse",
-            "weaponId": "m4a1_s",
+            "skin": "Ruby USP",
+            "weaponId": "usp_s",
             "rarity": "restricted",
-            "weight": 10,
+            "weight": 18,
             "slot": "primary"
           },
           {
-            "skin": "M4A1-S | Blue Fiber",
-            "weaponId": "m4a1_s",
+            "skin": "Azure Nova",
+            "weaponId": "xm1014",
+            "rarity": "restricted",
+            "weight": 14,
+            "slot": "primary"
+          },
+          {
+            "skin": "Gold Carbon AWP",
+            "weaponId": "awp",
             "rarity": "classified",
-            "weight": 7,
-            "slot": "primary"
-          },
-          {
-            "skin": "Desert Eagle | Brass Viper",
-            "weaponId": "deagle",
-            "rarity": "restricted",
-            "weight": 13,
-            "slot": "secondary"
-          },
-          {
-            "skin": "Desert Eagle | Obsidian Edge",
-            "weaponId": "deagle",
-            "rarity": "restricted",
             "weight": 10,
             "slot": "secondary"
           },
           {
-            "skin": "Desert Eagle | Sand Strike",
-            "weaponId": "deagle",
+            "skin": "Arctic MP9",
+            "weaponId": "mp9",
             "rarity": "classified",
-            "weight": 7,
+            "weight": 10,
             "slot": "secondary"
           },
           {
-            "skin": "P90 | Ion Bloom",
-            "weaponId": "p90",
-            "rarity": "restricted",
-            "weight": 13,
-            "slot": "primary"
-          },
-          {
-            "skin": "P90 | Amber Mesh",
-            "weaponId": "p90",
-            "rarity": "restricted",
-            "weight": 10,
-            "slot": "primary"
-          },
-          {
-            "skin": "P90 | Deep Scope",
-            "weaponId": "p90",
-            "rarity": "classified",
-            "weight": 7,
-            "slot": "primary"
-          },
-          {
-            "skin": "SG 553 | Mirage Sand",
-            "weaponId": "sg553",
-            "rarity": "restricted",
-            "weight": 13,
-            "slot": "primary"
-          },
-          {
-            "skin": "SG 553 | Signal Jam",
-            "weaponId": "sg553",
-            "rarity": "restricted",
-            "weight": 10,
-            "slot": "primary"
-          },
-          {
-            "skin": "SG 553 | Polar Front",
-            "weaponId": "sg553",
-            "rarity": "classified",
-            "weight": 7,
-            "slot": "primary"
-          },
-          {
-            "skin": "M9 | Night Stripe",
-            "weaponId": "m9",
-            "rarity": "classified",
-            "weight": 3,
-            "slot": "knife"
-          },
-          {
-            "skin": "M9 | Fade Wire",
+            "skin": "Ivory M9",
             "weaponId": "m9",
             "rarity": "covert",
-            "weight": 2,
-            "slot": "knife"
+            "weight": 6,
+            "slot": "secondary"
           },
           {
-            "skin": "M9 | Gold Spine",
-            "weaponId": "m9",
+            "skin": "Diamond Mirage Gloves",
+            "weaponId": "p90",
             "rarity": "contraband",
-            "weight": 1,
-            "slot": "knife"
+            "weight": 2,
+            "slot": "primary"
           }
         ]
       },
       "arsenal_case": {
         "id": "arsenal_case",
         "title": "Arsenal Case",
+        "description": "Heavy and sniper focused pool.",
+        "offerId": "case_arsenal",
         "openPriceCoin": 420,
+        "priceCoin": 420,
+        "enabled": true,
         "drops": [
           {
             "skin": "AWP | Carbon Fade",
@@ -590,7 +784,11 @@
       "vortex_case": {
         "id": "vortex_case",
         "title": "Vortex Case",
+        "description": "Premium mixed pool with covert cosmetics.",
+        "offerId": "case_vortex",
         "openPriceCoin": 520,
+        "priceCoin": 520,
+        "enabled": true,
         "drops": [
           {
             "skin": "Glock-18 | Pulse",
@@ -910,6 +1108,98 @@
         ]
       }
     },
+    "contentStudio": {
+      "packs": [
+        {
+          "id": "rifle_core_pack",
+          "title": "Rifle Core Pack",
+          "description": "Main rifle bundle for testing store content.",
+          "enabled": true,
+          "priceCoin": 6900,
+          "weaponIds": [
+            "ak47",
+            "m4a1_s",
+            "sg553",
+            "aug",
+            "awp"
+          ]
+        }
+      ],
+      "players": [
+        {
+          "id": "default_ct_operator",
+          "title": "CT Operator",
+          "description": "Reserved entity slot for future player content editing.",
+          "enabled": true,
+          "iconPath": "",
+          "modelPath": "/content/players/models/default_ct_operator__lowpolychar.fbx",
+          "animationPath": "",
+          "modelPosition": [
+            0,
+            0,
+            0
+          ],
+          "modelRotation": [
+            0,
+            0,
+            0
+          ],
+          "modelScale": [
+            1,
+            1,
+            1
+          ],
+          "meshVisibility": {
+            "Character_Male_FBI": true,
+            "Character_Female_FBI": false,
+            "Character_Male_civilian": false,
+            "Character_Female_civilian": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_male_1": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_male_4": true,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/beard_1": true,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/eyebrows_male": true,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/eyes_male": true,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_female_1": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/glasses_female": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_male_0": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/nose_female": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_female_2": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/nose_male": true,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_female_3": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_male_3": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/beard_0": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/eyebrows_female": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_female_0": false,
+            "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_male_2": false,
+            "Character_Female_sheriff": false,
+            "Character_Male_sheriff": false
+          },
+          "variantPresets": [
+            {
+              "id": "medik",
+              "title": "Medik",
+              "visibleMeshes": [
+                "Character_Male_FBI",
+                "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/hair_male_4",
+                "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/beard_1",
+                "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/eyebrows_male",
+                "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/eyes_male",
+                "LowPolyCharacter_Armature/mixamorigHips/mixamorigSpine/mixamorigSpine1/mixamorigSpine2/mixamorigNeck/mixamorigHead/mixamorigHeadTop_End/nose_male"
+              ]
+            }
+          ],
+          "activeVariantId": "medik"
+        }
+      ],
+      "maps": [
+        {
+          "id": "mirage_map",
+          "title": "Mirage",
+          "description": "Reserved entity slot for future map content editing.",
+          "enabled": true
+        }
+      ]
+    },
     "progression": {
       "quests": {
         "daily": [
@@ -1116,7 +1406,7 @@
           "caseId": "falcon_case",
           "priceCoin": 180,
           "price": 180,
-          "description": "Balanced drops for core rifles and pistols."
+          "description": "Balanced rifle and pistol pool."
         },
         {
           "id": "case_mirage",
@@ -1125,7 +1415,7 @@
           "caseId": "mirage_case",
           "priceCoin": 320,
           "price": 320,
-          "description": "Higher tier drops with knife chance."
+          "description": "Higher-tier drop pool with rarer finishes."
         },
         {
           "id": "case_arsenal",
@@ -1146,220 +1436,13 @@
           "description": "Premium mixed pool with covert cosmetics."
         },
         {
-          "id": "skin_weapon_1",
-          "title": "Glock-18 | Pulse",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "Glock-18 | Pulse",
-          "weaponId": "glock18",
-          "rarity": "milspec",
-          "priceCoin": 260,
-          "price": 260,
-          "description": "GLOCK18 demo skin."
-        },
-        {
-          "id": "skin_weapon_2",
-          "title": "Glock-18 | Carbon Dot",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "Glock-18 | Carbon Dot",
-          "weaponId": "glock18",
-          "rarity": "restricted",
-          "priceCoin": 285,
-          "price": 285,
-          "description": "GLOCK18 demo skin."
-        },
-        {
-          "id": "skin_weapon_3",
-          "title": "Glock-18 | Sunset Drift",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "Glock-18 | Sunset Drift",
-          "weaponId": "glock18",
-          "rarity": "classified",
-          "priceCoin": 310,
-          "price": 310,
-          "description": "GLOCK18 demo skin."
-        },
-        {
-          "id": "skin_weapon_4",
-          "title": "USP-S | Crimson Thread",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "USP-S | Crimson Thread",
-          "weaponId": "usp_s",
-          "rarity": "milspec",
-          "priceCoin": 335,
-          "price": 335,
-          "description": "USP_S demo skin."
-        },
-        {
-          "id": "skin_weapon_5",
-          "title": "USP-S | Nightline",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "USP-S | Nightline",
-          "weaponId": "usp_s",
-          "rarity": "restricted",
-          "priceCoin": 360,
-          "price": 360,
-          "description": "USP_S demo skin."
-        },
-        {
-          "id": "skin_weapon_6",
-          "title": "USP-S | Arctic Veil",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "USP-S | Arctic Veil",
-          "weaponId": "usp_s",
-          "rarity": "classified",
-          "priceCoin": 385,
-          "price": 385,
-          "description": "USP_S demo skin."
-        },
-        {
-          "id": "skin_weapon_7",
-          "title": "Desert Eagle | Brass Viper",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "Desert Eagle | Brass Viper",
-          "weaponId": "deagle",
-          "rarity": "milspec",
-          "priceCoin": 410,
-          "price": 410,
-          "description": "DEAGLE demo skin."
-        },
-        {
-          "id": "skin_weapon_8",
-          "title": "Desert Eagle | Obsidian Edge",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "Desert Eagle | Obsidian Edge",
-          "weaponId": "deagle",
-          "rarity": "restricted",
-          "priceCoin": 435,
-          "price": 435,
-          "description": "DEAGLE demo skin."
-        },
-        {
-          "id": "skin_weapon_9",
-          "title": "Desert Eagle | Sand Strike",
-          "type": "skin",
-          "slot": "secondary",
-          "skin": "Desert Eagle | Sand Strike",
-          "weaponId": "deagle",
-          "rarity": "classified",
-          "priceCoin": 460,
-          "price": 460,
-          "description": "DEAGLE demo skin."
-        },
-        {
-          "id": "skin_weapon_10",
-          "title": "MAC-10 | Reactor",
-          "type": "skin",
-          "slot": "primary",
-          "skin": "MAC-10 | Reactor",
-          "weaponId": "mac10",
-          "rarity": "milspec",
-          "priceCoin": 485,
-          "price": 485,
-          "description": "MAC10 demo skin."
-        },
-        {
-          "id": "skin_weapon_11",
-          "title": "MAC-10 | Urban Grid",
-          "type": "skin",
-          "slot": "primary",
-          "skin": "MAC-10 | Urban Grid",
-          "weaponId": "mac10",
-          "rarity": "restricted",
-          "priceCoin": 510,
-          "price": 510,
-          "description": "MAC10 demo skin."
-        },
-        {
-          "id": "skin_weapon_12",
-          "title": "MAC-10 | Ember Wire",
-          "type": "skin",
-          "slot": "primary",
-          "skin": "MAC-10 | Ember Wire",
-          "weaponId": "mac10",
-          "rarity": "classified",
-          "priceCoin": 535,
-          "price": 535,
-          "description": "MAC10 demo skin."
-        },
-        {
-          "id": "skin_character_1",
-          "title": "Operator | Urban Heavy",
-          "type": "skin",
-          "slot": "character",
-          "skin": "Operator | Urban Heavy",
-          "weaponId": "",
-          "rarity": "classified",
-          "priceCoin": 640,
-          "price": 640,
-          "description": "Character cosmetic demo."
-        },
-        {
-          "id": "skin_character_2",
-          "title": "Operator | Dust Patrol",
-          "type": "skin",
-          "slot": "character",
-          "skin": "Operator | Dust Patrol",
-          "weaponId": "",
-          "rarity": "restricted",
-          "priceCoin": 720,
-          "price": 720,
-          "description": "Character cosmetic demo."
-        },
-        {
-          "id": "skin_character_3",
-          "title": "Operator | Mirage Ghost",
-          "type": "skin",
-          "slot": "character",
-          "skin": "Operator | Mirage Ghost",
-          "weaponId": "",
-          "rarity": "covert",
-          "priceCoin": 800,
-          "price": 800,
-          "description": "Character cosmetic demo."
-        },
-        {
-          "id": "skin_knife_1",
-          "title": "M9 | Night Stripe",
-          "type": "skin",
-          "slot": "knife",
-          "skin": "M9 | Night Stripe",
-          "weaponId": "m9",
-          "rarity": "classified",
-          "priceCoin": 760,
-          "price": 760,
-          "description": "Knife cosmetic demo."
-        },
-        {
-          "id": "skin_knife_2",
-          "title": "M9 | Fade Wire",
-          "type": "skin",
-          "slot": "knife",
-          "skin": "M9 | Fade Wire",
-          "weaponId": "m9",
-          "rarity": "covert",
-          "priceCoin": 860,
-          "price": 860,
-          "description": "Knife cosmetic demo."
-        },
-        {
-          "id": "skin_knife_3",
-          "title": "M9 | Gold Spine",
-          "type": "skin",
-          "slot": "knife",
-          "skin": "M9 | Gold Spine",
-          "weaponId": "m9",
-          "rarity": "contraband",
-          "priceCoin": 960,
-          "price": 960,
-          "description": "Knife cosmetic demo."
+          "id": "rifle_core_pack",
+          "title": "Rifle Core Pack",
+          "type": "bundle",
+          "bundleSize": 5,
+          "priceCoin": 6900,
+          "price": 6900,
+          "description": "Main rifle bundle for testing store content."
         }
       ]
     }
@@ -1561,6 +1644,34 @@
             "calibrationMatches": 5,
             "calibrated": true,
             "tier": "blue"
+          },
+          "8f056420-66a3-4550-82eb-7b6c6299c7bf": {
+            "rating": 6297,
+            "matchesPlayed": 36,
+            "calibrationMatches": 5,
+            "calibrated": true,
+            "tier": "cyan"
+          },
+          "cd2e27b6-eb1e-4376-8a93-177849dbebfc": {
+            "rating": 5089,
+            "matchesPlayed": 1,
+            "calibrationMatches": 5,
+            "calibrated": false,
+            "tier": "unranked"
+          },
+          "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081": {
+            "rating": 5112,
+            "matchesPlayed": 2,
+            "calibrationMatches": 5,
+            "calibrated": false,
+            "tier": "unranked"
+          },
+          "b741e315-96fd-42be-a0be-be441b2b6016": {
+            "rating": 5171,
+            "matchesPlayed": 1,
+            "calibrationMatches": 5,
+            "calibrated": false,
+            "tier": "unranked"
           }
         }
       }
@@ -1619,7 +1730,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -1727,7 +1838,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -1891,7 +2002,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2005,7 +2116,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2113,7 +2224,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2221,7 +2332,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2329,7 +2440,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2437,7 +2548,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2543,7 +2654,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2654,7 +2765,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2768,7 +2879,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2876,7 +2987,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -2984,7 +3095,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3092,7 +3203,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3200,7 +3311,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3308,7 +3419,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3424,7 +3535,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3532,7 +3643,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3640,7 +3751,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3748,7 +3859,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3856,7 +3967,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -3964,7 +4075,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4072,7 +4183,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4180,7 +4291,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4288,7 +4399,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4396,7 +4507,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4504,7 +4615,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4612,7 +4723,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4720,7 +4831,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4828,7 +4939,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -4936,7 +5047,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5044,7 +5155,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5152,7 +5263,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5260,7 +5371,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5368,7 +5479,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5476,7 +5587,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5584,7 +5695,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5692,7 +5803,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5800,7 +5911,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -5908,7 +6019,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -6016,7 +6127,7 @@
       "progression": {
         "quests": {
           "daily": {
-            "key": "2026-03-27",
+            "key": "2026-03-29",
             "progress": {
               "daily_kills_15": 0,
               "daily_ak47_6": 0,
@@ -6075,6 +6186,561 @@
         "incoming": [],
         "outgoing": []
       }
+    },
+    {
+      "id": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "username": "KenanTG",
+      "passwordHash": "acae193e6be4d8575aa375002714c65c3b203e9a8ddc75ddd669c34815683aeae8ca75f37a69590375badf3802d1dd2d02679da7603e33a1297ef56132274e28",
+      "passwordSalt": "e328ed614cb9dbd54a0f1f13f47cf9ae",
+      "createdAt": "2026-03-27T08:34:29.992Z",
+      "wallet": 11566,
+      "inventory": {
+        "cases": {
+          "falcon_case": 1,
+          "mirage_case": 0
+        },
+        "skins": [
+          "MP9 | Neon Flux"
+        ],
+        "skinMeta": {
+          "MP9 | Neon Flux": {
+            "weaponId": "mp9",
+            "slot": "primary",
+            "rarity": "milspec"
+          }
+        },
+        "equipped": {
+          "character": "Heavy",
+          "rifle": "MP9 | Neon Flux",
+          "pistol": "Default USP",
+          "knife": "Default Knife"
+        }
+      },
+      "loadout": {
+        "primary": "ak47",
+        "secondary": "usp_s",
+        "knife": "m9"
+      },
+      "stats": {
+        "kills": 161,
+        "deaths": 198,
+        "assists": 3,
+        "headshots": 30,
+        "damage": 22262,
+        "score": 22342,
+        "wins": 23,
+        "maxKillStreak": 15,
+        "matchesPlayed": 36,
+        "lastMatchAt": "2026-03-29T11:16:30.160Z"
+      },
+      "premier": {
+        "rating": 6297,
+        "matchesPlayed": 36,
+        "calibrationMatches": 5,
+        "calibrated": true,
+        "tier": "cyan"
+      },
+      "progression": {
+        "quests": {
+          "daily": {
+            "key": "2026-03-29",
+            "progress": {
+              "daily_kills_15": 81,
+              "daily_ak47_6": 81,
+              "daily_assist_8": 1
+            },
+            "rewarded": {
+              "daily_kills_15": true,
+              "daily_ak47_6": true,
+              "daily_assist_8": false
+            }
+          },
+          "weekly": {
+            "key": "2026-W13",
+            "progress": {
+              "weekly_flawless_20": 0,
+              "weekly_headshot_30": 30,
+              "weekly_awp_20": 17
+            },
+            "rewarded": {
+              "weekly_flawless_20": false,
+              "weekly_headshot_30": true,
+              "weekly_awp_20": false
+            }
+          }
+        },
+        "achievements": {
+          "unlocked": {
+            "ach_kill_10": "2026-03-27T09:23:28.549Z",
+            "ach_kill_100": "2026-03-29T08:35:10.019Z"
+          }
+        },
+        "weeklyLogin": {
+          "key": "2026-W13",
+          "claimed": {}
+        },
+        "cosmetics": {
+          "title": "Rookie",
+          "nameColor": "default",
+          "avatar": "rookie_ops",
+          "avatarFrame": "default",
+          "unlockedTitles": [
+            "Rookie",
+            "Trigger Finger",
+            "Entry Fragger"
+          ],
+          "unlockedNameColors": [
+            "default",
+            "cyan"
+          ],
+          "unlockedAvatars": [
+            "rookie_ops",
+            "dust_raider"
+          ],
+          "unlockedAvatarFrames": [
+            "default"
+          ]
+        }
+      },
+      "friends": {
+        "friends": [],
+        "incoming": [],
+        "outgoing": []
+      },
+      "tokenVersion": 1,
+      "usernameLower": "kenantg"
+    },
+    {
+      "id": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "username": "kenantg2",
+      "passwordHash": "74c4a5e6a4e48a89e6763efb33bfc1db7241eee636a89d6a2689bd2044df5664bab98df6a3c2babc59ec7a2a7238cf3d0da75333d1904cb64937addff48aa91d",
+      "passwordSalt": "5acad898847053d7143519ad520fa7b7",
+      "createdAt": "2026-03-27T15:06:53.663Z",
+      "wallet": 1492,
+      "inventory": {
+        "cases": {
+          "falcon_case": 1,
+          "mirage_case": 0
+        },
+        "skins": [],
+        "skinMeta": {},
+        "equipped": {
+          "character": "Heavy",
+          "rifle": "Default AK",
+          "pistol": "Default USP",
+          "knife": "Default Knife"
+        }
+      },
+      "loadout": {
+        "primary": "ak47",
+        "secondary": "usp_s",
+        "knife": "m9"
+      },
+      "stats": {
+        "kills": 7,
+        "deaths": 13,
+        "assists": 0,
+        "headshots": 0,
+        "damage": 702,
+        "score": 489,
+        "wins": 0,
+        "maxKillStreak": 3,
+        "matchesPlayed": 1,
+        "lastMatchAt": "2026-03-27T15:33:01.702Z"
+      },
+      "premier": {
+        "rating": 5089,
+        "matchesPlayed": 1,
+        "calibrationMatches": 5,
+        "calibrated": false,
+        "tier": "unranked"
+      },
+      "progression": {
+        "quests": {
+          "daily": {
+            "key": "2026-03-29",
+            "progress": {
+              "daily_kills_15": 0,
+              "daily_ak47_6": 0,
+              "daily_assist_8": 0
+            },
+            "rewarded": {
+              "daily_kills_15": false,
+              "daily_ak47_6": false,
+              "daily_assist_8": false
+            }
+          },
+          "weekly": {
+            "key": "2026-W13",
+            "progress": {
+              "weekly_flawless_20": 0,
+              "weekly_headshot_30": 0,
+              "weekly_awp_20": 0
+            },
+            "rewarded": {
+              "weekly_flawless_20": false,
+              "weekly_headshot_30": false,
+              "weekly_awp_20": false
+            }
+          }
+        },
+        "achievements": {
+          "unlocked": {}
+        },
+        "weeklyLogin": {
+          "key": "2026-W13",
+          "claimed": {}
+        },
+        "cosmetics": {
+          "title": "Rookie",
+          "nameColor": "default",
+          "avatar": "rookie_ops",
+          "avatarFrame": "default",
+          "unlockedTitles": [
+            "Rookie"
+          ],
+          "unlockedNameColors": [
+            "default"
+          ],
+          "unlockedAvatars": [
+            "rookie_ops"
+          ],
+          "unlockedAvatarFrames": [
+            "default"
+          ]
+        }
+      },
+      "friends": {
+        "friends": [],
+        "incoming": [],
+        "outgoing": []
+      },
+      "tokenVersion": 1,
+      "usernameLower": "kenantg2"
+    },
+    {
+      "id": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+      "username": "TestKenan",
+      "passwordHash": "f6feb8970eef24a5b3aa5b17249c01cce321473d3d5dd7e5dfbc57d8d0db1eb377827fabefaad3fccde52db20782f2d7302cd2cd9b6d9cf21e78704ba5181243",
+      "passwordSalt": "c7d36740fe055c83d63cf2529af79f7e",
+      "createdAt": "2026-03-27T16:10:40.266Z",
+      "wallet": 1200,
+      "inventory": {
+        "cases": {
+          "falcon_case": 1,
+          "mirage_case": 0
+        },
+        "skins": [],
+        "skinMeta": {},
+        "equipped": {
+          "character": "Heavy",
+          "rifle": "Default AK",
+          "pistol": "Default USP",
+          "knife": "Default Knife"
+        }
+      },
+      "loadout": {
+        "primary": "ak47",
+        "secondary": "usp_s",
+        "knife": "m9"
+      },
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "assists": 0,
+        "headshots": 0,
+        "damage": 0,
+        "score": 0,
+        "wins": 0,
+        "maxKillStreak": 0,
+        "matchesPlayed": 0,
+        "lastMatchAt": null
+      },
+      "premier": {
+        "rating": 5000,
+        "matchesPlayed": 0,
+        "calibrationMatches": 5,
+        "calibrated": false,
+        "tier": "unranked"
+      },
+      "progression": {
+        "quests": {
+          "daily": {
+            "key": "2026-03-29",
+            "progress": {
+              "daily_kills_15": 0,
+              "daily_ak47_6": 0,
+              "daily_assist_8": 0
+            },
+            "rewarded": {
+              "daily_kills_15": false,
+              "daily_ak47_6": false,
+              "daily_assist_8": false
+            }
+          },
+          "weekly": {
+            "key": "2026-W13",
+            "progress": {
+              "weekly_flawless_20": 0,
+              "weekly_headshot_30": 0,
+              "weekly_awp_20": 0
+            },
+            "rewarded": {
+              "weekly_flawless_20": false,
+              "weekly_headshot_30": false,
+              "weekly_awp_20": false
+            }
+          }
+        },
+        "achievements": {
+          "unlocked": {}
+        },
+        "weeklyLogin": {
+          "key": "2026-W13",
+          "claimed": {}
+        },
+        "cosmetics": {
+          "title": "Rookie",
+          "nameColor": "default",
+          "avatar": "rookie_ops",
+          "avatarFrame": "default",
+          "unlockedTitles": [
+            "Rookie"
+          ],
+          "unlockedNameColors": [
+            "default"
+          ],
+          "unlockedAvatars": [
+            "rookie_ops"
+          ],
+          "unlockedAvatarFrames": [
+            "default"
+          ]
+        }
+      },
+      "friends": {
+        "friends": [],
+        "incoming": [],
+        "outgoing": []
+      },
+      "tokenVersion": 1,
+      "usernameLower": "testkenan"
+    },
+    {
+      "id": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+      "username": "kenan3",
+      "passwordHash": "096e7fb7f69ae31f0c4b541d359c850438623a6d1eeb632426771b1b92857265c989d47a8cdb409e201a73a30c38de35cda279f58e644b5d46962b1fae3cc904",
+      "passwordSalt": "c8ecbc774c2c171b046124b4de075528",
+      "createdAt": "2026-03-29T10:09:08.168Z",
+      "wallet": 1630,
+      "inventory": {
+        "cases": {
+          "falcon_case": 1,
+          "mirage_case": 0
+        },
+        "skins": [],
+        "skinMeta": {},
+        "equipped": {
+          "character": "Heavy",
+          "rifle": "Default AK",
+          "pistol": "Default USP",
+          "knife": "Default Knife"
+        }
+      },
+      "loadout": {
+        "primary": "ak47",
+        "secondary": "usp_s",
+        "knife": "m9"
+      },
+      "stats": {
+        "kills": 0,
+        "deaths": 4,
+        "assists": 0,
+        "headshots": 0,
+        "damage": 0,
+        "score": 0,
+        "wins": 1,
+        "maxKillStreak": 0,
+        "matchesPlayed": 2,
+        "lastMatchAt": "2026-03-29T10:41:19.396Z"
+      },
+      "premier": {
+        "rating": 5112,
+        "matchesPlayed": 2,
+        "calibrationMatches": 5,
+        "calibrated": false,
+        "tier": "unranked"
+      },
+      "progression": {
+        "quests": {
+          "daily": {
+            "key": "2026-03-29",
+            "progress": {
+              "daily_kills_15": 0,
+              "daily_ak47_6": 0,
+              "daily_assist_8": 0
+            },
+            "rewarded": {
+              "daily_kills_15": false,
+              "daily_ak47_6": false,
+              "daily_assist_8": false
+            }
+          },
+          "weekly": {
+            "key": "2026-W13",
+            "progress": {
+              "weekly_flawless_20": 0,
+              "weekly_headshot_30": 0,
+              "weekly_awp_20": 0
+            },
+            "rewarded": {
+              "weekly_flawless_20": false,
+              "weekly_headshot_30": false,
+              "weekly_awp_20": false
+            }
+          }
+        },
+        "achievements": {
+          "unlocked": {}
+        },
+        "weeklyLogin": {
+          "key": "2026-W13",
+          "claimed": {}
+        },
+        "cosmetics": {
+          "title": "Rookie",
+          "nameColor": "default",
+          "avatar": "rookie_ops",
+          "avatarFrame": "default",
+          "unlockedTitles": [
+            "Rookie"
+          ],
+          "unlockedNameColors": [
+            "default"
+          ],
+          "unlockedAvatars": [
+            "rookie_ops"
+          ],
+          "unlockedAvatarFrames": [
+            "default"
+          ]
+        }
+      },
+      "friends": {
+        "friends": [],
+        "incoming": [],
+        "outgoing": []
+      },
+      "tokenVersion": 1,
+      "usernameLower": "kenan3"
+    },
+    {
+      "id": "b741e315-96fd-42be-a0be-be441b2b6016",
+      "username": "test1",
+      "passwordHash": "10f338430689ad01bf7f8ae848027501380fedee9a9714e4d542122023ef3bc7ea8c6d174923b4514303c2bc5f33fa79adb34c32ce9a1b705d0c6b2b93bc824a",
+      "passwordSalt": "9c3454f933df1830df2d96ca1b2789d5",
+      "createdAt": "2026-03-29T10:32:14.508Z",
+      "wallet": 1564,
+      "inventory": {
+        "cases": {
+          "falcon_case": 1,
+          "mirage_case": 0
+        },
+        "skins": [],
+        "skinMeta": {},
+        "equipped": {
+          "character": "Heavy",
+          "rifle": "Default AK",
+          "pistol": "Default USP",
+          "knife": "Default Knife"
+        }
+      },
+      "loadout": {
+        "primary": "ak47",
+        "secondary": "usp_s",
+        "knife": "m9"
+      },
+      "stats": {
+        "kills": 4,
+        "deaths": 1,
+        "assists": 0,
+        "headshots": 0,
+        "damage": 1042,
+        "score": 789,
+        "wins": 1,
+        "maxKillStreak": 4,
+        "matchesPlayed": 1,
+        "lastMatchAt": "2026-03-29T10:37:25.709Z"
+      },
+      "premier": {
+        "rating": 5171,
+        "matchesPlayed": 1,
+        "calibrationMatches": 5,
+        "calibrated": false,
+        "tier": "unranked"
+      },
+      "progression": {
+        "quests": {
+          "daily": {
+            "key": "2026-03-29",
+            "progress": {
+              "daily_kills_15": 4,
+              "daily_ak47_6": 4,
+              "daily_assist_8": 0
+            },
+            "rewarded": {
+              "daily_kills_15": false,
+              "daily_ak47_6": false,
+              "daily_assist_8": false
+            }
+          },
+          "weekly": {
+            "key": "2026-W13",
+            "progress": {
+              "weekly_flawless_20": 0,
+              "weekly_headshot_30": 0,
+              "weekly_awp_20": 0
+            },
+            "rewarded": {
+              "weekly_flawless_20": false,
+              "weekly_headshot_30": false,
+              "weekly_awp_20": false
+            }
+          }
+        },
+        "achievements": {
+          "unlocked": {}
+        },
+        "weeklyLogin": {
+          "key": "2026-W13",
+          "claimed": {}
+        },
+        "cosmetics": {
+          "title": "Rookie",
+          "nameColor": "default",
+          "avatar": "rookie_ops",
+          "avatarFrame": "default",
+          "unlockedTitles": [
+            "Rookie"
+          ],
+          "unlockedNameColors": [
+            "default"
+          ],
+          "unlockedAvatars": [
+            "rookie_ops"
+          ],
+          "unlockedAvatarFrames": [
+            "default"
+          ]
+        }
+      },
+      "friends": {
+        "friends": [],
+        "incoming": [],
+        "outgoing": []
+      },
+      "tokenVersion": 1,
+      "usernameLower": "test1"
     }
   ],
   "matches": [
@@ -6299,6 +6965,1291 @@
       "durationSeconds": 309,
       "mapName": "mirage",
       "createdAt": "2026-03-23T14:36:30.809Z"
+    },
+    {
+      "id": "592cb4cc-ad12-46b7-bb1b-5129bfe3e810",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 5,
+      "assists": 0,
+      "damage": 27,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 6,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 0,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 0,
+        "win": 0,
+        "total": 0
+      },
+      "questReward": 0,
+      "premierBefore": 5000,
+      "premierAfter": 4997,
+      "eloDelta": -3,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T08:42:45.848Z"
+    },
+    {
+      "id": "03307a97-2884-4e00-a346-1ed2da5eedcf",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 1,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 5,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 0,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 0,
+        "win": 0,
+        "total": 0
+      },
+      "questReward": 0,
+      "premierBefore": 4997,
+      "premierAfter": 5029,
+      "eloDelta": 32,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T08:49:23.799Z"
+    },
+    {
+      "id": "39efee51-cdf7-49b6-b1f1-d75107389998",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 20,
+      "deaths": 11,
+      "assists": 1,
+      "damage": 1865,
+      "score": 2586,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 11,
+      "weaponKills": {
+        "ak47": 17,
+        "m9": 1,
+        "usp_s": 2
+      },
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 460,
+      "rewardBreakdown": {
+        "kill": 120,
+        "placement": 220,
+        "win": 120,
+        "total": 460
+      },
+      "questReward": 300,
+      "premierBefore": 5029,
+      "premierAfter": 5171,
+      "eloDelta": 142,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T09:23:28.550Z"
+    },
+    {
+      "id": "bc42ca09-4c53-4536-b135-086d12ae776a",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 16,
+      "deaths": 12,
+      "assists": 0,
+      "damage": 1351,
+      "score": 1831,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 8,
+      "weaponKills": {
+        "ak47": 16
+      },
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 436,
+      "rewardBreakdown": {
+        "kill": 96,
+        "placement": 220,
+        "win": 120,
+        "total": 436
+      },
+      "questReward": 0,
+      "premierBefore": 5171,
+      "premierAfter": 5291,
+      "eloDelta": 120,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T09:32:03.827Z"
+    },
+    {
+      "id": "53dfaeb8-2d39-4506-b2b6-783a77e8bee9",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 7,
+      "deaths": 15,
+      "assists": 0,
+      "damage": 843,
+      "score": 530,
+      "wins": 0,
+      "headshots": 2,
+      "maxKillStreak": 5,
+      "weaponKills": {
+        "ak47": 2,
+        "m4a1_s": 5
+      },
+      "placement": 4,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 42,
+      "rewardBreakdown": {
+        "kill": 42,
+        "placement": 0,
+        "win": 0,
+        "total": 42
+      },
+      "questReward": 0,
+      "premierBefore": 5291,
+      "premierAfter": 5323,
+      "eloDelta": 32,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T09:58:53.396Z"
+    },
+    {
+      "id": "3df854bc-b483-4088-9ec0-078c3123b722",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 4,
+      "deaths": 10,
+      "assists": 1,
+      "damage": 526,
+      "score": 354,
+      "wins": 0,
+      "headshots": 1,
+      "maxKillStreak": 2,
+      "weaponKills": {
+        "ak47": 4
+      },
+      "placement": 4,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 24,
+      "rewardBreakdown": {
+        "kill": 24,
+        "placement": 0,
+        "win": 0,
+        "total": 24
+      },
+      "questReward": 0,
+      "premierBefore": 5323,
+      "premierAfter": 5340,
+      "eloDelta": 17,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T10:25:57.202Z"
+    },
+    {
+      "id": "e1ab2fd2-0888-47a1-87f6-8b17714c312c",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 6,
+      "deaths": 4,
+      "assists": 0,
+      "damage": 541,
+      "score": 807,
+      "wins": 1,
+      "headshots": 1,
+      "maxKillStreak": 5,
+      "weaponKills": {
+        "ak47": 6
+      },
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 376,
+      "rewardBreakdown": {
+        "kill": 36,
+        "placement": 220,
+        "win": 120,
+        "total": 376
+      },
+      "questReward": 0,
+      "premierBefore": 5340,
+      "premierAfter": 5389,
+      "eloDelta": 49,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T10:44:20.348Z"
+    },
+    {
+      "id": "9a3ced94-0fb6-4b4c-8e8f-c2b026ac64d9",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5389,
+      "premierAfter": 5429,
+      "eloDelta": 40,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T10:49:28.201Z"
+    },
+    {
+      "id": "bec940b9-9341-4e1b-ad84-373ad96e2b9f",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 9,
+      "deaths": 12,
+      "assists": 0,
+      "damage": 894,
+      "score": 834,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 9,
+      "weaponKills": {
+        "ak47": 1,
+        "m4a1_s": 8
+      },
+      "placement": 3,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 144,
+      "rewardBreakdown": {
+        "kill": 54,
+        "placement": 90,
+        "win": 0,
+        "total": 144
+      },
+      "questReward": 0,
+      "premierBefore": 5429,
+      "premierAfter": 5457,
+      "eloDelta": 28,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T11:16:05.110Z"
+    },
+    {
+      "id": "928cc579-3e11-4a0f-9551-7192c8c61d09",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 4,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 6,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 0,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 0,
+        "win": 0,
+        "total": 0
+      },
+      "questReward": 0,
+      "premierBefore": 5457,
+      "premierAfter": 5453,
+      "eloDelta": -4,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T11:28:15.697Z"
+    },
+    {
+      "id": "8f3202ed-6afc-489e-9ae0-996864500a17",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 14,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 6,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 0,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 0,
+        "win": 0,
+        "total": 0
+      },
+      "questReward": 0,
+      "premierBefore": 5453,
+      "premierAfter": 5447,
+      "eloDelta": -6,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T11:52:43.778Z"
+    },
+    {
+      "id": "85695e51-11d9-4b16-8daa-3e752f28b56d",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 14,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 6,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 0,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 0,
+        "win": 0,
+        "total": 0
+      },
+      "questReward": 0,
+      "premierBefore": 5447,
+      "premierAfter": 5441,
+      "eloDelta": -6,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T12:32:16.930Z"
+    },
+    {
+      "id": "f059ac00-5f92-486d-858c-97f745aee7da",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 7,
+      "deaths": 7,
+      "assists": 0,
+      "damage": 1438,
+      "score": 1102,
+      "wins": 1,
+      "headshots": 2,
+      "maxKillStreak": 4,
+      "weaponKills": {
+        "ak47": 1,
+        "awp": 6
+      },
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 382,
+      "rewardBreakdown": {
+        "kill": 42,
+        "placement": 220,
+        "win": 120,
+        "total": 382
+      },
+      "questReward": 0,
+      "premierBefore": 5441,
+      "premierAfter": 5491,
+      "eloDelta": 50,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T13:11:20.486Z"
+    },
+    {
+      "id": "dcf90e49-ef0b-47bf-b611-bd4406eb1d60",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 10,
+      "deaths": 7,
+      "assists": 0,
+      "damage": 2464,
+      "score": 1946,
+      "wins": 1,
+      "headshots": 4,
+      "maxKillStreak": 7,
+      "weaponKills": {
+        "awp": 10
+      },
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 400,
+      "rewardBreakdown": {
+        "kill": 60,
+        "placement": 220,
+        "win": 120,
+        "total": 400
+      },
+      "questReward": 0,
+      "premierBefore": 5491,
+      "premierAfter": 5545,
+      "eloDelta": 54,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T13:20:09.823Z"
+    },
+    {
+      "id": "b67a5723-3e2d-4329-b3a3-505a249f2db9",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 1,
+      "deaths": 4,
+      "assists": 0,
+      "damage": 111,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 1,
+      "weaponKills": {
+        "awp": 1
+      },
+      "placement": 2,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 146,
+      "rewardBreakdown": {
+        "kill": 6,
+        "placement": 140,
+        "win": 0,
+        "total": 146
+      },
+      "questReward": 0,
+      "premierBefore": 5545,
+      "premierAfter": 5569,
+      "eloDelta": 24,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T13:27:25.364Z"
+    },
+    {
+      "id": "16d6aa24-fc90-41bc-8a90-b557ed71bb2b",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5569,
+      "premierAfter": 5609,
+      "eloDelta": 40,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T13:44:37.022Z"
+    },
+    {
+      "id": "3fd82eb6-5edd-4331-9f60-c7b9ac073109",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5609,
+      "premierAfter": 5649,
+      "eloDelta": 40,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T13:51:06.063Z"
+    },
+    {
+      "id": "5ac5163e-962d-419e-8a09-e542ec4b70ed",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5649,
+      "premierAfter": 5689,
+      "eloDelta": 40,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T13:56:21.073Z"
+    },
+    {
+      "id": "317a3486-5f55-422b-a8f7-0def4984a65a",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5689,
+      "premierAfter": 5729,
+      "eloDelta": 40,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T14:01:36.084Z"
+    },
+    {
+      "id": "e21008c3-dfeb-4586-962c-3585ba9bcf47",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5729,
+      "premierAfter": 5769,
+      "eloDelta": 40,
+      "durationSeconds": 506,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T14:37:07.660Z"
+    },
+    {
+      "id": "1175d95f-7020-4849-b555-8b6da14de140",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5769,
+      "premierAfter": 5809,
+      "eloDelta": 40,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T15:32:55.104Z"
+    },
+    {
+      "id": "ecc6c3cc-f095-437e-9fe4-18cbbc4c9f11",
+      "mode": "ffa",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "kills": 7,
+      "deaths": 13,
+      "assists": 0,
+      "damage": 702,
+      "score": 489,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 3,
+      "weaponKills": {
+        "ak47": 7
+      },
+      "placement": 3,
+      "playerCount": 6,
+      "opponentAvgElo": 18840,
+      "reward": 132,
+      "rewardBreakdown": {
+        "kill": 42,
+        "placement": 90,
+        "win": 0,
+        "total": 132
+      },
+      "questReward": 160,
+      "premierBefore": 5000,
+      "premierAfter": 5089,
+      "eloDelta": 89,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-27T15:33:01.703Z"
+    },
+    {
+      "id": "4ec95400-baa1-4985-80bc-904beabe366d",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 21,
+      "deaths": 8,
+      "assists": 1,
+      "damage": 2136,
+      "score": 2973,
+      "wins": 1,
+      "headshots": 1,
+      "maxKillStreak": 8,
+      "weaponKills": {
+        "ak47": 21
+      },
+      "placement": 1,
+      "playerCount": 3,
+      "opponentAvgElo": 19500,
+      "reward": 466,
+      "rewardBreakdown": {
+        "kill": 126,
+        "placement": 220,
+        "win": 120,
+        "total": 466
+      },
+      "questReward": 300,
+      "premierBefore": 5809,
+      "premierAfter": 5863,
+      "eloDelta": 54,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T08:35:10.025Z"
+    },
+    {
+      "id": "70a28dcb-250e-431c-8bcf-6f381663f896",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 14,
+      "deaths": 12,
+      "assists": 0,
+      "damage": 1542,
+      "score": 1862,
+      "wins": 1,
+      "headshots": 5,
+      "maxKillStreak": 6,
+      "weaponKills": {
+        "ak47": 14
+      },
+      "placement": 1,
+      "playerCount": 3,
+      "opponentAvgElo": 19500,
+      "reward": 424,
+      "rewardBreakdown": {
+        "kill": 84,
+        "placement": 220,
+        "win": 120,
+        "total": 424
+      },
+      "questReward": 0,
+      "premierBefore": 5863,
+      "premierAfter": 5917,
+      "eloDelta": 54,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T08:47:56.611Z"
+    },
+    {
+      "id": "1a3920be-a00c-4973-8990-b916e7597cc9",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 7,
+      "deaths": 10,
+      "assists": 0,
+      "damage": 811,
+      "score": 702,
+      "wins": 0,
+      "headshots": 1,
+      "maxKillStreak": 7,
+      "weaponKills": {
+        "ak47": 7
+      },
+      "placement": 3,
+      "playerCount": 3,
+      "opponentAvgElo": 19500,
+      "reward": 132,
+      "rewardBreakdown": {
+        "kill": 42,
+        "placement": 90,
+        "win": 0,
+        "total": 132
+      },
+      "questReward": 0,
+      "premierBefore": 5917,
+      "premierAfter": 5923,
+      "eloDelta": 6,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T08:57:15.790Z"
+    },
+    {
+      "id": "198893a5-08bb-42f9-bc0c-b1171e0f6ba1",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 2,
+      "playerCount": 3,
+      "opponentAvgElo": 19500,
+      "reward": 140,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 140,
+        "win": 0,
+        "total": 140
+      },
+      "questReward": 0,
+      "premierBefore": 5923,
+      "premierAfter": 5941,
+      "eloDelta": 18,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T09:02:30.815Z"
+    },
+    {
+      "id": "a78e11ea-a8cd-411d-a8e2-8bb884ef243e",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 10,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 3,
+      "playerCount": 3,
+      "opponentAvgElo": 19500,
+      "reward": 90,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 90,
+        "win": 0,
+        "total": 90
+      },
+      "questReward": 0,
+      "premierBefore": 5941,
+      "premierAfter": 5935,
+      "eloDelta": -6,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T09:14:02.935Z"
+    },
+    {
+      "id": "48ca5871-bd67-4078-aaa6-9649ff1a95e0",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 2,
+      "deaths": 11,
+      "assists": 0,
+      "damage": 81,
+      "score": 222,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 2,
+      "weaponKills": {
+        "ak47": 2
+      },
+      "placement": 3,
+      "playerCount": 3,
+      "opponentAvgElo": 19500,
+      "reward": 102,
+      "rewardBreakdown": {
+        "kill": 12,
+        "placement": 90,
+        "win": 0,
+        "total": 102
+      },
+      "questReward": 0,
+      "premierBefore": 5935,
+      "premierAfter": 5930,
+      "eloDelta": -5,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T09:19:17.953Z"
+    },
+    {
+      "id": "58c90e87-df95-4899-a588-74a66ae223bb",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 5,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 3308,
+      "score": 1868,
+      "wins": 1,
+      "headshots": 3,
+      "maxKillStreak": 5,
+      "weaponKills": {
+        "ak47": 5
+      },
+      "placement": 1,
+      "playerCount": 2,
+      "opponentAvgElo": 8500,
+      "reward": 370,
+      "rewardBreakdown": {
+        "kill": 30,
+        "placement": 220,
+        "win": 120,
+        "total": 370
+      },
+      "questReward": 0,
+      "premierBefore": 5930,
+      "premierAfter": 5976,
+      "eloDelta": 46,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T09:44:43.012Z"
+    },
+    {
+      "id": "6e97b97c-b728-4f58-931e-bde4a4525aed",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 2,
+      "opponentAvgElo": 8500,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 5976,
+      "premierAfter": 6008,
+      "eloDelta": 32,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T09:49:57.933Z"
+    },
+    {
+      "id": "7d1ca6bb-10cf-4455-ac34-02be7a514362",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 1,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 1030,
+      "score": 518,
+      "wins": 1,
+      "headshots": 1,
+      "maxKillStreak": 1,
+      "weaponKills": {
+        "ak47": 1
+      },
+      "placement": 1,
+      "playerCount": 2,
+      "opponentAvgElo": 8500,
+      "reward": 346,
+      "rewardBreakdown": {
+        "kill": 6,
+        "placement": 220,
+        "win": 120,
+        "total": 346
+      },
+      "questReward": 0,
+      "premierBefore": 6008,
+      "premierAfter": 6047,
+      "eloDelta": 39,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T09:57:19.928Z"
+    },
+    {
+      "id": "f19cffab-9eb6-4fb8-92cb-eec649be8e4f",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 2,
+      "opponentAvgElo": 8500,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 6047,
+      "premierAfter": 6079,
+      "eloDelta": 32,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T10:02:34.555Z"
+    },
+    {
+      "id": "abd0663f-b750-4060-9c2d-08b0a9158ebb",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 1,
+      "deaths": 4,
+      "assists": 0,
+      "damage": 214,
+      "score": 192,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 1,
+      "weaponKills": {
+        "ak47": 1
+      },
+      "placement": 1,
+      "playerCount": 4,
+      "opponentAvgElo": 10833,
+      "reward": 346,
+      "rewardBreakdown": {
+        "kill": 6,
+        "placement": 220,
+        "win": 120,
+        "total": 346
+      },
+      "questReward": 0,
+      "premierBefore": 6079,
+      "premierAfter": 6116,
+      "eloDelta": 37,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T10:34:01.867Z"
+    },
+    {
+      "id": "bfd8c593-891b-4942-8e20-2cd1c7ecf09f",
+      "mode": "ffa",
+      "userId": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+      "kills": 0,
+      "deaths": 4,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 0,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 3,
+      "playerCount": 3,
+      "opponentAvgElo": 12000,
+      "reward": 90,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 90,
+        "win": 0,
+        "total": 90
+      },
+      "questReward": 0,
+      "premierBefore": 5000,
+      "premierAfter": 4996,
+      "eloDelta": -4,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T10:36:04.393Z"
+    },
+    {
+      "id": "a3ff90af-a54b-44f4-8ba6-bcde54184b35",
+      "mode": "ffa",
+      "userId": "b741e315-96fd-42be-a0be-be441b2b6016",
+      "kills": 4,
+      "deaths": 1,
+      "assists": 0,
+      "damage": 1042,
+      "score": 789,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 4,
+      "weaponKills": {
+        "ak47": 4
+      },
+      "placement": 1,
+      "playerCount": 3,
+      "opponentAvgElo": 12000,
+      "reward": 364,
+      "rewardBreakdown": {
+        "kill": 24,
+        "placement": 220,
+        "win": 120,
+        "total": 364
+      },
+      "questReward": 0,
+      "premierBefore": 5000,
+      "premierAfter": 5171,
+      "eloDelta": 171,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T10:37:25.710Z"
+    },
+    {
+      "id": "0eb391a0-030e-49b9-80e0-c2492e38af21",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 3,
+      "opponentAvgElo": 10250,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 6116,
+      "premierAfter": 6153,
+      "eloDelta": 37,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T10:39:03.969Z"
+    },
+    {
+      "id": "ec25a0e4-9ee3-4e37-a57a-fd4ac734a34b",
+      "mode": "ffa",
+      "userId": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 2,
+      "opponentAvgElo": 12000,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 4996,
+      "premierAfter": 5112,
+      "eloDelta": 116,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T10:41:19.396Z"
+    },
+    {
+      "id": "08a16adf-f9e0-4569-9b3f-c83e59eaad2c",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 0,
+      "deaths": 0,
+      "assists": 0,
+      "damage": 0,
+      "score": 0,
+      "wins": 1,
+      "headshots": 0,
+      "maxKillStreak": 0,
+      "weaponKills": {},
+      "placement": 1,
+      "playerCount": 3,
+      "opponentAvgElo": 10250,
+      "reward": 340,
+      "rewardBreakdown": {
+        "kill": 0,
+        "placement": 220,
+        "win": 120,
+        "total": 340
+      },
+      "questReward": 0,
+      "premierBefore": 6153,
+      "premierAfter": 6189,
+      "eloDelta": 36,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T10:44:18.980Z"
+    },
+    {
+      "id": "0bca9a3c-7487-48ca-b009-9adb59b3236f",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 15,
+      "deaths": 12,
+      "assists": 0,
+      "damage": 1532,
+      "score": 1944,
+      "wins": 1,
+      "headshots": 3,
+      "maxKillStreak": 15,
+      "weaponKills": {
+        "ak47": 15
+      },
+      "placement": 1,
+      "playerCount": 4,
+      "opponentAvgElo": 18000,
+      "reward": 430,
+      "rewardBreakdown": {
+        "kill": 90,
+        "placement": 220,
+        "win": 120,
+        "total": 430
+      },
+      "questReward": 0,
+      "premierBefore": 6189,
+      "premierAfter": 6243,
+      "eloDelta": 54,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T11:01:10.030Z"
+    },
+    {
+      "id": "02c38166-8494-45e2-b259-0e17ab2fbe2b",
+      "mode": "ffa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "kills": 15,
+      "deaths": 11,
+      "assists": 0,
+      "damage": 1548,
+      "score": 2071,
+      "wins": 1,
+      "headshots": 6,
+      "maxKillStreak": 10,
+      "weaponKills": {
+        "ak47": 15
+      },
+      "placement": 1,
+      "playerCount": 4,
+      "opponentAvgElo": 18000,
+      "reward": 430,
+      "rewardBreakdown": {
+        "kill": 90,
+        "placement": 220,
+        "win": 120,
+        "total": 430
+      },
+      "questReward": 520,
+      "premierBefore": 6243,
+      "premierAfter": 6297,
+      "eloDelta": 54,
+      "durationSeconds": 300,
+      "mapName": "mirage",
+      "createdAt": "2026-03-29T11:16:30.160Z"
     }
   ],
   "leaderboards": {
@@ -6557,6 +8508,42 @@
         "score": 203839,
         "wins": 71,
         "matchesPlayed": 660
+      },
+      "8f056420-66a3-4550-82eb-7b6c6299c7bf": {
+        "kills": 161,
+        "deaths": 198,
+        "assists": 3,
+        "damage": 22262,
+        "score": 22342,
+        "wins": 23,
+        "matchesPlayed": 36
+      },
+      "cd2e27b6-eb1e-4376-8a93-177849dbebfc": {
+        "kills": 7,
+        "deaths": 13,
+        "assists": 0,
+        "damage": 702,
+        "score": 489,
+        "wins": 0,
+        "matchesPlayed": 1
+      },
+      "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081": {
+        "kills": 0,
+        "deaths": 4,
+        "assists": 0,
+        "damage": 0,
+        "score": 0,
+        "wins": 1,
+        "matchesPlayed": 2
+      },
+      "b741e315-96fd-42be-a0be-be441b2b6016": {
+        "kills": 4,
+        "deaths": 1,
+        "assists": 0,
+        "damage": 1042,
+        "score": 789,
+        "wins": 1,
+        "matchesPlayed": 1
       }
     },
     "daily": {
@@ -6828,6 +8815,55 @@
           "wins": 8,
           "matchesPlayed": 1
         }
+      },
+      "2026-03-27": {
+        "8f056420-66a3-4550-82eb-7b6c6299c7bf": {
+          "kills": 80,
+          "deaths": 120,
+          "assists": 2,
+          "damage": 10060,
+          "score": 9990,
+          "wins": 12,
+          "matchesPlayed": 21
+        },
+        "cd2e27b6-eb1e-4376-8a93-177849dbebfc": {
+          "kills": 7,
+          "deaths": 13,
+          "assists": 0,
+          "damage": 702,
+          "score": 489,
+          "wins": 0,
+          "matchesPlayed": 1
+        }
+      },
+      "2026-03-29": {
+        "8f056420-66a3-4550-82eb-7b6c6299c7bf": {
+          "kills": 81,
+          "deaths": 78,
+          "assists": 1,
+          "damage": 12202,
+          "score": 12352,
+          "wins": 11,
+          "matchesPlayed": 15
+        },
+        "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081": {
+          "kills": 0,
+          "deaths": 4,
+          "assists": 0,
+          "damage": 0,
+          "score": 0,
+          "wins": 1,
+          "matchesPlayed": 2
+        },
+        "b741e315-96fd-42be-a0be-be441b2b6016": {
+          "kills": 4,
+          "deaths": 1,
+          "assists": 0,
+          "damage": 1042,
+          "score": 789,
+          "wins": 1,
+          "matchesPlayed": 1
+        }
       }
     },
     "weekly": {
@@ -7094,12 +9130,48 @@
           "score": 10814,
           "wins": 20,
           "matchesPlayed": 24
+        },
+        "8f056420-66a3-4550-82eb-7b6c6299c7bf": {
+          "kills": 161,
+          "deaths": 198,
+          "assists": 3,
+          "damage": 22262,
+          "score": 22342,
+          "wins": 23,
+          "matchesPlayed": 36
+        },
+        "cd2e27b6-eb1e-4376-8a93-177849dbebfc": {
+          "kills": 7,
+          "deaths": 13,
+          "assists": 0,
+          "damage": 702,
+          "score": 489,
+          "wins": 0,
+          "matchesPlayed": 1
+        },
+        "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081": {
+          "kills": 0,
+          "deaths": 4,
+          "assists": 0,
+          "damage": 0,
+          "score": 0,
+          "wins": 1,
+          "matchesPlayed": 2
+        },
+        "b741e315-96fd-42be-a0be-be441b2b6016": {
+          "kills": 4,
+          "deaths": 1,
+          "assists": 0,
+          "damage": 1042,
+          "score": 789,
+          "wins": 1,
+          "matchesPlayed": 1
         }
       }
     }
   },
   "chat": {
-    "nextId": 25,
+    "nextId": 29,
     "lobby": [
       {
         "id": 1,
@@ -7388,6 +9460,54 @@
         "avatarFrame": "default",
         "text": "Clutch",
         "createdAt": "2026-03-26T22:34:55.039Z"
+      },
+      {
+        "id": 25,
+        "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+        "username": "KenanTG",
+        "displayName": "KenanTG",
+        "title": "Rookie",
+        "nameColor": "default",
+        "avatar": "rookie_ops",
+        "avatarFrame": "default",
+        "text": "hi",
+        "createdAt": "2026-03-27T09:12:55.070Z"
+      },
+      {
+        "id": 26,
+        "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+        "username": "kenantg2",
+        "displayName": "kenantg2",
+        "title": "Rookie",
+        "nameColor": "default",
+        "avatar": "rookie_ops",
+        "avatarFrame": "default",
+        "text": "selam",
+        "createdAt": "2026-03-27T15:06:58.694Z"
+      },
+      {
+        "id": 27,
+        "userId": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+        "username": "TestKenan",
+        "displayName": "TestKenan",
+        "title": "Rookie",
+        "nameColor": "default",
+        "avatar": "rookie_ops",
+        "avatarFrame": "default",
+        "text": "sa2",
+        "createdAt": "2026-03-27T16:10:54.087Z"
+      },
+      {
+        "id": 28,
+        "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+        "username": "KenanTG",
+        "displayName": "KenanTG",
+        "title": "Rookie",
+        "nameColor": "default",
+        "avatar": "rookie_ops",
+        "avatarFrame": "default",
+        "text": "GLHF",
+        "createdAt": "2026-03-27T16:11:00.310Z"
       }
     ]
   },
@@ -7403,8 +9523,73 @@
         "label": "TEST SQUAD",
         "partyId": "7FD9GN",
         "visibility": "private",
+        "game": {
+          "mode": "ffa",
+          "durationSeconds": 300,
+          "fillBots": true,
+          "startedAt": null
+        },
         "createdAt": "2026-03-27T06:54:49.188Z",
         "updatedAt": "2026-03-27T06:55:01.633Z"
+      },
+      {
+        "id": "09864191-f8ec-4a71-97ba-b1f574c5652c",
+        "hostUserId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+        "memberIds": [
+          "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+          "8f056420-66a3-4550-82eb-7b6c6299c7bf"
+        ],
+        "capacity": 4,
+        "label": "1555a",
+        "partyId": "PWQR55",
+        "visibility": "public",
+        "game": {
+          "mode": "ffa",
+          "durationSeconds": 300,
+          "fillBots": true,
+          "startedAt": null
+        },
+        "createdAt": "2026-03-27T15:44:10.870Z",
+        "updatedAt": "2026-03-29T11:16:47.045Z"
+      },
+      {
+        "id": "e1ef9907-6d11-43ca-b08a-f8db5fdb2024",
+        "hostUserId": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+        "memberIds": [
+          "a797c3a4-3526-4b5d-84ab-c5531dbae68f"
+        ],
+        "capacity": 4,
+        "label": "comeeeee",
+        "partyId": "7LULDX",
+        "visibility": "public",
+        "game": {
+          "mode": "ffa",
+          "durationSeconds": 300,
+          "fillBots": true,
+          "startedAt": null
+        },
+        "createdAt": "2026-03-27T16:23:50.674Z",
+        "updatedAt": "2026-03-29T10:09:19.454Z"
+      },
+      {
+        "id": "a65b5f40-ddbd-4c91-a02f-b1743bc64f13",
+        "hostUserId": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+        "memberIds": [
+          "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+          "b741e315-96fd-42be-a0be-be441b2b6016"
+        ],
+        "capacity": 4,
+        "label": "gell",
+        "partyId": "M9XHED",
+        "visibility": "public",
+        "game": {
+          "mode": "ffa",
+          "durationSeconds": 300,
+          "fillBots": true,
+          "startedAt": null
+        },
+        "createdAt": "2026-03-29T10:29:01.747Z",
+        "updatedAt": "2026-03-29T11:16:47.045Z"
       }
     ],
     "roomInvites": [],
@@ -7694,6 +9879,308 @@
       "partyId": "7FD9GN",
       "visibility": "private",
       "createdAt": "2026-03-27T06:55:01.634Z"
+    },
+    {
+      "id": "fceadeaf-caf6-425e-8e1c-9aa01f1c1b31",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "purchase",
+      "offerId": "case_falcon",
+      "qty": 1,
+      "amount": 180,
+      "currency": "coin",
+      "granted": [
+        {
+          "type": "case",
+          "caseId": "falcon_case",
+          "qty": 1
+        },
+        {
+          "type": "skin",
+          "skin": "MP9 | Neon Flux",
+          "rarity": "milspec"
+        }
+      ],
+      "liveopsRevision": 1,
+      "createdAt": "2026-03-27T09:18:07.539Z"
+    },
+    {
+      "id": "4c93dee1-9df5-45f1-a3b7-abec26a77ddb",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "680b893c-538a-40b4-83ca-cc62d6eebd4d",
+      "partyId": "CXXBPF",
+      "visibility": "public",
+      "createdAt": "2026-03-27T15:15:35.597Z"
+    },
+    {
+      "id": "da99368d-ddc4-48c0-bac5-9c799e6039b1",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "type": "social_room_join",
+      "roomId": "680b893c-538a-40b4-83ca-cc62d6eebd4d",
+      "partyId": "CXXBPF",
+      "createdAt": "2026-03-27T15:15:50.112Z"
+    },
+    {
+      "id": "2d270c45-b5cc-4b25-8a42-5096c4531090",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "aa92f222-d09a-44a4-b008-93383c3771df",
+      "partyId": "7PC98Z",
+      "visibility": "public",
+      "createdAt": "2026-03-27T15:16:22.699Z"
+    },
+    {
+      "id": "8e24d6dd-05ca-406a-bbc5-1ae8e28f6353",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "f8d4e25c-b7cb-4f31-9198-f3b6072da2a9",
+      "partyId": "GSUQ7P",
+      "visibility": "public",
+      "createdAt": "2026-03-27T15:17:07.155Z"
+    },
+    {
+      "id": "77697643-fe49-47c5-bbf6-f990b4cd6233",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "type": "social_room_join",
+      "roomId": "f8d4e25c-b7cb-4f31-9198-f3b6072da2a9",
+      "partyId": "GSUQ7P",
+      "createdAt": "2026-03-27T15:17:16.102Z"
+    },
+    {
+      "id": "c6b1e1ea-577b-4cfe-894b-1c14d5123831",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "3c1306a2-f0ee-4272-9dfb-909791a95a9b",
+      "partyId": "GEYCJ2",
+      "visibility": "public",
+      "createdAt": "2026-03-27T15:21:00.070Z"
+    },
+    {
+      "id": "3bc09eb5-3de2-453f-b382-52a2eadf33c4",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "type": "social_room_join",
+      "roomId": "3c1306a2-f0ee-4272-9dfb-909791a95a9b",
+      "partyId": "GEYCJ2",
+      "createdAt": "2026-03-27T15:21:15.360Z"
+    },
+    {
+      "id": "986c5248-2e7b-4933-ad1c-029252d09326",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "76f7d2c5-a7d0-41ad-9d1a-db2a53a75ef9",
+      "partyId": "M7PEGD",
+      "visibility": "public",
+      "createdAt": "2026-03-27T15:27:55.064Z"
+    },
+    {
+      "id": "cc6c27fb-93c1-4de6-b55e-73d08b32b270",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "type": "social_room_join",
+      "roomId": "76f7d2c5-a7d0-41ad-9d1a-db2a53a75ef9",
+      "partyId": "M7PEGD",
+      "createdAt": "2026-03-27T15:28:01.678Z"
+    },
+    {
+      "id": "efe77404-2e27-46c3-97cb-6162f5ddf6d4",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "type": "social_room_join",
+      "roomId": "76f7d2c5-a7d0-41ad-9d1a-db2a53a75ef9",
+      "partyId": "M7PEGD",
+      "createdAt": "2026-03-27T15:36:40.952Z"
+    },
+    {
+      "id": "8e8370a0-68d0-4c1d-ad44-513d233caa31",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "b3c1b793-248c-4e49-a77e-368eafb9ca6a",
+      "partyId": "GZ34GT",
+      "visibility": "public",
+      "createdAt": "2026-03-27T15:36:49.999Z"
+    },
+    {
+      "id": "9362f362-3d0e-4a47-ad8e-69f94889124e",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "type": "social_room_join",
+      "roomId": "b3c1b793-248c-4e49-a77e-368eafb9ca6a",
+      "partyId": "GZ34GT",
+      "createdAt": "2026-03-27T15:36:56.558Z"
+    },
+    {
+      "id": "4c34eaf0-bded-41ee-b68c-e1b6208af78d",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "09864191-f8ec-4a71-97ba-b1f574c5652c",
+      "partyId": "PWQR55",
+      "visibility": "public",
+      "createdAt": "2026-03-27T15:44:10.872Z"
+    },
+    {
+      "id": "91780572-5d71-40a2-811e-978ba4c45f31",
+      "userId": "cd2e27b6-eb1e-4376-8a93-177849dbebfc",
+      "type": "social_room_join",
+      "roomId": "09864191-f8ec-4a71-97ba-b1f574c5652c",
+      "partyId": "PWQR55",
+      "createdAt": "2026-03-27T15:44:16.673Z"
+    },
+    {
+      "id": "e99b5d6d-b60e-40f9-93b1-2843e94da620",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "4493d688-08dc-4e40-9699-7094d890ac06",
+      "partyId": "YPPAZG",
+      "visibility": "public",
+      "createdAt": "2026-03-27T16:11:21.923Z"
+    },
+    {
+      "id": "ff35d123-21dc-4cf5-b954-1de0683bbc16",
+      "userId": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+      "type": "social_room_join",
+      "roomId": "4493d688-08dc-4e40-9699-7094d890ac06",
+      "partyId": "YPPAZG",
+      "createdAt": "2026-03-27T16:11:37.610Z"
+    },
+    {
+      "id": "ba76fc37-ea59-4b29-8fd7-7da065e7c6c1",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "f90472a0-6be2-4e13-8f61-ad4114b03408",
+      "partyId": "8C487U",
+      "visibility": "public",
+      "createdAt": "2026-03-27T16:14:22.989Z"
+    },
+    {
+      "id": "aa08df60-4f89-4530-87c5-efa6fe8cac3c",
+      "userId": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+      "type": "social_room_join",
+      "roomId": "f90472a0-6be2-4e13-8f61-ad4114b03408",
+      "partyId": "8C487U",
+      "createdAt": "2026-03-27T16:14:30.520Z"
+    },
+    {
+      "id": "55e49f20-c18d-4535-abf0-de0bba3d1ac6",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "c0ee88d2-3dfd-440f-be63-86dd46e8a406",
+      "partyId": "J8ZNTW",
+      "visibility": "public",
+      "createdAt": "2026-03-27T16:16:59.076Z"
+    },
+    {
+      "id": "814fd7b7-2cfe-45f8-ba92-7da4866532e1",
+      "userId": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+      "type": "social_room_join",
+      "roomId": "c0ee88d2-3dfd-440f-be63-86dd46e8a406",
+      "partyId": "J8ZNTW",
+      "createdAt": "2026-03-27T16:17:06.339Z"
+    },
+    {
+      "id": "94fc0f74-000e-4fff-81d1-ab8a13e3c33d",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "7ea9e197-b195-4cef-bc8b-07a9307a84f3",
+      "partyId": "2MB8WQ",
+      "visibility": "public",
+      "createdAt": "2026-03-27T16:21:44.877Z"
+    },
+    {
+      "id": "f58cf3d0-a105-4fa0-b3e8-f8faa65103cd",
+      "userId": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+      "type": "social_room_join",
+      "roomId": "7ea9e197-b195-4cef-bc8b-07a9307a84f3",
+      "partyId": "2MB8WQ",
+      "createdAt": "2026-03-27T16:21:54.198Z"
+    },
+    {
+      "id": "6449a1d6-426d-4621-b3a3-4504801aa97c",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "e1ef9907-6d11-43ca-b08a-f8db5fdb2024",
+      "partyId": "7LULDX",
+      "visibility": "public",
+      "createdAt": "2026-03-27T16:23:50.674Z"
+    },
+    {
+      "id": "0eced460-8bee-4175-ab64-cf96ee4fe75d",
+      "userId": "a797c3a4-3526-4b5d-84ab-c5531dbae68f",
+      "type": "social_room_join",
+      "roomId": "e1ef9907-6d11-43ca-b08a-f8db5fdb2024",
+      "partyId": "7LULDX",
+      "createdAt": "2026-03-27T16:23:54.102Z"
+    },
+    {
+      "id": "6456bbdc-46a8-4196-8c93-2868f5ddf4aa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "6e161a4d-5f20-4252-a6ea-769f6a4e2df7",
+      "partyId": "UTQW9X",
+      "visibility": "public",
+      "createdAt": "2026-03-29T10:09:19.454Z"
+    },
+    {
+      "id": "8016fa78-f878-4b3c-9b4a-3fe5ef69e8b2",
+      "userId": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+      "type": "social_room_join",
+      "roomId": "6e161a4d-5f20-4252-a6ea-769f6a4e2df7",
+      "partyId": "UTQW9X",
+      "createdAt": "2026-03-29T10:09:26.788Z"
+    },
+    {
+      "id": "440aee3d-af2f-4216-b7ed-6bc48dc7f5b1",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "bf1bd22b-fedb-4f66-9efc-c416821498f4",
+      "partyId": "3ZUMRV",
+      "visibility": "public",
+      "createdAt": "2026-03-29T10:10:00.821Z"
+    },
+    {
+      "id": "d9ec9da3-c7f6-4cdb-9050-f12eab1e1c26",
+      "userId": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+      "type": "social_room_join",
+      "roomId": "bf1bd22b-fedb-4f66-9efc-c416821498f4",
+      "partyId": "3ZUMRV",
+      "createdAt": "2026-03-29T10:10:04.572Z"
+    },
+    {
+      "id": "f21ad97c-1bb0-4984-ab97-9bec950b34fa",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_create",
+      "roomId": "a65b5f40-ddbd-4c91-a02f-b1743bc64f13",
+      "partyId": "M9XHED",
+      "visibility": "public",
+      "createdAt": "2026-03-29T10:29:01.748Z"
+    },
+    {
+      "id": "a4ce74d8-3a78-4ff9-806e-c8e0d8bc483f",
+      "userId": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+      "type": "social_room_join",
+      "roomId": "a65b5f40-ddbd-4c91-a02f-b1743bc64f13",
+      "partyId": "M9XHED",
+      "createdAt": "2026-03-29T10:30:36.844Z"
+    },
+    {
+      "id": "de58e5e2-775d-4f94-bb60-0dae418315ae",
+      "userId": "d3c3f7ae-d775-4ae2-a7e7-3b0e167f2081",
+      "type": "social_room_join",
+      "roomId": "a65b5f40-ddbd-4c91-a02f-b1743bc64f13",
+      "partyId": "M9XHED",
+      "createdAt": "2026-03-29T10:31:04.291Z"
+    },
+    {
+      "id": "aa09e534-3bbf-4ebd-9143-5309b30e6b13",
+      "userId": "b741e315-96fd-42be-a0be-be441b2b6016",
+      "type": "social_room_join",
+      "roomId": "a65b5f40-ddbd-4c91-a02f-b1743bc64f13",
+      "partyId": "M9XHED",
+      "createdAt": "2026-03-29T10:32:25.592Z"
+    },
+    {
+      "id": "77edd037-9405-4646-ae42-5906c2ddd76d",
+      "userId": "8f056420-66a3-4550-82eb-7b6c6299c7bf",
+      "type": "social_room_join",
+      "roomId": "09864191-f8ec-4a71-97ba-b1f574c5652c",
+      "partyId": "PWQR55",
+      "createdAt": "2026-03-29T11:16:47.045Z"
     }
   ]
 }

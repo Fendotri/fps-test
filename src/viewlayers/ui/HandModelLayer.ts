@@ -1,11 +1,16 @@
 ﻿import { GameContext } from '@src/core/GameContext';
+import * as THREE from 'three';
 import { CycleInterface } from '@src/core/inferface/CycleInterface';
 import { LoopInterface } from '@src/core/inferface/LoopInterface';
 import { PointLockEventEnum } from '@src/gameplay/abstract/EventsEnum';
 import { DomEventPipe, PointLockEvent } from '@src/gameplay/pipes/DomEventPipe';
 import { LocalPlayer } from '@src/gameplay/player/LocalPlayer';
 import { MovementController } from '@src/gameplay/input/controllers/MovementController';
-import { MathUtils, Vector3 } from 'three';
+import { getWeaponEntry } from '@src/gameplay/loadout/weaponCatalog';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { Box3, DoubleSide, Group, MathUtils, Vector3 } from 'three';
 
 let deltaZUtil = 0;
 let deltaYUtil = 0;
@@ -53,6 +58,12 @@ export class HandModelLayer implements CycleInterface, LoopInterface {
     camera: THREE.PerspectiveCamera;
     localPlayer: LocalPlayer = LocalPlayer.getInstance();
     animationMixer: THREE.AnimationMixer;
+    private customWeaponAnchor: THREE.Group;
+    private customWeaponModel: THREE.Object3D | null = null;
+    private customWeaponPath = '';
+    private customWeaponId = '';
+    private customWeaponLoadId = 0;
+    private hiddenResourceKey = '';
 
     init(): void {
         this.scene = GameContext.Scenes.Handmodel;
@@ -67,6 +78,8 @@ export class HandModelLayer implements CycleInterface, LoopInterface {
 
         this.initCameraStatus();
         this.addHandMesh();
+        this.customWeaponAnchor = new Group();
+        this.scene.add(this.customWeaponAnchor);
     }
 
     callEveryFrame(deltaTime?: number, elapsedTime?: number): void {
@@ -133,6 +146,7 @@ export class HandModelLayer implements CycleInterface, LoopInterface {
         this.camera.position.y = cameraDefaultPosition.y - (deltaYUtil + breathDelta) + bobYCurrent;
         this.camera.position.x = cameraDefaultPosition.x + bobXCurrent;
         this.camera.rotation.z = bobXCurrent * bobRollMul;
+        this.updateCustomWeaponOverride();
     }
 
     initCameraStatus() {
@@ -156,6 +170,135 @@ export class HandModelLayer implements CycleInterface, LoopInterface {
         arms.visible = true;
         this.scene.add(armature);
         this.scene.add(arms);
+    }
+
+    private updateCustomWeaponOverride() {
+        this.clearCustomWeaponOverride();
+    }
+
+    private getResourceKeyForWeapon(weaponId: string) {
+        const key = `${weaponId || ''}`.trim().toLowerCase();
+        if (key === 'awp') return 'AWP_1';
+        if (key === 'mp9') return 'MP9_1';
+        if (key === 'usp_s') return 'USP_1';
+        if (key === 'm9') return 'M9_1';
+        if (key === 'nova' || key === 'xm1014') return 'Nova_1';
+        return 'AK47_1';
+    }
+
+    private applyBuiltInVisibility(weaponId: string, hidden: boolean) {
+        const nextKey = this.getResourceKeyForWeapon(weaponId);
+        if (this.hiddenResourceKey && this.hiddenResourceKey !== nextKey) {
+            const previous = GameContext.GameResources.resourceMap.get(this.hiddenResourceKey) as THREE.Object3D | undefined;
+            if (previous) previous.visible = true;
+        }
+        const mesh = GameContext.GameResources.resourceMap.get(nextKey) as THREE.Object3D | undefined;
+        if (mesh) mesh.visible = !hidden;
+        this.hiddenResourceKey = hidden ? nextKey : '';
+    }
+
+    private syncCustomWeaponAnchor(weaponId: string) {
+        const reference = GameContext.GameResources.resourceMap.get(this.getResourceKeyForWeapon(weaponId)) as THREE.Object3D | undefined;
+        if (!reference || !this.customWeaponAnchor) return;
+        this.customWeaponAnchor.position.copy(reference.position);
+        this.customWeaponAnchor.quaternion.copy(reference.quaternion);
+        this.customWeaponAnchor.scale.copy(reference.scale);
+    }
+
+    private clearCustomWeaponOverride() {
+        if (this.hiddenResourceKey) {
+            const prev = GameContext.GameResources.resourceMap.get(this.hiddenResourceKey) as THREE.Object3D | undefined;
+            if (prev) prev.visible = true;
+        }
+        this.hiddenResourceKey = '';
+        this.customWeaponId = '';
+        this.customWeaponPath = '';
+        if (this.customWeaponModel) this.customWeaponAnchor.remove(this.customWeaponModel);
+        this.customWeaponModel = null;
+        this.customWeaponAnchor.position.set(0, 0, 0);
+        this.customWeaponAnchor.rotation.set(0, 0, 0);
+        this.customWeaponAnchor.scale.set(1, 1, 1);
+    }
+
+    private normalizeCustomWeaponObject(object: THREE.Object3D, weaponId: string) {
+        const entry = getWeaponEntry(weaponId);
+        object.traverse((child: any) => {
+            if (!child?.isMesh) return;
+            child.visible = true;
+            child.frustumCulled = false;
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.filter(Boolean).forEach((material: any) => {
+                if ('side' in material) material.side = DoubleSide;
+                if ('transparent' in material && material.transparent && material.opacity === 0) material.opacity = 1;
+                if ('needsUpdate' in material) material.needsUpdate = true;
+            });
+        });
+
+        const builtIn = GameContext.GameResources.resourceMap.get(this.getResourceKeyForWeapon(weaponId)) as THREE.Object3D | undefined;
+        const builtInBox = builtIn ? new Box3().setFromObject(builtIn) : null;
+        const incomingBox = new Box3().setFromObject(object);
+        if (incomingBox.isEmpty()) return;
+        const incomingCenter = incomingBox.getCenter(new Vector3());
+        const incomingSize = incomingBox.getSize(new Vector3());
+        object.position.sub(incomingCenter);
+        const incomingMax = Math.max(incomingSize.x, incomingSize.y, incomingSize.z, 0.001);
+
+        if (builtInBox && !builtInBox.isEmpty()) {
+            const builtInSize = builtInBox.getSize(new Vector3());
+            const builtInMax = Math.max(builtInSize.x, builtInSize.y, builtInSize.z, 0.001);
+            object.scale.multiplyScalar(builtInMax / incomingMax);
+        } else {
+            object.scale.multiplyScalar(0.22 / incomingMax);
+        }
+
+        const modelScale = Array.isArray(entry?.modelScale) ? entry.modelScale : [1, 1, 1];
+        const modelRotation = Array.isArray(entry?.modelRotation) ? entry.modelRotation : [0, 180, 0];
+        const modelPosition = Array.isArray(entry?.modelPosition) ? entry.modelPosition : [0.02, 0.98, 0.44];
+        object.scale.multiply(new Vector3(modelScale[0] || 1, modelScale[1] || 1, modelScale[2] || 1));
+        object.rotation.set(
+            MathUtils.degToRad(modelRotation[0] || 0),
+            MathUtils.degToRad(modelRotation[1] || 0),
+            MathUtils.degToRad(modelRotation[2] || 0),
+        );
+        object.position.set(modelPosition[0] || 0, modelPosition[1] || 0, modelPosition[2] || 0);
+    }
+
+    private async loadCustomWeaponOverride(weaponId: string, modelPath: string) {
+        const requestId = ++this.customWeaponLoadId;
+        this.clearCustomWeaponOverride();
+        const ext = modelPath.split('.').pop()?.toLowerCase() || '';
+        const onLoad = (object: THREE.Object3D) => {
+            if (requestId !== this.customWeaponLoadId) return;
+            this.customWeaponId = weaponId;
+            this.customWeaponPath = modelPath;
+            this.syncCustomWeaponAnchor(weaponId);
+            this.normalizeCustomWeaponObject(object, weaponId);
+            this.customWeaponModel = object;
+            this.customWeaponAnchor.add(object);
+            this.applyBuiltInVisibility(weaponId, true);
+        };
+        const onError = () => {
+            if (requestId !== this.customWeaponLoadId) return;
+            this.clearCustomWeaponOverride();
+        };
+
+        try {
+            if (ext === 'glb' || ext === 'gltf') {
+                new GLTFLoader().load(modelPath, (gltf) => onLoad(gltf.scene || gltf.scenes?.[0] || new Group()), undefined, onError);
+                return;
+            }
+            if (ext === 'fbx') {
+                new FBXLoader().load(modelPath, (object) => onLoad(object), undefined, onError);
+                return;
+            }
+            if (ext === 'obj') {
+                new OBJLoader().load(modelPath, (object) => onLoad(object), undefined, onError);
+                return;
+            }
+            onError();
+        } catch {
+            onError();
+        }
     }
 
 }

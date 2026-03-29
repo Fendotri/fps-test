@@ -101,6 +101,9 @@ export const PlayerDamagedEvent = new CustomEvent<{
     armor: number;
     headshot: boolean;
     attackerName?: string;
+    attackerX?: number;
+    attackerY?: number;
+    attackerZ?: number;
 }>(
     'player damaged', {
     detail: {
@@ -110,6 +113,9 @@ export const PlayerDamagedEvent = new CustomEvent<{
         armor: 0,
         headshot: false,
         attackerName: '',
+        attackerX: 0,
+        attackerY: 0,
+        attackerZ: 0,
     }
 });
 

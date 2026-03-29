@@ -8,6 +8,7 @@ import { PointLockEventEnum, UserInputEventEnum } from '@src/gameplay/abstract/E
 import { GameLogicEventPipe, PlayerDamagedEvent, WeaponEquipEvent } from '@src/gameplay/pipes/GameLogicEventPipe';
 import { UserInputEvent, UserInputEventPipe } from '@src/gameplay/pipes/UserinputEventPipe';
 import { DomEventPipe, PointLockEvent } from '@src/gameplay/pipes/DomEventPipe';
+import { getRuntimeTuningSnapshot, subscribeRuntimeTuning } from '@src/gameplay/tuning/RuntimeTuning';
 import { MathUtils, Vector3 } from 'three';
 
 const STEPS_PER_FRAME = 5;
@@ -39,7 +40,7 @@ type SurfaceTune = {
     stepBlockNormalY: number;
 };
 
-const config = {
+const DEFAULT_CONFIG = {
     groundAccel: 62,
     airAccel: 11.5,
     friction: 8.1,
@@ -108,14 +109,17 @@ const MIRAGE_SURFACE_TUNE: SurfaceTune = {
 };
 
 const DUST2_SURFACE_TUNE: SurfaceTune = {
-    // Dust2 map has more ramp/stair transitions: use stronger step assist.
-    groundProbeDepth: 0.38,
-    walkableFloorNormalY: 0.3,
-    groundStickDownSpeed: 4.0,
-    stepHeight: 0.56,
-    stepMinHorizontalSpeed: 0.02,
-    stepBlockNormalY: -0.08,
+    // Dust2 needs more generous floor snapping, but overly aggressive step assist
+    // causes frequent wall/trim snagging on dense collision meshes.
+    groundProbeDepth: 0.34,
+    walkableFloorNormalY: 0.34,
+    groundStickDownSpeed: 3.3,
+    stepHeight: 0.4,
+    stepMinHorizontalSpeed: 0.18,
+    stepBlockNormalY: 0.06,
 };
+
+let config = { ...DEFAULT_CONFIG };
 
 const CAMERA_PITCH_MIN = Math.PI / 2 - Math.PI;
 const CAMERA_PITCH_MAX = Math.PI / 2;
@@ -205,6 +209,10 @@ export class MovementController implements CycleInterface, LoopInterface {
     init(): void {
         this.playerOctree = GameContext.Physical.WorldOCTree;
         this.playerCamera = GameContext.Cameras.PlayerCamera;
+        this.applyRuntimeMovementTune();
+        subscribeRuntimeTuning(() => {
+            this.applyRuntimeMovementTune();
+        });
         this.applyMapSurfaceTune();
         this.playerCollider = new Capsule(
             new Vector3(0, PLAYER_COLLIDER_RADIUS, 0),
@@ -445,8 +453,40 @@ export class MovementController implements CycleInterface, LoopInterface {
         this.tmpHorizontal.set(deltaPosition.x, 0, deltaPosition.z);
         if (this.tmpHorizontal.lengthSq() <= 0.000001) return false;
         if (this.horizontalSpeed < this.surfaceTune.stepMinHorizontalSpeed) return false;
+        if (!this.hasStepObstacle(this.tmpHorizontal)) return false;
         return this.tryStepMoveWithHeight(this.tmpHorizontal, this.surfaceTune.stepHeight)
             || this.tryStepMoveWithHeight(this.tmpHorizontal, this.surfaceTune.stepHeight * 1.32);
+    }
+
+    private applyRuntimeMovementTune() {
+        const movement = getRuntimeTuningSnapshot().movement;
+        config = {
+            ...DEFAULT_CONFIG,
+            groundAccel: movement.groundAccel,
+            airAccel: movement.airAccel,
+            friction: movement.friction,
+            maxGroundSpeed: movement.maxGroundSpeed,
+            maxAirSpeed: movement.maxAirSpeed,
+            walkSpeedMul: movement.walkSpeedMul,
+            crouchSpeedMul: movement.crouchSpeedMul,
+            jumpSpeed: movement.jumpSpeed,
+        };
+    }
+
+    private hasStepObstacle(horizontalDelta: Vector3) {
+        const probe = new Capsule(
+            this.playerCollider.start.clone(),
+            this.playerCollider.end.clone(),
+            this.playerCollider.radius,
+        );
+
+        probe.translate(horizontalDelta);
+        const hit = this.playerOctree.capsuleIntersect(probe);
+        if (!hit) return false;
+
+        // Only step when the direct move is blocked by a wall-like obstacle.
+        // Floor-like contacts should use the normal movement path to avoid jitter.
+        return hit.depth > 0.015 && hit.normal.y < this.surfaceTune.walkableFloorNormalY;
     }
 
     private tryStepMoveWithHeight(horizontalDelta: Vector3, stepHeight: number) {

@@ -3,6 +3,7 @@ import { CycleInterface } from '@src/core/inferface/CycleInterface';
 import { DomEventPipe, PointLockEvent } from '@src/gameplay/pipes/DomEventPipe';
 import { PointLockEventEnum } from '@src/gameplay/abstract/EventsEnum';
 import { LocalPlayer } from '@src/gameplay/player/LocalPlayer';
+import { isDebugFreeCameraActive } from '@src/debug/DebugFreeCamera';
 
 const mouseConfig = {
     dpi: 1000,
@@ -39,6 +40,7 @@ export class FPSCameraController extends EventTarget implements CycleInterface {
         DomEventPipe.addEventListener(PointLockEvent.type, function (e: CustomEvent) {
             switch (e.detail.enum) {
                 case PointLockEventEnum.MOUSEMOVE:
+                    if (isDebugFreeCameraActive()) return;
                     if (scope.localPlayer.health <= 0) return;
 
                     const { dpi, mouseSensitivity } = mouseConfig;

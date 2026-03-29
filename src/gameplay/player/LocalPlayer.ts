@@ -8,9 +8,11 @@ import { UserInputSystem } from '../input/UserInputSystem';
 import { FPSCameraController } from '../input/controllers/FPSCameraController';
 import { MovementController } from '../input/controllers/MovementController';
 import { DEFAULT_FFA_LOADOUT, LoadoutProfile, normalizeLoadoutProfile } from '../loadout/weaponCatalog';
-import { createWeaponsForLoadout } from '../loadout/weaponFactory';
+import { applyRuntimeTuningToWeaponInstance, createWeaponsForLoadout } from '../loadout/weaponFactory';
+import { subscribeRuntimeTuning } from '../tuning/RuntimeTuning';
 import { WeaponSystem } from '../weapon/WeaponSystem';
 import { MeshBasicMaterial } from 'three';
+import { isDebugFreeCameraActive } from '@src/debug/DebugFreeCamera';
 
 const roleTexture = GameContext.GameResources.textureLoader.load('/role/role.TF2.heavy.png');
 dealWithRoleTexture(roleTexture);
@@ -65,6 +67,9 @@ export class LocalPlayer implements CycleInterface, LoopInterface {
         this.inventorySystem = new InventorySystem();
         this.inventorySystem.init();
         this.applyLoadout(DEFAULT_FFA_LOADOUT);
+        subscribeRuntimeTuning(() => {
+            this.refreshRuntimeWeaponTuning();
+        });
 
         window.addEventListener('game:play-now', (event: Event) => {
             const detail = ((event as CustomEvent).detail || {}) as PlayNowDetail;
@@ -73,6 +78,10 @@ export class LocalPlayer implements CycleInterface, LoopInterface {
     }
 
     callEveryFrame(deltaTime?: number, elapsedTime?: number): void {
+        if (isDebugFreeCameraActive()) {
+            this.movementController.clearInputState();
+            return;
+        }
         if (this.health <= 0) {
             this.movementController.clearInputState();
             return;
@@ -103,5 +112,14 @@ export class LocalPlayer implements CycleInterface, LoopInterface {
         this.activeLoadout = normalized;
         const pack = createWeaponsForLoadout(this.activeLoadout);
         this.inventorySystem.applyLoadoutPack(pack.bySlot, InventorySlotEnum.Primary);
+    }
+
+    refreshRuntimeWeaponTuning() {
+        if (!this.inventorySystem) return;
+        this.inventorySystem.weapons.forEach((weapon) => {
+            applyRuntimeTuningToWeaponInstance(weapon);
+        });
+        this.inventorySystem.rebuildSpawnAmmoCache();
+        this.inventorySystem.refreshCurrentWeaponState();
     }
 }

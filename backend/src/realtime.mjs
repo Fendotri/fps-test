@@ -30,6 +30,8 @@ export const attachRealtimeGateway = ({ server, config, db }) => {
                 state: {
                     tick: 0,
                     players: {},
+                    runtimeBots: null,
+                    runtimeBotsVersion: 0,
                 },
             });
         }
@@ -54,6 +56,8 @@ export const attachRealtimeGateway = ({ server, config, db }) => {
                 roomId: room.id,
                 tick: room.state.tick,
                 players: room.state.players,
+                runtimeBots: room.state.runtimeBots,
+                runtimeBotsVersion: room.state.runtimeBotsVersion,
                 serverTime: nowMs(),
             });
 
@@ -95,6 +99,12 @@ export const attachRealtimeGateway = ({ server, config, db }) => {
                     y: 0,
                     z: 0,
                     hp: 100,
+                    armor: 100,
+                    hasHelmet: true,
+                    yaw: 0,
+                    pitch: 0,
+                    fireSeq: 0,
+                    weaponId: '',
                 };
                 meta.roomId = roomId;
                 ws.send(JSON.stringify({ type: 'joined', roomId }));
@@ -106,12 +116,114 @@ export const attachRealtimeGateway = ({ server, config, db }) => {
                 const room = rooms.get(meta.roomId);
                 if (!room) return;
                 meta.lastInputAt = nowMs();
-                const playerState = room.state.players[meta.userId] || { username: meta.username, x: 0, y: 0, z: 0, hp: 100 };
+                const playerState = room.state.players[meta.userId] || {
+                    username: meta.username,
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                    hp: 100,
+                    armor: 100,
+                    hasHelmet: true,
+                    yaw: 0,
+                    pitch: 0,
+                    fireSeq: 0,
+                    weaponId: '',
+                };
                 if (typeof data.x === 'number') playerState.x = data.x;
                 if (typeof data.y === 'number') playerState.y = data.y;
                 if (typeof data.z === 'number') playerState.z = data.z;
                 if (typeof data.hp === 'number') playerState.hp = data.hp;
+                if (typeof data.armor === 'number') playerState.armor = data.armor;
+                if (typeof data.hasHelmet === 'boolean') playerState.hasHelmet = data.hasHelmet;
+                if (typeof data.yaw === 'number') playerState.yaw = data.yaw;
+                if (typeof data.pitch === 'number') playerState.pitch = data.pitch;
+                if (typeof data.fireSeq === 'number') playerState.fireSeq = data.fireSeq;
+                if (typeof data.weaponId === 'string') playerState.weaponId = data.weaponId;
                 room.state.players[meta.userId] = playerState;
+                return;
+            }
+
+            if (data.type === 'player_respawn') {
+                if (!meta.roomId) return;
+                const room = rooms.get(meta.roomId);
+                if (!room) return;
+                const playerState = room.state.players[meta.userId];
+                if (!playerState) return;
+                playerState.hp = 100;
+                playerState.armor = 100;
+                playerState.hasHelmet = true;
+                if (typeof data.x === 'number') playerState.x = data.x;
+                if (typeof data.y === 'number') playerState.y = data.y;
+                if (typeof data.z === 'number') playerState.z = data.z;
+                room.state.players[meta.userId] = playerState;
+                return;
+            }
+
+            if (data.type === 'runtime_tuning') {
+                if (!meta.roomId) return;
+                const room = rooms.get(meta.roomId);
+                if (!room) return;
+                const payload = data?.bots;
+                if (!payload || typeof payload !== 'object') return;
+                room.state.runtimeBots = payload;
+                room.state.runtimeBotsVersion = nowMs();
+                return;
+            }
+
+            if (data.type === 'player_hit') {
+                if (!meta.roomId) return;
+                const room = rooms.get(meta.roomId);
+                if (!room) return;
+                const targetId = typeof data.targetId === 'string' ? data.targetId : '';
+                if (!targetId || targetId === meta.userId) return;
+                const targetSocket = room.players.get(targetId);
+                const targetState = room.state.players[targetId];
+                if (!targetSocket || !targetState || (Number(targetState.hp) || 0) <= 0) return;
+
+                const hpDamage = Math.max(1, Math.floor(Number(data.damage) || 0));
+                const armorDamage = Math.max(0, Math.floor(Number(data.armorDamage) || 0));
+                targetState.armor = Math.max(0, (Number(targetState.armor) || 0) - armorDamage);
+                targetState.hp = Math.max(0, (Number(targetState.hp) || 0) - hpDamage);
+                if (targetState.armor <= 0) targetState.hasHelmet = false;
+                const killed = targetState.hp <= 0;
+                room.state.players[targetId] = targetState;
+
+                if (targetSocket.readyState === targetSocket.OPEN) {
+                    targetSocket.send(JSON.stringify({
+                        type: 'damage_taken',
+                        attackerId: meta.userId,
+                        attackerName: typeof data.attackerName === 'string' && data.attackerName ? data.attackerName : meta.username,
+                        weaponId: typeof data.weaponId === 'string' ? data.weaponId : '',
+                        weaponName: typeof data.weaponName === 'string' ? data.weaponName : (typeof data.weaponId === 'string' ? data.weaponId : 'RIFLE'),
+                        damage: hpDamage,
+                        armorDamage,
+                        headshot: data.headshot === true,
+                        health: targetState.hp,
+                        armor: targetState.armor,
+                        attackerX: room.state.players[meta.userId]?.x || 0,
+                        attackerY: room.state.players[meta.userId]?.y || 0,
+                        attackerZ: room.state.players[meta.userId]?.z || 0,
+                    }));
+                }
+
+                if (killed) {
+                    const deathPayload = JSON.stringify({
+                        type: 'player_died',
+                        targetId,
+                        attackerId: meta.userId,
+                        attackerName: typeof data.attackerName === 'string' && data.attackerName ? data.attackerName : meta.username,
+                        weaponId: typeof data.weaponId === 'string' ? data.weaponId : '',
+                        weaponName: typeof data.weaponName === 'string' ? data.weaponName : (typeof data.weaponId === 'string' ? data.weaponId : 'RIFLE'),
+                        headshot: data.headshot === true,
+                        x: targetState.x || 0,
+                        y: targetState.y || 0,
+                        z: targetState.z || 0,
+                        yaw: targetState.yaw || 0,
+                    });
+                    room.players.forEach((socket) => {
+                        if (socket.readyState === socket.OPEN) socket.send(deathPayload);
+                    });
+                }
                 return;
             }
 

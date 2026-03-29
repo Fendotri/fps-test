@@ -31,9 +31,12 @@ Create env values (optional):
 - `BACKEND_PORT` default: `8787`
 - `CORS_ORIGIN` default: `http://localhost:5173` (`*` or comma-separated list supported)
 - `AUTH_SECRET` default: `change-me-in-production`
+- `ADMIN_API_KEY` default: empty/disabled. Required for Content Studio backend save/load and asset uploads.
 - `TOKEN_TTL_SECONDS` default: `1209600` (14 days)
 - `WS_TICK_RATE` default: `20`
 - `DATA_FILE` default: `backend/data/db.json`
+
+The backend now auto-loads environment values from `backend/.env` if present.
 
 ## API Overview
 

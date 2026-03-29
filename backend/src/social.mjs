@@ -4,7 +4,8 @@ import { getCaseById, getShopOffers } from './liveops.mjs';
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
-const ROOM_CAPACITY = 4;
+const DEFAULT_ROOM_CAPACITY = 4;
+const MAX_ROOM_CAPACITY = 8;
 const PARTY_ID_LENGTH = 6;
 const ROOM_INVITE_TTL_MS = 30 * 60 * 1000;
 const MAX_GIFT_NOTE = 120;
@@ -102,6 +103,16 @@ const createRoomLabel = (user) => {
     return `${username.toUpperCase()} SQUAD`;
 };
 
+const sanitizeRoomGame = (rawGame) => {
+    const source = rawGame && typeof rawGame === 'object' ? rawGame : {};
+    return {
+        mode: ensureString(source.mode, 'ffa').toLowerCase() || 'ffa',
+        durationSeconds: clampInt(source.durationSeconds, 300, 60, 3600),
+        fillBots: source.fillBots !== false,
+        startedAt: toIso(source.startedAt),
+    };
+};
+
 export const createDefaultSocialStore = () => ({
     rooms: [],
     roomInvites: [],
@@ -120,11 +131,12 @@ const sanitizeRoom = (rawRoom, validUserIds) => {
     return {
         id: roomId,
         hostUserId: memberIds.includes(hostUserId) ? hostUserId : memberIds[0],
-        memberIds: memberIds.slice(0, ROOM_CAPACITY),
-        capacity: ROOM_CAPACITY,
+        memberIds: memberIds.slice(0, MAX_ROOM_CAPACITY),
+        capacity: clampInt(rawRoom?.capacity, DEFAULT_ROOM_CAPACITY, 2, MAX_ROOM_CAPACITY),
         label: trimText(rawRoom?.label || '', 36) || 'SQUAD ROOM',
         partyId: ensureString(rawRoom?.partyId).toUpperCase().slice(0, PARTY_ID_LENGTH) || randomPartyId(),
         visibility: normalizeVisibility(rawRoom?.visibility, 'private'),
+        game: sanitizeRoomGame(rawRoom?.game),
         createdAt: toIso(rawRoom?.createdAt) || new Date().toISOString(),
         updatedAt: toIso(rawRoom?.updatedAt) || new Date().toISOString(),
     };
@@ -339,16 +351,20 @@ const ensureRoomForUser = (socialStore, user, now = new Date(), options = {}) =>
         if (!room.hostUserId) room.hostUserId = user.id;
         if (!room.partyId) room.partyId = ensureUniquePartyId(socialStore, room.id);
         if (options.visibility) room.visibility = normalizeVisibility(options.visibility, room.visibility || 'private');
+        if (options.label) room.label = trimText(options.label, 36) || room.label;
+        if (options.capacity) room.capacity = clampInt(options.capacity, room.capacity || DEFAULT_ROOM_CAPACITY, 2, MAX_ROOM_CAPACITY);
+        if (options.game) room.game = sanitizeRoomGame(options.game);
         return room;
     }
     room = {
         id: crypto.randomUUID(),
         hostUserId: user.id,
         memberIds: [user.id],
-        capacity: ROOM_CAPACITY,
-        label: createRoomLabel(user),
+        capacity: clampInt(options.capacity, DEFAULT_ROOM_CAPACITY, 2, MAX_ROOM_CAPACITY),
+        label: trimText(options.label, 36) || createRoomLabel(user),
         partyId: ensureUniquePartyId(socialStore),
         visibility: normalizeVisibility(options.visibility, 'private'),
+        game: sanitizeRoomGame(options.game),
         createdAt: now.toISOString(),
         updatedAt: now.toISOString(),
     };
@@ -377,9 +393,10 @@ const buildRoomPublic = ({ room, usersById, presenceResolver, viewerUserId }) =>
         partyId: room.partyId,
         visibility: normalizeVisibility(room.visibility, 'private'),
         hostUserId: room.hostUserId,
-        capacity: clampInt(room.capacity, ROOM_CAPACITY, 2, ROOM_CAPACITY),
+        capacity: clampInt(room.capacity, DEFAULT_ROOM_CAPACITY, 2, MAX_ROOM_CAPACITY),
         memberCount: members.length,
         isHost: room.hostUserId === viewerUserId,
+        game: sanitizeRoomGame(room.game),
         members,
         createdAt: room.createdAt,
         updatedAt: room.updatedAt,
@@ -516,7 +533,7 @@ export const buildSocialSnapshot = ({ user, users = [], socialStore, liveops, pr
             room: buildRoomPublic({ room, usersById, presenceResolver, viewerUserId: user?.id }),
             incomingInvites,
             outgoingInvites,
-            capacity: ROOM_CAPACITY,
+            capacity: DEFAULT_ROOM_CAPACITY,
         },
         gifts: {
             catalog: buildGiftCatalog(liveops),
@@ -537,7 +554,7 @@ export const sendSquadInvite = ({ socialStore, fromUser, toUser, now = new Date(
     if (!areUsersFriends(fromUser, toUser)) return { ok: false, reason: 'friends-only' };
     const room = ensureRoomForUser(socialStore, fromUser, now);
     if (room.memberIds.includes(toUser.id)) return { ok: true, reason: 'already-in-room', roomId: room.id };
-    if (room.memberIds.length >= clampInt(room.capacity, ROOM_CAPACITY, 2, ROOM_CAPACITY)) {
+    if (room.memberIds.length >= clampInt(room.capacity, DEFAULT_ROOM_CAPACITY, 2, MAX_ROOM_CAPACITY)) {
         return { ok: false, reason: 'room-full' };
     }
     const existing = (socialStore.roomInvites || []).find((invite) => (
@@ -572,10 +589,10 @@ export const sendSquadInvite = ({ socialStore, fromUser, toUser, now = new Date(
     return { ok: true, reason: 'invite-sent', inviteId: created.id, roomId: room.id };
 };
 
-export const createSquadRoom = ({ socialStore, user, visibility = 'private', now = new Date(), forceNew = false }) => {
+export const createSquadRoom = ({ socialStore, user, visibility = 'private', label = '', capacity = DEFAULT_ROOM_CAPACITY, game = null, now = new Date(), forceNew = false }) => {
     if (!user) return { ok: false, reason: 'user-not-found' };
     if (forceNew) leaveRoomInternal(socialStore, user.id, now);
-    const room = ensureRoomForUser(socialStore, user, now, { visibility });
+    const room = ensureRoomForUser(socialStore, user, now, { visibility, label, capacity, game });
     room.visibility = normalizeVisibility(visibility, room.visibility || 'private');
     room.updatedAt = now.toISOString();
     return {
@@ -585,6 +602,22 @@ export const createSquadRoom = ({ socialStore, user, visibility = 'private', now
         partyId: room.partyId,
         visibility: room.visibility,
     };
+};
+
+export const listPublicSquadRooms = ({ socialStore, users = [], presenceResolver, viewerUserId = '' }) => {
+    const usersById = new Map(users
+        .filter((item) => item && typeof item === 'object' && ensureString(item.id))
+        .map((item) => [item.id, item]));
+
+    return (socialStore?.rooms || [])
+        .filter((room) => normalizeVisibility(room.visibility, 'private') === 'public')
+        .map((room) => buildRoomPublic({ room, usersById, presenceResolver, viewerUserId }))
+        .filter(Boolean)
+        .sort((a, b) => {
+            const left = Number(new Date(a.updatedAt || 0).getTime()) || 0;
+            const right = Number(new Date(b.updatedAt || 0).getTime()) || 0;
+            return right - left;
+        });
 };
 
 export const setSquadRoomVisibility = ({ socialStore, userId, visibility = 'private', now = new Date() }) => {
@@ -610,7 +643,7 @@ export const joinSquadRoomByPartyId = ({ socialStore, user, partyId, now = new D
         room.updatedAt = now.toISOString();
         return { ok: true, reason: 'already-in-room', roomId: room.id, partyId: room.partyId };
     }
-    if (room.memberIds.length >= clampInt(room.capacity, ROOM_CAPACITY, 2, ROOM_CAPACITY)) {
+    if (room.memberIds.length >= clampInt(room.capacity, DEFAULT_ROOM_CAPACITY, 2, MAX_ROOM_CAPACITY)) {
         return { ok: false, reason: 'room-full' };
     }
     leaveRoomInternal(socialStore, user.id, now);
@@ -664,7 +697,7 @@ export const respondSquadInvite = ({ socialStore, inviteId, actorUser, action, n
         return { ok: false, reason: 'room-expired' };
     }
 
-    if (!room.memberIds.includes(actorId) && room.memberIds.length >= clampInt(room.capacity, ROOM_CAPACITY, 2, ROOM_CAPACITY)) {
+    if (!room.memberIds.includes(actorId) && room.memberIds.length >= clampInt(room.capacity, DEFAULT_ROOM_CAPACITY, 2, MAX_ROOM_CAPACITY)) {
         return { ok: false, reason: 'room-full' };
     }
 

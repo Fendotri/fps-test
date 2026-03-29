@@ -1,7 +1,7 @@
 import { Sky } from 'three/examples/jsm/objects/Sky'
 import { GameContext } from "@src/core/GameContext"
 import { CycleInterface } from '../core/inferface/CycleInterface';
-import { MathUtils, Vector3 } from 'three';
+import { AmbientLight, Color, DirectionalLight, HemisphereLight, MathUtils, Vector3 } from 'three';
 
 // 天空盒
 const skyEffectConfig = {
@@ -22,6 +22,9 @@ export class SkyLayer implements CycleInterface {
     scene: THREE.Scene;
     sky: Sky = new Sky();
     sun: THREE.Vector3 = new Vector3();
+    hemiLight: HemisphereLight;
+    sunLight: DirectionalLight;
+    ambientLight: AmbientLight;
 
     /** 当前情况不需要每帧都更新信息 */
     init(): void {
@@ -41,6 +44,19 @@ export class SkyLayer implements CycleInterface {
         uniforms['sunPosition'].value.copy(this.sun);
         GameContext.GameView.Renderer.toneMappingExposure = skyEffectConfig.exposure;
         this.scene.add(this.sky);
+
+        const levelScene = GameContext.Scenes.Level;
+
+        this.hemiLight = new HemisphereLight(0xd8ecff, 0x5a4632, 1.1);
+        this.ambientLight = new AmbientLight(0xffffff, 0.2);
+        this.sunLight = new DirectionalLight(new Color(0xfff1d6), 1.6);
+        this.sunLight.position.copy(this.sun).multiplyScalar(220);
+        this.sunLight.target.position.set(0, 0, 0);
+
+        levelScene.add(this.hemiLight);
+        levelScene.add(this.ambientLight);
+        levelScene.add(this.sunLight);
+        levelScene.add(this.sunLight.target);
     }
 
 }

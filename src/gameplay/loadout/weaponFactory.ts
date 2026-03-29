@@ -2,8 +2,14 @@ import { InventorySlotEnum } from '@src/gameplay/abstract/InventorySlotEnum';
 import { WeaponClassificationEnum } from '@src/gameplay/abstract/WeaponClassificationEnum';
 import { WeaponInterface } from '@src/gameplay/weapon/abstract/WeaponInterface';
 import { AK47 } from '@src/gameplay/weapon/instances/AK47';
+import { AWP } from '@src/gameplay/weapon/instances/AWP';
 import { M9 } from '@src/gameplay/weapon/instances/M9';
+import { MP9 } from '@src/gameplay/weapon/instances/MP9';
+import { Nova } from '@src/gameplay/weapon/instances/Nova';
 import { USP } from '@src/gameplay/weapon/instances/USP';
+import { GameContext } from '@src/core/GameContext';
+import { getRuntimeWeaponTune } from '@src/gameplay/tuning/RuntimeTuning';
+import { Color, MeshBasicMaterial, SkinnedMesh } from 'three';
 import { DEFAULT_FFA_LOADOUT, getWeaponEntry, LoadoutProfile, normalizeLoadoutProfile, WeaponCatalogEntry } from './weaponCatalog';
 
 const normalizeClass = (value: WeaponClassificationEnum | string, fallback: WeaponClassificationEnum) => {
@@ -18,46 +24,108 @@ const normalizeClass = (value: WeaponClassificationEnum | string, fallback: Weap
     return fallback;
 };
 
-const createPlaceholderWeapon = (entry: WeaponCatalogEntry): WeaponInterface => {
-    const instance: WeaponInterface =
-        entry.placeholderRig === 'usp'
-            ? new USP()
-            : entry.placeholderRig === 'm9'
-                ? new M9()
-                : new AK47();
+const createMeshPresetWeapon = (meshPreset: 'ak' | 'usp' | 'm9'): WeaponInterface => {
+    if (meshPreset === 'usp') return new USP();
+    if (meshPreset === 'm9') return new M9();
+    return new AK47();
+};
 
-    instance.weaponName = entry.displayName;
-    instance.weaponId = entry.weaponId;
-    instance.weaponClassificationEnum = normalizeClass(entry.stats.classification, instance.weaponClassificationEnum);
-    instance.damage = entry.stats.damage;
-    const rpm = Number(entry.stats.rpm);
-    const secondsPerShotFromRpm = rpm > 0 ? (60 / rpm) : 0;
-    instance.rpm = rpm > 0 ? rpm : undefined;
-    instance.tracerSpeed = Number(entry.stats.tracerSpeed) > 0 ? Number(entry.stats.tracerSpeed) : undefined;
-    instance.fireRate = Math.max(
-        0.04,
-        secondsPerShotFromRpm || Number(entry.stats.fireRate) || instance.fireRate || 0.12,
-    );
-    instance.magazineSize = Math.max(1, Math.floor(Number(entry.stats.magazine) || instance.magazineSize || 1));
-    instance.bulletLeftMagzine = instance.magazineSize;
-    instance.bulletLeftTotal = Math.max(0, Math.floor(Number(entry.stats.reserve) || 0));
-    instance.speed = Math.max(
-        120,
-        Math.floor(
-            Number(entry.stats.movementModel?.speed)
-            || Number(entry.stats.speed)
-            || instance.speed
-            || 220,
-        ),
-    );
-    instance.recoilControl = Math.max(1, Math.floor(Number(entry.stats.recoilControl) || instance.recoilControl || 4));
-    instance.recoverTime = Math.max(0.08, Number(entry.stats.recoverTime) || instance.recoverTime || 0.28);
-    instance.reloadTime = Math.max(0.1, Number(entry.stats.reloadTime) || instance.reloadTime || 2.0);
-    instance.accurateRange = Math.max(2, Math.floor(Number(entry.stats.accurateRange) || instance.accurateRange || 110));
-    instance.armorPenetration = Number(entry.stats.damageModel?.armorRatio) || instance.armorPenetration || 1.0;
+const tryCreateRealWeapon = (entry: WeaponCatalogEntry): WeaponInterface | null => {
+    const tune = getRuntimeWeaponTune(entry.weaponId);
+    if (tune.meshPreset !== 'auto') return null;
+    try {
+        switch (entry.weaponId) {
+            case 'ak47': return new AK47();
+            case 'awp': return new AWP();
+            case 'mp9': return new MP9();
+            case 'usp_s': return new USP();
+            case 'm9': return new M9();
+            case 'nova':
+            case 'xm1014': return new Nova();
+            default: return null;
+        }
+    } catch {
+        return null;
+    }
+};
+
+const applyWeaponMaterialTuning = (entry: WeaponCatalogEntry, tintHex: string, brightness: number, meshPreset: 'auto' | 'ak' | 'usp' | 'm9') => {
+    const resourceBase = meshPreset === 'auto'
+        ? (entry.placeholderRig === 'usp' ? 'USP' : (entry.placeholderRig === 'm9' ? 'M9' : 'AK47'))
+        : (meshPreset === 'usp' ? 'USP' : (meshPreset === 'm9' ? 'M9' : 'AK47'));
+    const preferredBase = meshPreset === 'auto'
+        ? (entry.weaponId === 'awp' ? 'AWP' : (entry.weaponId === 'mp9' ? 'MP9' : (entry.weaponId === 'm9' ? 'M9' : (entry.weaponId === 'usp_s' ? 'USP' : (entry.weaponId === 'nova' || entry.weaponId === 'xm1014' ? 'AK47' : 'AK47')))))
+        : resourceBase;
+    const resourceKey = `${preferredBase}_1`;
+    const mesh = GameContext.GameResources.resourceMap.get(resourceKey) as SkinnedMesh | undefined;
+    if (!mesh) return;
+    const tint = new Color(tintHex);
+    const luminance = Math.max(0.25, Math.min(3, brightness));
+    const applyToMaterial = (material: MeshBasicMaterial) => {
+        material.color.copy(tint).multiplyScalar(luminance);
+        material.needsUpdate = true;
+    };
+
+    if (Array.isArray(mesh.material)) {
+        mesh.material.forEach((material) => {
+            if (material instanceof MeshBasicMaterial) applyToMaterial(material);
+        });
+        return;
+    }
+    if (mesh.material instanceof MeshBasicMaterial) applyToMaterial(mesh.material);
+};
+
+export const applyRuntimeTuningToWeaponInstance = (weapon: WeaponInterface | null | undefined, explicitWeaponId?: string) => {
+    if (!weapon) return null;
+    const weaponId = `${explicitWeaponId || weapon.weaponId || ''}`.trim().toLowerCase();
+    const entry = getWeaponEntry(weaponId) || getWeaponEntry(DEFAULT_FFA_LOADOUT.primary);
+    if (!entry) return weapon;
+    const tune = getRuntimeWeaponTune(entry.weaponId);
+
+    weapon.weaponId = entry.weaponId;
+    weapon.weaponName = entry.displayName;
+    weapon.weaponClassificationEnum = normalizeClass(entry.stats.classification, weapon.weaponClassificationEnum);
+    weapon.damage = tune.damage;
+    weapon.rpm = tune.rpm;
+    weapon.tracerSpeed = tune.tracerSpeed;
+    weapon.fireRate = Math.max(0.04, 60 / Math.max(1, tune.rpm));
+    weapon.magazineSize = tune.magazine;
+    weapon.bulletLeftMagzine = Math.min(Math.max(0, Number(weapon.bulletLeftMagzine) || tune.magazine), tune.magazine);
+    weapon.bulletLeftTotal = Math.min(Math.max(0, Number(weapon.bulletLeftTotal) || tune.reserve), tune.reserve);
+    weapon.speed = tune.speed;
+    weapon.recoilControl = tune.recoilControl;
+    weapon.recoverTime = tune.recoverTime;
+    weapon.reloadTime = tune.reloadTime;
+    weapon.accurateRange = tune.accurateRange;
+    weapon.armorPenetration = Number(entry.stats.damageModel?.armorRatio) || weapon.armorPenetration || 1.0;
+
+    applyWeaponMaterialTuning(entry, tune.materialTint, tune.materialBrightness, tune.meshPreset);
+    return weapon;
+};
+
+const createPlaceholderWeapon = (entry: WeaponCatalogEntry): WeaponInterface => {
+    const tune = getRuntimeWeaponTune(entry.weaponId);
+    const instance: WeaponInterface =
+        tryCreateRealWeapon(entry)
+        || createMeshPresetWeapon(tune.meshPreset === 'auto' ? entry.placeholderRig : tune.meshPreset);
+
     instance.lastFireTime = 0;
     instance.active = false;
-    return instance;
+    return applyRuntimeTuningToWeaponInstance(instance, entry.weaponId) || instance;
+};
+
+export const createWeaponById = (weaponId: string, fallbackId = DEFAULT_FFA_LOADOUT.primary) => {
+    return createPlaceholderWeapon(ensureEntry(weaponId, fallbackId));
+};
+
+export const cloneWeaponInstanceWithAmmo = (weapon: WeaponInterface | null | undefined) => {
+    if (!weapon) return null;
+    const cloned = createWeaponById(`${weapon.weaponId || weapon.weaponName || ''}`);
+    cloned.bulletLeftMagzine = Math.max(0, Number(weapon.bulletLeftMagzine) || 0);
+    cloned.bulletLeftTotal = Math.max(0, Number(weapon.bulletLeftTotal) || 0);
+    cloned.lastFireTime = 0;
+    cloned.active = false;
+    return cloned;
 };
 
 const ensureEntry = (weaponId: string, fallbackId: string) => {

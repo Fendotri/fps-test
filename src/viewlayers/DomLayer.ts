@@ -27,6 +27,7 @@ import {
     SocialSnapshot,
     SocialUserEntry,
     ShopOffer,
+    SquadRoomState,
     WeaponCatalogItem,
 } from '@src/services/BackendApi';
 import { DEFAULT_AVATAR_ID, FRONTEND_AVATAR_CATALOG, getAvatarImageUrl, getAvatarLabel } from '@src/shared/AvatarCatalog';
@@ -44,6 +45,13 @@ import caseTier9Url from '@assets/case/9.png';
 import caseAnimationRefUrl from '@assets/gui/CASE - ANIMATION.jpg';
 import caseBuyRefUrl from '@assets/gui/CASE - BUY.jpg';
 import weaponReviewRefUrl from '@assets/gui/WEAPON REVIEW - EQUIP.jpg';
+import {
+    getContentStudioSnapshot,
+    getStudioCaseCatalogItems,
+    getStudioShopOffers,
+    getStudioWeaponCatalogItems,
+    subscribeContentStudio,
+} from '@src/content/ContentStudio';
 
 type GunAssetEntry = {
     url: string;
@@ -58,7 +66,7 @@ type GunAssetEntry = {
 
 type MenuTab = 'play' | 'inventory' | 'shop' | 'leaderboard' | 'rewards' | 'missions';
 type ShopSubTab = 'home' | 'case' | 'weapon' | 'emotes' | 'buy_fp';
-type ForboxModalType = 'none' | 'account' | 'squad' | 'create_game' | 'purchase_confirm';
+type ForboxModalType = 'none' | 'account' | 'squad' | 'create_game' | 'find_game' | 'purchase_confirm';
 
 type CaseSpinResult = {
     skin: SkinItem;
@@ -68,80 +76,18 @@ type CaseSpinResult = {
     durationMs: number;
 };
 
-const FALLBACK_LOADOUT: LoadoutProfile = {
-    primary: 'ak47',
-    secondary: 'usp_s',
-    knife: 'm9',
-};
+const FALLBACK_LOADOUT: LoadoutProfile = (() => {
+    const loadout = getContentStudioSnapshot().defaultLoadout;
+    return {
+        primary: `${loadout?.primary || 'ak47'}`,
+        secondary: `${loadout?.secondary || 'usp_s'}`,
+        knife: `${loadout?.knife || 'm9'}`,
+    };
+})();
 
-const FALLBACK_WEAPON_CATALOG: WeaponCatalogItem[] = [
-    { weaponId: 'mac10', displayName: 'MAC-10', category: 'SMG', priceCoin: 1050, slot: 'primary', placeholderRig: 'ak', stats: { damage: 29, fireRate: 60 / 800, magazine: 30, reserve: 100, speed: 240, classification: 'smg' } },
-    { weaponId: 'mp9', displayName: 'MP9', category: 'SMG', priceCoin: 1250, slot: 'primary', placeholderRig: 'ak', stats: { damage: 26, fireRate: 60 / 857, magazine: 30, reserve: 120, speed: 240, classification: 'smg' } },
-    { weaponId: 'p90', displayName: 'P90', category: 'SMG', priceCoin: 2350, slot: 'primary', placeholderRig: 'ak', stats: { damage: 26, fireRate: 60 / 857, magazine: 50, reserve: 100, speed: 230, classification: 'smg' } },
-    { weaponId: 'ak47', displayName: 'AK-47', category: 'Rifles', priceCoin: 2700, slot: 'primary', placeholderRig: 'ak', stats: { damage: 36, fireRate: 60 / 600, magazine: 30, reserve: 90, speed: 215, classification: 'rifle' } },
-    { weaponId: 'm4a1_s', displayName: 'M4A1-S', category: 'Rifles', priceCoin: 2900, slot: 'primary', placeholderRig: 'ak', stats: { damage: 33, fireRate: 60 / 600, magazine: 25, reserve: 75, speed: 220, classification: 'rifle' } },
-    { weaponId: 'sg553', displayName: 'SG 553', category: 'Rifles', priceCoin: 3000, slot: 'primary', placeholderRig: 'ak', stats: { damage: 30, fireRate: 60 / 545, magazine: 30, reserve: 90, speed: 210, classification: 'rifle' } },
-    { weaponId: 'aug', displayName: 'AUG', category: 'Rifles', priceCoin: 3300, slot: 'primary', placeholderRig: 'ak', stats: { damage: 28, fireRate: 60 / 600, magazine: 30, reserve: 90, speed: 220, classification: 'rifle' } },
-    { weaponId: 'awp', displayName: 'AWP', category: 'Sniper', priceCoin: 4750, slot: 'primary', placeholderRig: 'ak', stats: { damage: 115, fireRate: 1.2, magazine: 10, reserve: 30, speed: 200, classification: 'sniper' } },
-    { weaponId: 'xm1014', displayName: 'XM1014', category: 'Shotgun', priceCoin: 2000, slot: 'primary', placeholderRig: 'ak', stats: { damage: 20, fireRate: 60 / 171, magazine: 7, reserve: 32, speed: 215, classification: 'shotgun' } },
-    { weaponId: 'negev', displayName: 'Negev', category: 'Machinegun', priceCoin: 1700, slot: 'primary', placeholderRig: 'ak', stats: { damage: 35, fireRate: 60 / 800, magazine: 150, reserve: 200, speed: 195, classification: 'machinegun' } },
-    { weaponId: 'usp_s', displayName: 'USP-S', category: 'Pistols', priceCoin: 200, slot: 'secondary', placeholderRig: 'usp', stats: { damage: 35, fireRate: 0.17, magazine: 12, reserve: 72, speed: 240, classification: 'pistol' } },
-    { weaponId: 'glock18', displayName: 'Glock-18', category: 'Pistols', priceCoin: 200, slot: 'secondary', placeholderRig: 'usp', stats: { damage: 30, fireRate: 0.11, magazine: 20, reserve: 120, speed: 240, classification: 'pistol' } },
-    { weaponId: 'deagle', displayName: 'Desert Eagle', category: 'Pistols', priceCoin: 700, slot: 'secondary', placeholderRig: 'usp', stats: { damage: 53, fireRate: 0.29, magazine: 7, reserve: 35, speed: 230, classification: 'pistol' } },
-    { weaponId: 'm9', displayName: 'M9 Knife', category: 'Knife', priceCoin: 0, slot: 'knife', placeholderRig: 'm9', stats: { damage: 55, fireRate: 0.5, magazine: 1, reserve: 0, speed: 250, classification: 'knife' } },
-];
-
-const FALLBACK_OFFERS: ShopOffer[] = [
-    {
-        id: 'case_falcon',
-        title: 'Falcon Case',
-        type: 'case',
-        caseId: 'falcon_case',
-        priceCoin: 180,
-        description: 'Balanced drop pool for rifle and pistol skins.',
-    },
-    {
-        id: 'case_mirage',
-        title: 'Mirage Case',
-        type: 'case',
-        caseId: 'mirage_case',
-        priceCoin: 320,
-        description: 'Higher-tier drop pool with rare outcomes.',
-    },
-];
-
-const FALLBACK_CASES: CaseCatalogItem[] = [
-    {
-        id: 'falcon_case',
-        title: 'Falcon Case',
-        openPriceCoin: 180,
-        drops: [
-            { skin: 'Forest Camo AK', rarity: 'milspec' },
-            { skin: 'Crimson USP', rarity: 'milspec' },
-            { skin: 'Ice Nova', rarity: 'milspec' },
-            { skin: 'Carbon AWP', rarity: 'restricted' },
-            { skin: 'Neon MP9', rarity: 'restricted' },
-            { skin: 'Night M9', rarity: 'classified' },
-            { skin: 'Urban Heavy Outfit', rarity: 'classified' },
-            { skin: 'Bronze Mirage Gloves', rarity: 'covert' },
-        ],
-    },
-    {
-        id: 'mirage_case',
-        title: 'Mirage Case',
-        openPriceCoin: 320,
-        drops: [
-            { skin: 'Obsidian AK', rarity: 'restricted' },
-            { skin: 'Ruby USP', rarity: 'restricted' },
-            { skin: 'Azure Nova', rarity: 'restricted' },
-            { skin: 'Gold Carbon AWP', rarity: 'classified' },
-            { skin: 'Arctic MP9', rarity: 'classified' },
-            { skin: 'Ivory M9', rarity: 'covert' },
-            { skin: 'Phoenix Operator Outfit', rarity: 'covert' },
-            { skin: 'Diamond Mirage Gloves', rarity: 'contraband' },
-        ],
-    },
-];
+const FALLBACK_WEAPON_CATALOG: WeaponCatalogItem[] = getStudioWeaponCatalogItems();
+const FALLBACK_OFFERS: ShopOffer[] = getStudioShopOffers();
+const FALLBACK_CASES: CaseCatalogItem[] = getStudioCaseCatalogItems();
 
 const FALLBACK_PROGRESSION: ProgressionProfile = {
     serverTime: new Date(0).toISOString(),
@@ -330,11 +276,14 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
     private currentShopSubTab: ShopSubTab = 'case';
     private activeForboxModal: ForboxModalType = 'none';
     private currentGameMode = 'ffa';
+    private activeMatchRoom: SquadRoomState | null = null;
+    private publicMatchRooms: SquadRoomState[] = [];
     private boardPeriod: LeaderboardPeriod = 'daily';
     private boardMetric: LeaderboardMetric = 'kills';
     private leaderboardView: 'stats' | 'premier' = 'stats';
     private gameStarted = false;
     private intermissionActive = false;
+    private devPanelOpen = false;
     private leaderboardRequestId = 0;
     private leaderboardCountdownInterval: number | null = null;
     private leaderboardServerOffsetMs = 0;
@@ -423,6 +372,7 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
     private accountModalEl: HTMLDivElement;
     private squadModalEl: HTMLDivElement;
     private createGameModalEl: HTMLDivElement;
+    private findGameModalEl: HTMLDivElement;
     private purchaseConfirmModalEl: HTMLDivElement;
     private accountDisplayNameEl: HTMLSpanElement;
     private accountStatsListEl: HTMLDivElement;
@@ -466,7 +416,12 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
     private createGameModeEl: HTMLSelectElement;
     private createGameFillBotsEl: HTMLInputElement;
     private createGameNameEl: HTMLInputElement;
+    private findGameStatusEl: HTMLDivElement;
+    private findGameListEl: HTMLDivElement;
+    private findGameRefreshBtn: HTMLButtonElement;
     private purchaseConfirmTextEl: HTMLDivElement;
+    private quickMatchOverlayEl: HTMLDivElement;
+    private quickMatchCardEl: HTMLDivElement;
 
     private caseModalEl: HTMLDivElement;
     private caseModalTitleEl: HTMLDivElement;
@@ -487,9 +442,9 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
 
     private sessionToken: string | null = null;
     private currentUser: AuthUser | null = null;
-    private shopOffers: ShopOffer[] = [...FALLBACK_OFFERS];
-    private caseCatalog: CaseCatalogItem[] = [...FALLBACK_CASES];
-    private weaponCatalog: WeaponCatalogItem[] = [...FALLBACK_WEAPON_CATALOG];
+    private shopOffers: ShopOffer[] = getStudioShopOffers();
+    private caseCatalog: CaseCatalogItem[] = getStudioCaseCatalogItems();
+    private weaponCatalog: WeaponCatalogItem[] = getStudioWeaponCatalogItems();
 
     private selectedCaseId: string | null = null;
     private selectedCaseOfferId: string | null = null;
@@ -529,7 +484,7 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
                     this.blocker.style.display = 'none';
                     break;
                 case PointLockEventEnum.UNLOCK:
-                    if (this.gameStarted && !this.intermissionActive) {
+                    if (this.gameStarted && !this.intermissionActive && !this.devPanelOpen) {
                         this.showPauseBlocker();
                     }
                     break;
@@ -551,6 +506,29 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
 
         window.addEventListener('game:open-main-menu', () => {
             this.openMainMenuState();
+        });
+
+        window.addEventListener('game:dev-panel-visibility', (event: Event) => {
+            const detail = ((event as CustomEvent).detail || {}) as { open?: boolean };
+            this.devPanelOpen = !!detail.open;
+            if (this.devPanelOpen) this.blocker.style.display = 'none';
+        });
+
+        subscribeContentStudio((state) => {
+            this.shopOffers = getStudioShopOffers();
+            this.caseCatalog = getStudioCaseCatalogItems();
+            this.weaponCatalog = getStudioWeaponCatalogItems();
+            if (!this.currentUser) return;
+            this.currentUser.loadout = {
+                ...this.currentUser.loadout,
+                primary: `${state.defaultLoadout?.primary || this.currentUser.loadout?.primary || FALLBACK_LOADOUT.primary}`,
+                secondary: `${state.defaultLoadout?.secondary || this.currentUser.loadout?.secondary || FALLBACK_LOADOUT.secondary}`,
+                knife: `${state.defaultLoadout?.knife || this.currentUser.loadout?.knife || FALLBACK_LOADOUT.knife}`,
+            };
+            if (this.mainMenu.style.display !== 'none') {
+                this.renderInventory();
+                this.renderShop();
+            }
         });
 
         window.addEventListener('game:profile-updated', (e: Event) => {
@@ -1163,6 +1141,18 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
                         <button id="forbox-create-confirm" class="ok" type="button">CREATE GAME</button>
                     </div>
                 </div>
+                <div class="forbox-modal hidden" id="forbox-find-game-modal">
+                    <h3>Find Match</h3>
+                    <p>Browse public online rooms and join by party id.</p>
+                    <div class="menu-inline-msg" id="forbox-find-game-status">Loading public rooms...</div>
+                    <div class="forbox-modal-actions">
+                        <button id="forbox-find-game-refresh" type="button">REFRESH</button>
+                    </div>
+                    <div class="forbox-account-friend-list" id="forbox-find-game-list"></div>
+                    <div class="forbox-modal-actions">
+                        <button data-modal-cancel type="button">CLOSE</button>
+                    </div>
+                </div>
                 <div class="forbox-modal hidden" id="forbox-purchase-modal">
                     <h3>Confirm Purchase</h3>
                     <p id="forbox-purchase-text">Are you sure you want to purchase this item?</p>
@@ -1175,6 +1165,16 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
         `;
 
         GameContext.GameView.Container.appendChild(this.mainMenu);
+        this.quickMatchOverlayEl = document.createElement('div');
+        this.quickMatchOverlayEl.className = 'forbox-modal-host hidden';
+        this.quickMatchOverlayEl.innerHTML = '<div class="forbox-modal-backdrop"></div>';
+        this.quickMatchCardEl = document.createElement('div');
+        this.quickMatchCardEl.className = 'forbox-modal';
+        this.quickMatchOverlayEl.appendChild(this.quickMatchCardEl);
+        GameContext.GameView.Container.appendChild(this.quickMatchOverlayEl);
+        this.quickMatchOverlayEl.querySelector('.forbox-modal-backdrop')?.addEventListener('click', () => {
+            this.hideQuickMatchOverlay();
+        });
 
         this.walletValueEl = this.mainMenu.querySelector('#menu-wallet-value') as HTMLSpanElement;
         this.topWalletValueEl = this.mainMenu.querySelector('#menu-top-wallet-value') as HTMLSpanElement;
@@ -1267,6 +1267,7 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
         this.accountModalEl = this.mainMenu.querySelector('#forbox-account-modal') as HTMLDivElement;
         this.squadModalEl = this.mainMenu.querySelector('#forbox-squad-modal') as HTMLDivElement;
         this.createGameModalEl = this.mainMenu.querySelector('#forbox-create-game-modal') as HTMLDivElement;
+        this.findGameModalEl = this.mainMenu.querySelector('#forbox-find-game-modal') as HTMLDivElement;
         this.purchaseConfirmModalEl = this.mainMenu.querySelector('#forbox-purchase-modal') as HTMLDivElement;
         this.accountDisplayNameEl = this.mainMenu.querySelector('#forbox-account-display-name') as HTMLSpanElement;
         this.accountStatsListEl = this.mainMenu.querySelector('#forbox-account-stats-list') as HTMLDivElement;
@@ -1310,6 +1311,9 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
         this.createGameModeEl = this.mainMenu.querySelector('#forbox-create-mode') as HTMLSelectElement;
         this.createGameFillBotsEl = this.mainMenu.querySelector('#forbox-create-bots') as HTMLInputElement;
         this.createGameNameEl = this.mainMenu.querySelector('#forbox-create-name') as HTMLInputElement;
+        this.findGameStatusEl = this.mainMenu.querySelector('#forbox-find-game-status') as HTMLDivElement;
+        this.findGameListEl = this.mainMenu.querySelector('#forbox-find-game-list') as HTMLDivElement;
+        this.findGameRefreshBtn = this.mainMenu.querySelector('#forbox-find-game-refresh') as HTMLButtonElement;
         this.purchaseConfirmTextEl = this.mainMenu.querySelector('#forbox-purchase-text') as HTMLDivElement;
 
         this.loadIdentityState();
@@ -1350,10 +1354,10 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
                 this.showTab('play');
                 return;
             }
-            this.startGameSession('ffa', 300);
+            this.openFindGameOverlay();
         });
         createGameButton.addEventListener('click', () => {
-            this.showForboxModal('create_game');
+            this.openCreateGameOverlay();
         });
 
         this.mainMenu.querySelectorAll('[data-slot]').forEach(slotEl => {
@@ -1543,14 +1547,10 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
         });
         const createConfirmBtn = this.mainMenu.querySelector('#forbox-create-confirm') as HTMLButtonElement;
         createConfirmBtn.addEventListener('click', () => {
-            const selectedPlayers = Math.max(2, toInt(this.createGamePlayersEl.value, 4, 2));
-            const selectedDuration = Math.max(60, toInt(this.createGameDurationEl.value, 300, 60));
-            const selectedMode = `${this.createGameModeEl.value || 'ffa'}`.trim().toLowerCase();
-            const fillBots = !!this.createGameFillBotsEl.checked;
-            const lobbyName = `${this.createGameNameEl.value || ''}`.trim();
-            this.hideForboxModal();
-            this.setAuthStatus(`Lobby preset: ${selectedMode.toUpperCase()} | ${selectedPlayers}P | bots ${fillBots ? 'ON' : 'OFF'}${lobbyName ? ` | ${lobbyName}` : ''}`);
-            this.startGameSession('ffa', selectedDuration);
+            void this.handleCreateMatchRoom();
+        });
+        this.findGameRefreshBtn.addEventListener('click', () => {
+            void this.refreshPublicMatchRooms();
         });
         const purchaseConfirmBtn = this.mainMenu.querySelector('#forbox-purchase-confirm') as HTMLButtonElement;
         purchaseConfirmBtn.addEventListener('click', () => {
@@ -2131,6 +2131,7 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
         const normalizedId = this.normalizeWeaponId(weaponId);
         if (normalizedId === 'character') return weaponReviewRefUrl;
         const weaponMeta = this.weaponCatalog.find((item) => this.normalizeWeaponId(item.weaponId) === normalizedId);
+        if (weaponMeta?.iconPath) return weaponMeta.iconPath;
         const slot = weaponMeta?.slot || (normalizedId === 'm9' ? 'knife' : undefined);
         const candidateKeys = new Set([
             normalizeGunAssetKey(normalizedId),
@@ -4494,13 +4495,21 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
                 void this.refreshSocialState(true);
             }
         }
+        if (type === 'find_game') {
+            this.renderPublicMatchRooms();
+            if (this.isAuthenticated()) void this.refreshPublicMatchRooms();
+        }
         this.forboxModalHostEl.classList.toggle('hidden', type === 'none');
         const setVisible = (el: HTMLDivElement, visible: boolean) => {
+            if (!el) return;
             el.classList.toggle('hidden', !visible);
+            if (visible) el.style.display = 'grid';
+            else el.style.removeProperty('display');
         };
         setVisible(this.accountModalEl, type === 'account');
         setVisible(this.squadModalEl, type === 'squad');
         setVisible(this.createGameModalEl, type === 'create_game');
+        setVisible(this.findGameModalEl, type === 'find_game');
         setVisible(this.purchaseConfirmModalEl, type === 'purchase_confirm');
     }
 
@@ -4597,7 +4606,195 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
         localPlayer.money = Math.max(0, Math.floor(this.currentUser.wallet));
     }
 
-    private startGameSession(mode: string, durationSeconds: number) {
+    private renderPublicMatchRooms() {
+        if (!this.findGameListEl || !this.findGameStatusEl) return;
+        const rooms = Array.isArray(this.publicMatchRooms) ? this.publicMatchRooms : [];
+        if (!rooms.length) {
+            this.findGameListEl.innerHTML = '<div class="inventory-empty">No public rooms online right now.</div>';
+            return;
+        }
+
+        this.findGameListEl.innerHTML = rooms.map((room) => {
+            const game = room.game || { mode: 'ffa', durationSeconds: 300, fillBots: true };
+            const host = room.members?.find((item) => item.userId === room.hostUserId) || room.members?.[0] || null;
+            return `
+                <div class="forbox-social-row">
+                    <div class="forbox-social-row-main">
+                        <div class="forbox-social-row-title">${escapeHtml(room.label || 'PUBLIC ROOM')}</div>
+                        <div class="forbox-social-row-meta">
+                            ${escapeHtml((game.mode || 'ffa').toUpperCase())} |
+                            ${Math.max(1, toInt(game.durationSeconds, 300, 1))}s |
+                            ${room.memberCount || 0}/${room.capacity || 4} |
+                            bots ${game.fillBots ? 'ON' : 'OFF'} |
+                            host ${escapeHtml(host?.username || 'Unknown')}
+                        </div>
+                        <div class="forbox-social-room-link">Party ID: ${escapeHtml(room.partyId || '------')}</div>
+                    </div>
+                    <div class="forbox-social-row-actions">
+                        <button type="button" data-find-room-party="${escapeHtml(room.partyId || '')}">JOIN</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        this.findGameListEl.querySelectorAll('button[data-find-room-party]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const partyId = `${(button as HTMLButtonElement).dataset.findRoomParty || ''}`.trim();
+                if (!partyId) return;
+                void this.joinPublicMatchRoom(partyId);
+            });
+        });
+    }
+
+    private showQuickMatchOverlay(title: string, subtitle: string, bodyHtml: string, afterRender?: () => void) {
+        if (!this.quickMatchOverlayEl || !this.quickMatchCardEl) return;
+        this.quickMatchCardEl.innerHTML = `
+            <h3>${escapeHtml(title)}</h3>
+            <p>${escapeHtml(subtitle)}</p>
+            ${bodyHtml}
+        `;
+        this.quickMatchOverlayEl.classList.remove('hidden');
+        afterRender?.();
+    }
+
+    private hideQuickMatchOverlay() {
+        if (!this.quickMatchOverlayEl || !this.quickMatchCardEl) return;
+        this.quickMatchOverlayEl.classList.add('hidden');
+        this.quickMatchCardEl.innerHTML = '';
+    }
+
+    private openCreateGameOverlay() {
+        this.showQuickMatchOverlay(
+            'Create Match',
+            'Set up a public online room.',
+            `
+                <div class="forbox-form-grid">
+                    <label>Max Players<select id="quick-create-players"><option value="4">4 players</option><option value="6">6 players</option><option value="8">8 players</option></select></label>
+                    <label>Game Duration<select id="quick-create-duration"><option value="120">2 minutes</option><option value="300" selected>5 minutes</option><option value="600">10 minutes</option></select></label>
+                    <label>Game Mode<select id="quick-create-mode"><option value="ffa" selected>Free For All</option><option value="tdm">Team Deathmatch</option></select></label>
+                    <label>Fill With Bots<input id="quick-create-bots" type="checkbox" checked /></label>
+                    <label class="forbox-wide">Lobby Name<input id="quick-create-name" type="text" maxlength="24" placeholder="enter lobby name..." /></label>
+                </div>
+                <div class="forbox-modal-actions">
+                    <button id="quick-create-cancel" type="button">CANCEL</button>
+                    <button id="quick-create-confirm" class="ok" type="button">CREATE GAME</button>
+                </div>
+            `,
+            () => {
+                (this.quickMatchCardEl.querySelector('#quick-create-cancel') as HTMLButtonElement).addEventListener('click', () => this.hideQuickMatchOverlay());
+                (this.quickMatchCardEl.querySelector('#quick-create-confirm') as HTMLButtonElement).addEventListener('click', () => {
+                    this.createGamePlayersEl.value = `${((this.quickMatchCardEl.querySelector('#quick-create-players') as HTMLSelectElement)?.value || '4')}`;
+                    this.createGameDurationEl.value = `${((this.quickMatchCardEl.querySelector('#quick-create-duration') as HTMLSelectElement)?.value || '300')}`;
+                    this.createGameModeEl.value = `${((this.quickMatchCardEl.querySelector('#quick-create-mode') as HTMLSelectElement)?.value || 'ffa')}`;
+                    this.createGameFillBotsEl.checked = !!((this.quickMatchCardEl.querySelector('#quick-create-bots') as HTMLInputElement)?.checked);
+                    this.createGameNameEl.value = `${((this.quickMatchCardEl.querySelector('#quick-create-name') as HTMLInputElement)?.value || '')}`;
+                    this.hideQuickMatchOverlay();
+                    void this.handleCreateMatchRoom();
+                });
+            },
+        );
+    }
+
+    private openFindGameOverlay() {
+        this.showQuickMatchOverlay(
+            'Find Match',
+            'Browse public online rooms and join one.',
+            `
+                <div class="menu-inline-msg" id="quick-find-game-status">Loading public rooms...</div>
+                <div class="forbox-modal-actions">
+                    <button id="quick-find-game-refresh" type="button">REFRESH</button>
+                    <button id="quick-find-game-close" type="button">CLOSE</button>
+                </div>
+                <div class="forbox-account-friend-list" id="quick-find-game-list"></div>
+            `,
+            () => {
+                this.findGameStatusEl = this.quickMatchCardEl.querySelector('#quick-find-game-status') as HTMLDivElement;
+                this.findGameListEl = this.quickMatchCardEl.querySelector('#quick-find-game-list') as HTMLDivElement;
+                (this.quickMatchCardEl.querySelector('#quick-find-game-refresh') as HTMLButtonElement).addEventListener('click', () => {
+                    void this.refreshPublicMatchRooms();
+                });
+                (this.quickMatchCardEl.querySelector('#quick-find-game-close') as HTMLButtonElement).addEventListener('click', () => {
+                    this.hideQuickMatchOverlay();
+                });
+                this.renderPublicMatchRooms();
+                void this.refreshPublicMatchRooms();
+            },
+        );
+    }
+
+    private async refreshPublicMatchRooms() {
+        if (!this.findGameStatusEl) return;
+        this.findGameStatusEl.textContent = 'Refreshing public rooms...';
+        try {
+            const payload = await backendApi.listPublicMatchRooms();
+            this.publicMatchRooms = Array.isArray(payload.rooms) ? payload.rooms : [];
+            this.renderPublicMatchRooms();
+            this.findGameStatusEl.textContent = this.publicMatchRooms.length
+                ? `${this.publicMatchRooms.length} public room(s) online.`
+                : 'No public rooms online right now.';
+        } catch (error: any) {
+            this.publicMatchRooms = [];
+            this.renderPublicMatchRooms();
+            this.findGameStatusEl.textContent = error?.message || 'Public room list failed.';
+        }
+    }
+
+    private async handleCreateMatchRoom() {
+        if (!this.isAuthenticated() || !this.sessionToken) {
+            this.setAuthStatus('Login required to create an online room.');
+            return;
+        }
+        const selectedPlayers = Math.max(2, toInt(this.createGamePlayersEl.value, 4, 2));
+        const selectedDuration = Math.max(60, toInt(this.createGameDurationEl.value, 300, 60));
+        const selectedMode = `${this.createGameModeEl.value || 'ffa'}`.trim().toLowerCase();
+        const fillBots = !!this.createGameFillBotsEl.checked;
+        const lobbyName = `${this.createGameNameEl.value || ''}`.trim();
+        try {
+            const payload = await backendApi.createMatchRoom(this.sessionToken, {
+                visibility: 'public',
+                forceNew: true,
+                label: lobbyName || `${this.getDisplayName().toUpperCase()} ROOM`,
+                capacity: selectedPlayers,
+                game: {
+                    mode: selectedMode,
+                    durationSeconds: selectedDuration,
+                    fillBots,
+                },
+            });
+            this.socialSnapshot = payload.social || this.socialSnapshot;
+            this.renderSocialPanel();
+            this.activeMatchRoom = this.socialSnapshot?.squad?.room || null;
+            this.hideForboxModal();
+            this.setAuthStatus(`Online room ready. Party ID: ${this.activeMatchRoom?.partyId || '------'}`);
+            this.startGameSession(selectedMode, selectedDuration, this.activeMatchRoom);
+        } catch (error: any) {
+            this.setAuthStatus(error?.message || 'Room creation failed.');
+        }
+    }
+
+    private async joinPublicMatchRoom(partyId: string) {
+        if (!this.sessionToken || !this.currentUser) {
+            this.setAuthStatus('Login required to join an online room.');
+            return;
+        }
+        const safePartyId = this.sanitizePartyId(partyId);
+        if (!safePartyId) return;
+        this.findGameStatusEl.textContent = `Joining ${safePartyId}...`;
+        try {
+            const payload = await backendApi.joinSquadRoom(this.sessionToken, safePartyId);
+            this.socialSnapshot = payload.social || this.socialSnapshot;
+            this.renderSocialPanel();
+            this.activeMatchRoom = this.socialSnapshot?.squad?.room || null;
+            const game = this.activeMatchRoom?.game || { mode: 'ffa', durationSeconds: 300 };
+            this.hideForboxModal();
+            this.setAuthStatus(`Joined online room ${safePartyId}.`);
+            this.startGameSession(game.mode || 'ffa', Math.max(60, toInt(game.durationSeconds, 300, 60)), this.activeMatchRoom);
+        } catch (error: any) {
+            this.findGameStatusEl.textContent = error?.message || `Join failed for ${safePartyId}.`;
+        }
+    }
+
+    private startGameSession(mode: string, durationSeconds: number, room?: SquadRoomState | null) {
         const safeMode = `${mode || 'ffa'}`.trim().toLowerCase();
         const requireAuth = true;
         if (requireAuth && !this.isAuthenticated()) {
@@ -4607,8 +4804,11 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
         }
 
         const user = this.currentUser;
+        this.activeMatchRoom = room || this.activeMatchRoom || null;
         this.currentGameMode = safeMode;
         this.gameStarted = true;
+        this.hideQuickMatchOverlay();
+        this.hideForboxModal();
         this.mainMenu.classList.add('hidden');
         this.blocker.style.display = 'none';
 
@@ -4616,6 +4816,13 @@ export class DOMLayer extends EventTarget implements CycleInterface, LoopInterfa
             detail: {
                 mode: safeMode,
                 durationSeconds: Math.max(0, Math.floor(durationSeconds || 0)),
+                room: this.activeMatchRoom ? {
+                    id: this.activeMatchRoom.id,
+                    partyId: this.activeMatchRoom.partyId,
+                    visibility: this.activeMatchRoom.visibility,
+                    label: this.activeMatchRoom.label,
+                    game: this.activeMatchRoom.game || null,
+                } : undefined,
                 auth: user ? {
                     token: this.sessionToken,
                     username: this.getDisplayName(),

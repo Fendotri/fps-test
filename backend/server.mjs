@@ -1,5 +1,7 @@
 import http from 'node:http';
 import crypto from 'node:crypto';
+import { mkdir, readdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 import { config } from './src/config.mjs';
 import { JsonDb, createNewUser, toPublicUser } from './src/db.mjs';
 import {
@@ -18,6 +20,7 @@ import {
     claimFriendGift,
     joinSquadRoomByPartyId,
     leaveSquadRoom,
+    listPublicSquadRooms,
     markDirectThreadRead,
     respondSquadInvite,
     sendDirectMessage,
@@ -66,6 +69,7 @@ import {
 } from './src/auth.mjs';
 import { attachRealtimeGateway } from './src/realtime.mjs';
 import { createLobbyChatService } from './src/chat.mjs';
+import { buildAdminContentPage } from './src/adminContentPage.mjs';
 
 const json = (res, statusCode, payload) => {
     const body = JSON.stringify(payload);
@@ -91,10 +95,10 @@ const setCors = (req, res) => {
     return allowed;
 };
 
-const parseBody = async (req) => {
+const parseBody = async (req, options = {}) => {
     const chunks = [];
     let size = 0;
-    const maxSize = 1024 * 1024;
+    const maxSize = Math.max(1024, Number(options.maxSizeBytes) || (1024 * 1024));
 
     for await (const chunk of req) {
         size += chunk.length;
@@ -130,6 +134,59 @@ const toWeaponKillMap = (value) => {
     });
     return output;
 };
+
+const html = (res, statusCode, body) => {
+    res.statusCode = statusCode;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Content-Length', Buffer.byteLength(body));
+    res.end(body);
+};
+
+const sanitizeAssetName = (value, fallback = 'asset') => `${value || fallback}`
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    || fallback;
+
+const decodeBase64Payload = (value) => {
+    const raw = `${value || ''}`.trim();
+    if (!raw) return null;
+    const body = raw.includes(',') ? raw.split(',').pop() : raw;
+    try {
+        return Buffer.from(body, 'base64');
+    } catch {
+        return null;
+    }
+};
+
+const createAssetFolderMap = () => ({
+    'weapon-icon': {
+        folder: path.resolve(config.publicDir, 'content/weapons/icons'),
+        publicBase: '/content/weapons/icons',
+        extensions: new Set(['.png', '.jpg', '.jpeg', '.webp']),
+    },
+    'weapon-model': {
+        folder: path.resolve(config.publicDir, 'content/weapons/models'),
+        publicBase: '/content/weapons/models',
+        extensions: new Set(['.glb', '.gltf', '.fbx', '.obj']),
+    },
+    'player-icon': {
+        folder: path.resolve(config.publicDir, 'content/players/icons'),
+        publicBase: '/content/players/icons',
+        extensions: new Set(['.png', '.jpg', '.jpeg', '.webp']),
+    },
+    'player-model': {
+        folder: path.resolve(config.publicDir, 'content/players/models'),
+        publicBase: '/content/players/models',
+        extensions: new Set(['.glb', '.gltf', '.fbx', '.obj']),
+    },
+    'player-animation': {
+        folder: path.resolve(config.publicDir, 'content/players/animations'),
+        publicBase: '/content/players/animations',
+        extensions: new Set(['.glb', '.gltf', '.fbx']),
+    },
+});
 
 const issueUserToken = (user) => {
     const now = Math.floor(Date.now() / 1000);
@@ -256,11 +313,15 @@ const createServer = async () => {
         }
 
         const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
-        const path = url.pathname;
+        const pathname = url.pathname;
         const method = req.method || 'GET';
 
         try {
-            if (method === 'GET' && path === '/api/health') {
+            if (method === 'GET' && pathname === '/admin/content') {
+                return html(res, 200, buildAdminContentPage());
+            }
+
+            if (method === 'GET' && pathname === '/api/health') {
                 const chatMeta = chatService.meta();
                 return json(res, 200, {
                     ok: true,
@@ -275,7 +336,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/auth/register') {
+            if (method === 'POST' && pathname === '/api/auth/register') {
                 const body = await parseBody(req);
                 const username = typeof body.username === 'string' ? body.username.trim() : '';
                 const password = typeof body.password === 'string' ? body.password : '';
@@ -314,7 +375,7 @@ const createServer = async () => {
                 return json(res, 201, { token, user: toClientUser(user, db.read()) });
             }
 
-            if (method === 'POST' && path === '/api/auth/login') {
+            if (method === 'POST' && pathname === '/api/auth/login') {
                 const body = await parseBody(req);
                 const username = typeof body.username === 'string' ? body.username.trim() : '';
                 const password = typeof body.password === 'string' ? body.password : '';
@@ -332,14 +393,14 @@ const createServer = async () => {
                 return json(res, 200, { token, user: toClientUser(user, data) });
             }
 
-            if (method === 'GET' && path === '/api/auth/me') {
+            if (method === 'GET' && pathname === '/api/auth/me') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const data = db.read();
                 return json(res, 200, { user: toClientUser(user, data) });
             }
 
-            if (method === 'GET' && path === '/api/profile') {
+            if (method === 'GET' && pathname === '/api/profile') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const data = db.read();
@@ -349,7 +410,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/friends') {
+            if (method === 'GET' && pathname === '/api/friends') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const data = db.read();
@@ -363,7 +424,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/friends/search') {
+            if (method === 'GET' && pathname === '/api/friends/search') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const query = `${url.searchParams.get('q') || ''}`.trim();
@@ -382,7 +443,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/friends/request') {
+            if (method === 'POST' && pathname === '/api/friends/request') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -421,7 +482,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/friends/accept') {
+            if (method === 'POST' && pathname === '/api/friends/accept') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -450,7 +511,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/friends/decline') {
+            if (method === 'POST' && pathname === '/api/friends/decline') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -477,7 +538,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/friends/cancel') {
+            if (method === 'POST' && pathname === '/api/friends/cancel') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -504,7 +565,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/friends/remove') {
+            if (method === 'POST' && pathname === '/api/friends/remove') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -531,7 +592,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/social') {
+            if (method === 'GET' && pathname === '/api/social') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const data = db.read();
@@ -541,7 +602,20 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/squad/invite') {
+            if (method === 'GET' && pathname === '/api/social/squad/public') {
+                const data = db.read();
+                return json(res, 200, {
+                    rooms: listPublicSquadRooms({
+                        socialStore: data.social,
+                        users: data.users,
+                        presenceResolver: resolvePresence,
+                        viewerUserId: '',
+                    }),
+                    serverTime: new Date().toISOString(),
+                });
+            }
+
+            if (method === 'POST' && pathname === '/api/social/squad/invite') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -596,7 +670,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/squad/create') {
+            if (method === 'POST' && pathname === '/api/social/squad/create') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -610,10 +684,22 @@ const createServer = async () => {
                         result = { ok: false, reason: 'user-not-found' };
                         return;
                     }
+                    const label = typeof body.label === 'string' ? `${body.label}`.trim() : '';
+                    const capacity = Number(body.capacity);
+                    const game = body && typeof body.game === 'object'
+                        ? {
+                            mode: typeof body.game.mode === 'string' ? `${body.game.mode}`.trim().toLowerCase() : 'ffa',
+                            durationSeconds: Number(body.game.durationSeconds),
+                            fillBots: body.game.fillBots !== false,
+                        }
+                        : null;
                     result = createSquadRoom({
                         socialStore: mutable.social,
                         user: actor,
                         visibility,
+                        label,
+                        capacity,
+                        game,
                         forceNew,
                         now: new Date(),
                     });
@@ -640,7 +726,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/squad/visibility') {
+            if (method === 'POST' && pathname === '/api/social/squad/visibility') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -683,7 +769,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/squad/join') {
+            if (method === 'POST' && pathname === '/api/social/squad/join') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -733,7 +819,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/squad/respond') {
+            if (method === 'POST' && pathname === '/api/social/squad/respond') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -787,7 +873,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/squad/leave') {
+            if (method === 'POST' && pathname === '/api/social/squad/leave') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 let result = null;
@@ -814,7 +900,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/gifts/send') {
+            if (method === 'POST' && pathname === '/api/social/gifts/send') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -877,7 +963,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/gifts/claim') {
+            if (method === 'POST' && pathname === '/api/social/gifts/claim') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -927,7 +1013,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/social/messages') {
+            if (method === 'GET' && pathname === '/api/social/messages') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const otherUserId = `${url.searchParams.get('userId') || ''}`.trim();
@@ -957,7 +1043,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/social/messages') {
+            if (method === 'POST' && pathname === '/api/social/messages') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const body = await parseBody(req);
@@ -1019,7 +1105,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/progression') {
+            if (method === 'GET' && pathname === '/api/progression') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const data = db.read();
@@ -1031,7 +1117,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/progression/equip') {
+            if (method === 'POST' && pathname === '/api/progression/equip') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1063,7 +1149,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/rewards/weekly-login/claim') {
+            if (method === 'POST' && pathname === '/api/rewards/weekly-login/claim') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1106,7 +1192,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/shop/offers') {
+            if (method === 'GET' && pathname === '/api/shop/offers') {
                 const data = db.read();
                 const offers = getShopOffers(data.liveops);
                 const cases = getCasesArray(data.liveops);
@@ -1118,7 +1204,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/loadout/catalog') {
+            if (method === 'GET' && pathname === '/api/loadout/catalog') {
                 const data = db.read();
                 return json(res, 200, {
                     weapons: getWeaponsCatalog(data.liveops),
@@ -1128,7 +1214,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/loadout/equip') {
+            if (method === 'POST' && pathname === '/api/loadout/equip') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1163,7 +1249,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/shop/purchase') {
+            if (method === 'POST' && pathname === '/api/shop/purchase') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1283,7 +1369,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/inventory') {
+            if (method === 'GET' && pathname === '/api/inventory') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const data = db.read();
@@ -1294,12 +1380,12 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/cases/catalog') {
+            if (method === 'GET' && pathname === '/api/cases/catalog') {
                 const data = db.read();
                 return json(res, 200, buildCasesCatalogResponse(data.liveops));
             }
 
-            if (method === 'POST' && path === '/api/cases/open') {
+            if (method === 'POST' && pathname === '/api/cases/open') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1372,7 +1458,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/inventory/open-case') {
+            if (method === 'POST' && pathname === '/api/inventory/open-case') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1428,7 +1514,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/inventory/equip') {
+            if (method === 'POST' && pathname === '/api/inventory/equip') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1469,7 +1555,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/leaderboard') {
+            if (method === 'GET' && pathname === '/api/leaderboard') {
                 const period = url.searchParams.get('period') || 'all';
                 const metric = url.searchParams.get('metric') || 'kills';
                 const limit = Number(url.searchParams.get('limit') || 20);
@@ -1483,7 +1569,7 @@ const createServer = async () => {
                 return json(res, 200, leaderboard);
             }
 
-            if (method === 'GET' && path === '/api/leaderboard/premier') {
+            if (method === 'GET' && pathname === '/api/leaderboard/premier') {
                 const viewer = optionalAuth(req);
                 const data = db.read();
                 const usersById = new Map(data.users.map((item) => [item.id, item]));
@@ -1496,7 +1582,7 @@ const createServer = async () => {
                 return json(res, 200, payload);
             }
 
-            if (method === 'GET' && path === '/api/chat/lobby') {
+            if (method === 'GET' && pathname === '/api/chat/lobby') {
                 const afterId = toInt(url.searchParams.get('afterId'), 0, 0);
                 const limit = Math.min(200, toInt(url.searchParams.get('limit'), 50, 1));
                 const payload = chatService.list({ afterId, limit });
@@ -1506,7 +1592,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/chat/lobby') {
+            if (method === 'POST' && pathname === '/api/chat/lobby') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1536,7 +1622,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'POST' && path === '/api/matches/ffa/report') {
+            if (method === 'POST' && pathname === '/api/matches/ffa/report') {
                 const user = requireAuth(req, res);
                 if (!user) return;
 
@@ -1696,7 +1782,76 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'PUT' && path === '/api/liveops/config') {
+            if (method === 'GET' && pathname === '/api/liveops/config') {
+                if (!requireAdmin(req, res)) return;
+                return json(res, 200, {
+                    ok: true,
+                    liveops: db.read().liveops,
+                });
+            }
+
+            if (method === 'GET' && pathname === '/api/liveops/assets') {
+                if (!requireAdmin(req, res)) return;
+                const target = `${url.searchParams.get('target') || ''}`.trim().toLowerCase();
+                const entityId = sanitizeAssetName(url.searchParams.get('entityId'), 'asset');
+                const folderMap = createAssetFolderMap();
+                const def = folderMap[target];
+                if (!def) return json(res, 400, { error: 'Unsupported asset target.' });
+
+                await mkdir(def.folder, { recursive: true });
+                const prefix = `${entityId}__`;
+                const legacyPrefix = `${entityId}.`;
+                const names = (await readdir(def.folder, { withFileTypes: true }))
+                    .filter((entry) => entry.isFile())
+                    .map((entry) => entry.name)
+                    .filter((name) => {
+                        const lower = name.toLowerCase();
+                        const extension = path.extname(lower);
+                        return def.extensions.has(extension) && (lower.startsWith(prefix) || lower.startsWith(legacyPrefix));
+                    })
+                    .sort((a, b) => a.localeCompare(b));
+
+                return json(res, 200, {
+                    ok: true,
+                    assets: names.map((name) => ({
+                        fileName: name,
+                        publicPath: `${def.publicBase}/${name}`,
+                    })),
+                });
+            }
+
+            if (method === 'POST' && pathname === '/api/liveops/upload-asset') {
+                if (!requireAdmin(req, res)) return;
+                const body = await parseBody(req, { maxSizeBytes: 32 * 1024 * 1024 });
+                const target = `${body?.target || ''}`.trim().toLowerCase();
+                const entityId = sanitizeAssetName(body?.entityId, 'asset');
+                const originalName = `${body?.fileName || ''}`.trim();
+                const extension = path.extname(originalName).toLowerCase();
+                const fileData = decodeBase64Payload(body?.dataBase64);
+                const folderMap = createAssetFolderMap();
+                const def = folderMap[target];
+                if (!def) return json(res, 400, { error: 'Unsupported upload target.' });
+                if (!def.extensions.has(extension)) return json(res, 400, { error: 'Unsupported file extension.' });
+                if (!fileData?.length) return json(res, 400, { error: 'Missing file data.' });
+
+                await mkdir(def.folder, { recursive: true });
+                const sourceStem = sanitizeAssetName(
+                    path.parse(originalName).name,
+                    target.endsWith('icon') ? 'icon' : (target.endsWith('animation') ? 'anim' : 'model'),
+                );
+                const finalName = `${entityId}__${sourceStem}${extension}`;
+                const diskPath = path.resolve(def.folder, finalName);
+                await writeFile(diskPath, fileData);
+
+                return json(res, 200, {
+                    ok: true,
+                    publicPath: `${def.publicBase}/${finalName}`,
+                    fileName: finalName,
+                    bytes: fileData.length,
+                });
+            }
+
+            if (method === 'PUT' && pathname === '/api/liveops/config') {
                 if (!requireAdmin(req, res)) return;
 
                 const body = await parseBody(req);
@@ -1715,7 +1870,7 @@ const createServer = async () => {
                 });
             }
 
-            if (method === 'GET' && path === '/api/multiplayer/bootstrap') {
+            if (method === 'GET' && pathname === '/api/multiplayer/bootstrap') {
                 const user = requireAuth(req, res);
                 if (!user) return;
                 const forwardedProtoHeader = `${req.headers['x-forwarded-proto'] || ''}`.split(',')[0].trim();

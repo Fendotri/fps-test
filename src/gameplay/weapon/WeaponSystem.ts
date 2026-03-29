@@ -6,6 +6,7 @@ import { UserInputEvent, UserInputEventPipe } from '../pipes/UserinputEventPipe'
 import { UserInputEventEnum } from '@src/gameplay/abstract/EventsEnum';
 import { BulletImpactEvent, GameLogicEventPipe, HitDamageEvent, KillFeedEvent, PlayerDiedEvent, WeaponFireEvent } from '../pipes/GameLogicEventPipe';
 import { EnemyBotSystem } from '@src/gameplay/bot/EnemyBotSystem';
+import { OnlineRoomSystem } from '@src/gameplay/online/OnlineRoomSystem';
 import { LocalPlayer } from '@src/gameplay/player/LocalPlayer';
 import { Raycaster, Vector3 } from 'three';
 
@@ -109,6 +110,7 @@ export class WeaponSystem {
                             weaponId,
                             BulletImpactEvent.detail.distance,
                         );
+                        let matchedTarget = botResult.matched;
 
                         if (botResult.matched && botResult.damage > 0) {
                             HitDamageEvent.detail.damage = botResult.damage;
@@ -127,6 +129,33 @@ export class WeaponSystem {
                             GameLogicEventPipe.dispatchEvent(KillFeedEvent);
                         }
 
+                        if (!botResult.matched) {
+                            const onlineResult = OnlineRoomSystem.getInstance()?.applyDamageFromHitObject(
+                                this._objectsIntersectedArray[i].object,
+                                weaponId,
+                                BulletImpactEvent.detail.distance,
+                            ) || { matched: false, killed: false, victimName: '', damage: 0 };
+                            matchedTarget = onlineResult.matched;
+
+                            if (onlineResult.matched && onlineResult.damage > 0) {
+                                HitDamageEvent.detail.damage = onlineResult.damage;
+                                HitDamageEvent.detail.victimName = onlineResult.victimName;
+                                HitDamageEvent.detail.weaponName = weaponName;
+                                HitDamageEvent.detail.headshot = gameObjectMaterial === GameObjectMaterialEnum.PlayerHead;
+                                HitDamageEvent.detail.killed = onlineResult.killed;
+                                GameLogicEventPipe.dispatchEvent(HitDamageEvent);
+                            }
+
+                            if (onlineResult.matched && onlineResult.killed) {
+                                KillFeedEvent.detail.killerName = 'YOU';
+                                KillFeedEvent.detail.victimName = onlineResult.victimName;
+                                KillFeedEvent.detail.weaponName = weaponName;
+                                KillFeedEvent.detail.headshot = gameObjectMaterial === GameObjectMaterialEnum.PlayerHead;
+                                GameLogicEventPipe.dispatchEvent(KillFeedEvent);
+                            }
+                        }
+
+                        if (!matchedTarget) continue;
                         ifGenerated = true; // ä¸ç”Ÿæˆå¼¹å­”,ä¸”åç»­ç©¿é€ä¹Ÿä¸ä¼šç”Ÿæˆå¼¹å­”
                         // ... è¿™é‡Œåº”å½“å‘å‡ºç©å®¶xxxè¢«å‡»ä¸­çš„äº‹ä»¶
                         continue;

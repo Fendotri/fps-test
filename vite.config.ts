@@ -5,6 +5,12 @@ import path from 'path';
 
 export default defineConfig(({ mode }) => {
     const isLite = mode === 'lite' || `${process.env.VITE_BUILD_PROFILE || ''}`.trim().toLowerCase() === 'lite';
+    const devHost = `${process.env.VITE_DEV_HOST || ''}`.trim() || '0.0.0.0';
+    const devPort = Number(process.env.VITE_DEV_PORT || 5173) || 5173;
+    const hmrHost = `${process.env.VITE_DEV_HMR_HOST || ''}`.trim();
+    const backendHost = `${process.env.BACKEND_HOST || '127.0.0.1'}`.trim() || '127.0.0.1';
+    const backendPort = Number(process.env.BACKEND_PORT || 8787) || 8787;
+    const backendTarget = `http://${backendHost === '0.0.0.0' ? '127.0.0.1' : backendHost}:${backendPort}`;
 
     return {
         base: '/',
@@ -42,6 +48,23 @@ export default defineConfig(({ mode }) => {
             },
         },
         plugins: [vue(), vueJsx()],
+        server: {
+            host: devHost,
+            port: devPort,
+            strictPort: true,
+            hmr: hmrHost ? { host: hmrHost, port: devPort } : undefined,
+            proxy: {
+                '/api': {
+                    target: backendTarget,
+                    changeOrigin: true,
+                },
+                '/ws': {
+                    target: backendTarget.replace(/^http/i, 'ws'),
+                    ws: true,
+                    changeOrigin: true,
+                },
+            },
+        },
         envDir: path.resolve(__dirname, './envs/'),
         envPrefix: 'VITE_',
         css: {

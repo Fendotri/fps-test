@@ -1,12 +1,20 @@
 import { GameContext } from '@src/core/GameContext';
 import { CycleInterface } from '@src/core/inferface/CycleInterface';
 import { LoopInterface } from '@src/core/inferface/LoopInterface';
+import { UserInputEventEnum } from '@src/gameplay/abstract/EventsEnum';
 import { GameObjectMaterialEnum } from '@src/gameplay/abstract/GameObjectMaterialEnum';
-import { InventorySlotEnum } from '@src/gameplay/abstract/InventorySlotEnum';
+import { InventorySlotEnum, mapIventorySlotByWeaponClassficationEnum } from '@src/gameplay/abstract/InventorySlotEnum';
 import { KillFeedEvent, GameLogicEventPipe, PlayerDamagedEvent, PlayerDiedEvent, PlayerRespawnedEvent, WeaponFireEvent } from '@src/gameplay/pipes/GameLogicEventPipe';
+import { UserInputEvent, UserInputEventPipe } from '@src/gameplay/pipes/UserinputEventPipe';
 import { LocalPlayer } from '@src/gameplay/player/LocalPlayer';
+import { getRuntimePlayerAppearance } from '@src/gameplay/player/PlayerAppearance';
+import { createWeaponById, cloneWeaponInstanceWithAmmo } from '@src/gameplay/loadout/weaponFactory';
+import { getWeaponEntry } from '@src/gameplay/loadout/weaponCatalog';
+import { getRuntimeBotTune, getRuntimeTuningSnapshot, getRuntimeWeaponTune, subscribeRuntimeTuning } from '@src/gameplay/tuning/RuntimeTuning';
+import { WeaponInterface } from '@src/gameplay/weapon/abstract/WeaponInterface';
 import { Capsule } from 'three/examples/jsm/math/Capsule';
 import { Octree } from 'three/examples/jsm/math/Octree';
+import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils';
 import {
     Box3,
     BoxGeometry,
@@ -14,6 +22,7 @@ import {
     DoubleSide,
     Group,
     MathUtils,
+    Material,
     Mesh,
     MeshBasicMaterial,
     Object3D,
@@ -78,24 +87,43 @@ type TargetInfo = { kind: 'player' | 'bot'; name: string; team: TeamName; positi
 
 type BotRig = {
     root: Group;
-    headJoint: Group;
-    leftArmJoint: Group;
-    rightArmJoint: Group;
-    leftLegJoint: Group;
-    rightLegJoint: Group;
+    headJoint: Object3D;
+    leftArmJoint: Object3D;
+    rightArmJoint: Object3D;
+    leftLegJoint: Object3D;
+    rightLegJoint: Object3D;
     weaponMesh: Mesh;
     muzzleMesh: Mesh;
+    aimIndicator: Group;
+    aimBeam: Mesh;
+    aimTip: Mesh;
     nameTag: Sprite;
     shieldSprite: Sprite;
+    materials: TintableMaterial[];
+    baseColors: number[];
+    baseOpacities: number[];
+    baseTransparent: boolean[];
+};
+
+type TintableMaterial = Material & {
+    color: {
+        getHex(): number;
+        setRGB(r: number, g: number, b: number): void;
+    };
+    opacity: number;
+    transparent: boolean;
 };
 
 type BotAgent = {
     id: string;
     name: string;
     team: TeamName;
+    isTestDummy: boolean;
     difficulty: DifficultyName;
+    runtimeOrder: number;
     profile: DifficultyProfile;
     weapon: WeaponProfile;
+    weaponInstance: WeaponInterface;
     rig: BotRig;
     hp: number;
     armor: number;
@@ -129,6 +157,41 @@ type BotAgent = {
     respawnAt: number;
     spawnProtectedUntil: number;
     outOfBoundsSince: number;
+    hitGlowUntil: number;
+    hitGlowStrength: number;
+    anchorPosition: Vector3;
+};
+
+type DroppedWeaponData = {
+    mesh: Mesh;
+    weaponInstance: WeaponInterface;
+    slot: InventorySlotEnum;
+    removeAt: number;
+};
+
+export type DroppedWeaponPromptInfo = {
+    weaponName: string;
+    distance: number;
+};
+
+export type DebugColliderSnapshot = {
+    player: { start: Vector3; end: Vector3; radius: number; } | null;
+    bots: Array<{ id: string; start: Vector3; end: Vector3; radius: number; alive: boolean; isTestDummy: boolean; }>;
+};
+
+type CorpseData = {
+    rig: BotRig;
+    spawnedAt: number;
+    removeAt: number;
+    initialPosition: Vector3;
+    initialYaw: number;
+    fallSide: number;
+    isPlayer: boolean;
+    headshot: boolean;
+    launchDir: Vector3;
+    launchDistance: number;
+    settleDrop: number;
+    droppedWeapon: Mesh | null;
 };
 
 const PLAYER_TEAM: TeamName = 'CT';
@@ -146,9 +209,16 @@ const SPAWN_RECENT_NODE_PROXIMITY = 8.0;
 const SPAWN_RANDOM_TOP_DUST2 = 16;
 const SPAWN_RANDOM_TOP_GENERIC = 10;
 const OUT_OF_BOUNDS_GRACE_SECONDS = 1.1;
+const CORPSE_LIFETIME_SECONDS = 3.0;
+const CORPSE_FALL_DURATION_SECONDS = 0.72;
+const CORPSE_FADE_DURATION_SECONDS = 0.65;
+const DROPPED_WEAPON_LIFETIME_SECONDS = 30.0;
+const DROPPED_WEAPON_PICKUP_DISTANCE = 2.35;
 
 const PLAYER_MAX_HP = 100;
 const PLAYER_MAX_ARMOR = 100;
+const TEST_DUMMY_HP = 1000;
+const TEST_DUMMY_RESPAWN_SECONDS = 1.0;
 
 const BOT_HP = 100;
 const BOT_COLLIDER_RADIUS = 0.28;
@@ -182,15 +252,18 @@ const QUALITY_TIER = getRuntimeQualityProfile().tier;
 const BOT_CONFIGS: BotConfig[] = QUALITY_TIER === 'low'
     ? ALL_BOT_CONFIGS.slice(0, 3)
     : (QUALITY_TIER === 'medium' ? ALL_BOT_CONFIGS.slice(0, 4) : ALL_BOT_CONFIGS);
+const ROLE_VARIANTS = ['Character_Female_FBI', 'Character_Male_civilian'] as const;
 
 const DIFFICULTY: Record<DifficultyName, DifficultyProfile> = {
-    EASY: { moveSpeed: 1.95, acceleration: 6.2, turnSpeed: 5.8, reactionSeconds: 0.46, engageMin: 6, engageMax: 22, tracking: 0.36, bravery: 0.4 },
-    NORMAL: { moveSpeed: 2.25, acceleration: 7.2, turnSpeed: 7.2, reactionSeconds: 0.3, engageMin: 8, engageMax: 26, tracking: 0.5, bravery: 0.54 },
-    HARD: { moveSpeed: 2.55, acceleration: 8.2, turnSpeed: 8.8, reactionSeconds: 0.22, engageMin: 10, engageMax: 30, tracking: 0.62, bravery: 0.68 },
+    EASY: { moveSpeed: 1.9, acceleration: 5.8, turnSpeed: 2.2, reactionSeconds: 0.68, engageMin: 7, engageMax: 20, tracking: 0.24, bravery: 0.32 },
+    NORMAL: { moveSpeed: 2.15, acceleration: 6.6, turnSpeed: 2.8, reactionSeconds: 0.48, engageMin: 9, engageMax: 24, tracking: 0.36, bravery: 0.46 },
+    HARD: { moveSpeed: 2.38, acceleration: 7.2, turnSpeed: 3.4, reactionSeconds: 0.34, engageMin: 10, engageMax: 28, tracking: 0.47, bravery: 0.56 },
 };
 
 const botWeapon = (weaponId: string, color: number, weaponName?: string): WeaponProfile => {
     const preset = getBotWeaponPreset(weaponId);
+    const tune = getRuntimeWeaponTune(weaponId);
+    const visualColor = Number.parseInt(tune.materialTint.replace('#', ''), 16);
     return {
         weaponName: weaponName || preset.weaponName,
         baseDamage: preset.baseDamage,
@@ -205,7 +278,7 @@ const botWeapon = (weaponId: string, color: number, weaponName?: string): Weapon
         spreadMoving: preset.spreadMoving,
         recoilPerShot: preset.recoilPerShot,
         recoilRecover: preset.recoilRecover,
-        color,
+        color: Number.isFinite(visualColor) ? visualColor : color,
     };
 };
 
@@ -225,6 +298,26 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         return this.enemyBotSystem;
     }
 
+    public getDebugColliderSnapshot(): DebugColliderSnapshot {
+        const movement = this.localPlayer.movementController;
+        const playerCollider = movement?.playerCollider
+            ? {
+                start: movement.playerCollider.start.clone(),
+                end: movement.playerCollider.end.clone(),
+                radius: movement.playerCollider.radius,
+            }
+            : null;
+        const bots = Array.from(this.bots.values()).map((bot) => ({
+            id: bot.id,
+            start: bot.collider.start.clone(),
+            end: bot.collider.end.clone(),
+            radius: bot.collider.radius,
+            alive: bot.alive,
+            isTestDummy: bot.isTestDummy,
+        }));
+        return { player: playerCollider, bots };
+    }
+
     private constructor() { }
 
     private scene = GameContext.Scenes.Level;
@@ -232,6 +325,8 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
     private worldOctree: Octree = GameContext.Physical.WorldOCTree;
 
     private bots = new Map<string, BotAgent>();
+    private corpses: CorpseData[] = [];
+    private droppedWeapons: DroppedWeaponData[] = [];
     private meshToBotId = new Map<string, string>();
 
     private walkMeshes: Object3D[] = [];
@@ -333,6 +428,16 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         GameLogicEventPipe.addEventListener(WeaponFireEvent.type, () => {
             if (this.localPlayer.health > 0) this.playerSpawnProtectedUntil = 0;
         });
+
+        UserInputEventPipe.addEventListener(UserInputEvent.type, (e: CustomEvent) => {
+            if (e.detail.enum !== UserInputEventEnum.BUTTON_INTERACT) return;
+            if (!this.matchEnabled || this.localPlayer.health <= 0) return;
+            this.tryPickupDroppedWeapon();
+        });
+
+        subscribeRuntimeTuning(() => {
+            this.applyRuntimeBotRoster();
+        });
     }
 
     private detectMapProfile() {
@@ -361,16 +466,89 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
 
     private hideAllBots() {
         this.bots.forEach(bot => {
-            bot.alive = false;
-            bot.rig.root.visible = false;
-            bot.path = [];
-            bot.pathCursor = 0;
-            bot.currentNode = -1;
-            bot.targetNode = -1;
-            bot.velocity.set(0, 0, 0);
-            bot.nextShotAt = Number.POSITIVE_INFINITY;
-            bot.nextBurstAt = Number.POSITIVE_INFINITY;
+            this.deactivateBot(bot);
         });
+        this.clearCorpses();
+        this.clearDroppedWeapons();
+    }
+
+    private isRuntimeBotActive(bot: BotAgent) {
+        if (bot.isTestDummy) return true;
+        const runtime = getRuntimeTuningSnapshot().bots;
+        const perBot = runtime?.perBot?.[bot.id];
+        const count = Math.max(0, Math.floor(Number(runtime?.activeCount) || 0));
+        return bot.runtimeOrder < count && perBot?.enabled !== false;
+    }
+
+    private deactivateBot(bot: BotAgent) {
+        bot.alive = false;
+        bot.rig.root.visible = false;
+        bot.path = [];
+        bot.pathCursor = 0;
+        bot.currentNode = -1;
+        bot.targetNode = -1;
+        bot.velocity.set(0, 0, 0);
+        bot.nextShotAt = Number.POSITIVE_INFINITY;
+        bot.nextBurstAt = Number.POSITIVE_INFINITY;
+        bot.respawnAt = 0;
+    }
+
+    private applyRuntimeBotRoster() {
+        this.bots.forEach(bot => {
+            if (this.isRuntimeBotActive(bot)) return;
+            this.deactivateBot(bot);
+        });
+    }
+
+    public getScoreboardRoster() {
+        const rows: Array<{
+            id: string;
+            name: string;
+            title: string;
+            nameColor: string;
+            avatar: string;
+            avatarFrame: string;
+            elo: number;
+            premierTier: string;
+            calibrated: boolean;
+            ping: number;
+        }> = [];
+
+        this.bots.forEach((bot) => {
+            if (!this.isRuntimeBotActive(bot)) return;
+            rows.push({
+                id: bot.id,
+                name: bot.name,
+                title: bot.difficulty === 'HARD' ? 'Legend' : (bot.difficulty === 'NORMAL' ? 'Sharpshooter' : 'Rookie'),
+                nameColor: bot.team === 'CT' ? 'blue' : 'pink',
+                avatar: bot.team === 'CT' ? 'hawk_eye' : 'night_viper',
+                avatarFrame: bot.difficulty === 'HARD' ? 'legend' : (bot.team === 'CT' ? 'steel' : 'neon'),
+                elo: bot.difficulty === 'HARD' ? 24000 : (bot.difficulty === 'NORMAL' ? 15000 : 8500),
+                premierTier: bot.difficulty === 'HARD' ? 'pink' : (bot.difficulty === 'NORMAL' ? 'blue' : 'cyan'),
+                calibrated: true,
+                ping: bot.team === 'CT' ? 24 : 31,
+            });
+        });
+
+        return rows;
+    }
+
+    private getBotRuntimeProfile(bot: BotAgent) {
+        const runtime = getRuntimeTuningSnapshot().bots;
+        const perBot = getRuntimeBotTune(bot.id);
+        return {
+            reactionMul: runtime.reactionMul * perBot.reactionMul,
+            turnSpeedMul: runtime.turnSpeedMul * perBot.turnSpeedMul,
+            trackingMul: perBot.trackingMul,
+            aggression: perBot.aggression,
+            defense: perBot.defense,
+            tactical: perBot.tactical,
+            hitChanceMul: runtime.hitChanceMul * perBot.hitChanceMul,
+            spreadMul: runtime.spreadMul,
+            burstMul: runtime.burstMul,
+            cooldownMul: runtime.cooldownMul,
+            aimLockMul: runtime.aimLockMul * MathUtils.lerp(0.9, 1.2, perBot.trackingMul - 1 + 0.5),
+        };
     }
 
     callEveryFrame(deltaTime?: number, elapsedTime?: number): void {
@@ -386,6 +564,9 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
             this.pendingRestart = false;
             this.startRound(elapsed);
         }
+
+        this.updateCorpses(elapsed);
+        this.updateDroppedWeapons(elapsed);
 
         if (!this.matchEnabled) return;
         if (this.intermissionActive) return;
@@ -404,20 +585,25 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         const bot = this.bots.get(botId);
         const elapsed = GameContext.GameLoop.Clock.getElapsedTime();
         if (!bot || !bot.alive) return { matched: true, killed: false, victimName: bot ? bot.name : '', damage: 0 };
-        if (this.roundPhase !== 'live' || !this.matchEnabled) return { matched: true, killed: false, victimName: bot.name, damage: 0 };
-        if (this.isPlayerSpawnProtected(elapsed)) return { matched: true, killed: false, victimName: bot.name, damage: 0 };
-        if (elapsed < bot.spawnProtectedUntil) return { matched: true, killed: false, victimName: bot.name, damage: 0 };
+        if (!bot.isTestDummy) {
+            if (this.roundPhase !== 'live' || !this.matchEnabled) return { matched: true, killed: false, victimName: bot.name, damage: 0 };
+            if (this.isPlayerSpawnProtected(elapsed)) return { matched: true, killed: false, victimName: bot.name, damage: 0 };
+            if (elapsed < bot.spawnProtectedUntil) return { matched: true, killed: false, victimName: bot.name, damage: 0 };
+        }
         if (!FRIENDLY_FIRE && bot.team === attackerTeam) return { matched: true, killed: false, victimName: bot.name, damage: 0 };
 
         const part = hitObject.userData['GameObjectMaterialEnum'] as GameObjectMaterialEnum;
         const damage = this.calculateDamage(weaponName, part, distanceWorld, bot.armor, bot.hasHelmet);
-        const killed = this.applyDamageToBot(bot, damage, elapsed);
+        const impactDir = this.v1.copy(bot.rig.root.position).sub(GameContext.Cameras.PlayerCamera.position).setY(0);
+        const killed = this.applyDamageToBot(bot, damage, elapsed, part === GameObjectMaterialEnum.PlayerHead, impactDir);
         if (!killed) {
             bot.kick = Math.min(1, bot.kick + 0.24);
-            bot.nextDecisionAt = elapsed;
-            bot.lastSeenAt = elapsed;
-            bot.lastSeenPos.copy(this.getPlayerTargetPosition());
-            if (bot.intent === 'ANCHOR') bot.intent = 'PUSH';
+            if (!bot.isTestDummy) {
+                bot.nextDecisionAt = elapsed;
+                bot.lastSeenAt = elapsed;
+                bot.lastSeenPos.copy(this.getPlayerTargetPosition());
+                if (bot.intent === 'ANCHOR') bot.intent = 'PUSH';
+            }
         }
         return { matched: true, killed, victimName: bot.name, damage: damage.healthDamage };
     }
@@ -811,25 +997,38 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
     }
 
     private createBots() {
-        BOT_CONFIGS.forEach(config => {
-            const bot = this.createBot(config);
+        BOT_CONFIGS.forEach((config, index) => {
+            const bot = this.createBot(config, index);
             this.bots.set(bot.id, bot);
             this.scene.add(bot.rig.root);
         });
+        this.applyRuntimeBotRoster();
     }
 
-    private createBot(config: BotConfig): BotAgent {
+    private pickWeaponId(team: TeamName, difficulty: DifficultyName) {
+        if (team === 'CT') return difficulty === 'EASY' ? 'mp9' : 'm4a1_s';
+        if (difficulty === 'HARD') return 'awp';
+        if (difficulty === 'EASY') return 'mp9';
+        return 'ak47';
+    }
+
+    private createBot(config: BotConfig, runtimeOrder: number): BotAgent {
         const profile = DIFFICULTY[config.difficulty];
+        const weaponId = this.pickWeaponId(config.team, config.difficulty);
         const weapon = this.pickWeapon(config.team, config.difficulty);
+        const weaponInstance = createWeaponById(weaponId);
         const rig = this.createRig(config, weapon);
 
         return {
             id: config.id,
             name: config.name,
             team: config.team,
+            isTestDummy: false,
             difficulty: config.difficulty,
+            runtimeOrder,
             profile,
             weapon,
+            weaponInstance,
             rig,
             hp: BOT_HP,
             armor: 0,
@@ -863,17 +1062,210 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
             respawnAt: 0,
             spawnProtectedUntil: 0,
             outOfBoundsSince: -1,
+            hitGlowUntil: 0,
+            hitGlowStrength: 0,
+            anchorPosition: new Vector3(),
         };
     }
 
+    private createTestDummyBot() {
+        const bot = this.createBot({ id: 'test_dummy', name: 'TEST_DUMMY', team: 'T', difficulty: 'EASY' }, 999);
+        bot.isTestDummy = true;
+        bot.hp = TEST_DUMMY_HP;
+        return bot;
+    }
+
     private pickWeapon(team: TeamName, difficulty: DifficultyName) {
-        if (team === 'CT') return difficulty === 'EASY' ? WEAPONS.MP9 : WEAPONS.M4A1S;
-        if (difficulty === 'HARD') return WEAPONS.AWP;
-        if (difficulty === 'EASY') return WEAPONS.MP9;
+        const weaponId = this.pickWeaponId(team, difficulty);
+        if (weaponId === 'm4a1_s') return WEAPONS.M4A1S;
+        if (weaponId === 'awp') return WEAPONS.AWP;
+        if (weaponId === 'mp9') return WEAPONS.MP9;
         return WEAPONS.AK47;
     }
 
     private createRig(config: BotConfig, weapon: WeaponProfile): BotRig {
+        const importedRig = this.createImportedRig(config, weapon);
+        if (importedRig) return importedRig;
+
+        return this.createPrimitiveRig(config, weapon);
+    }
+
+    private createImportedRig(config: BotConfig, weapon: WeaponProfile): BotRig | null {
+        const appearance = getRuntimePlayerAppearance(config.id || config.name);
+        const contentModelKey = appearance?.modelPath ? `ContentPlayerModel:${appearance.modelPath}` : '';
+        const contentModelResource = contentModelKey ? GameContext.GameResources.resourceMap.get(contentModelKey) as any : null;
+        const roleResource = contentModelResource || GameContext.GameResources.resourceMap.get('Role') as any;
+        const roleScene = (roleResource?.scene || roleResource) as Object3D | undefined;
+        if (!roleScene) return null;
+
+        const root = new Group();
+        root.name = config.name;
+        root.visible = false;
+
+        const visualRoot = cloneSkeleton(roleScene);
+        visualRoot.name = `${config.name}_Visual`;
+        root.add(visualRoot);
+
+        const usesCustomContentModel = !!appearance?.modelPath;
+        const selectedVariant = config.team === 'CT' ? ROLE_VARIANTS[0] : ROLE_VARIANTS[1];
+        const variantVisibleMeshes = new Set(Array.isArray(appearance?.visibleMeshes) ? appearance.visibleMeshes : []);
+        const tintableMaterials: TintableMaterial[] = [];
+        let visibleMeshCount = 0;
+        visualRoot.traverse((child: any) => {
+            if (!child?.isMesh) return;
+            const meshKey = this.getPreviewStyleNodeKey(child, visualRoot);
+            const hasVariantSelection = variantVisibleMeshes.size > 0;
+            if (hasVariantSelection) child.visible = variantVisibleMeshes.has(meshKey);
+            else if (usesCustomContentModel) child.visible = true;
+            else child.visible = child.name === selectedVariant;
+            if (appearance?.meshVisibility && Object.prototype.hasOwnProperty.call(appearance.meshVisibility, meshKey)) {
+                child.visible = appearance.meshVisibility[meshKey] !== false;
+            }
+            if (!child.visible) return;
+            visibleMeshCount += 1;
+
+            if (Array.isArray(child.material)) {
+                child.material = child.material.map((material: TintableMaterial | undefined) => this.cloneTintableMaterial(material));
+            } else {
+                child.material = this.cloneTintableMaterial(child.material);
+            }
+
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach((material: TintableMaterial | undefined) => {
+                if (!material?.color || tintableMaterials.includes(material)) return;
+                tintableMaterials.push(material);
+            });
+        });
+
+        if (!visibleMeshCount) {
+            root.remove(visualRoot);
+            return null;
+        }
+
+        const headJoint = this.findRigNode(visualRoot, ['mixamorig:Head', 'head']);
+        const leftArmJoint = this.findRigNode(visualRoot, ['mixamorig:LeftArm', 'leftarm']);
+        const rightArmJoint = this.findRigNode(visualRoot, ['mixamorig:RightArm', 'rightarm']);
+        const leftLegJoint = this.findRigNode(visualRoot, ['mixamorig:LeftUpLeg', 'leftupleg']);
+        const rightLegJoint = this.findRigNode(visualRoot, ['mixamorig:RightUpLeg', 'rightupleg']);
+        const rightHand = this.findRigNode(visualRoot, ['mixamorig:RightHand', 'righthand']);
+        const chestBone = this.findRigNode(visualRoot, ['mixamorig:Spine2', 'spine2', 'spine1', 'spine']);
+        const bellyBone = this.findRigNode(visualRoot, ['mixamorig:Spine', 'spine']);
+
+        if (!headJoint || !leftArmJoint || !rightArmJoint || !leftLegJoint || !rightLegJoint) {
+            root.remove(visualRoot);
+            return null;
+        }
+
+        this.createAttachedHitbox(headJoint, new BoxGeometry(0.34, 0.34, 0.34), config.id, GameObjectMaterialEnum.PlayerHead, [0, 0.08, 0]);
+        this.createAttachedHitbox(chestBone || headJoint.parent || root, new BoxGeometry(0.54, 0.5, 0.30), config.id, GameObjectMaterialEnum.PlayerChest, [0, 0.04, 0.02]);
+        this.createAttachedHitbox(bellyBone || chestBone || headJoint.parent || root, new BoxGeometry(0.48, 0.34, 0.28), config.id, GameObjectMaterialEnum.PlayerBelly, [0, 0.03, 0.02]);
+        this.createAttachedHitbox(chestBone || headJoint.parent || root, new BoxGeometry(0.72, 1.08, 0.5), config.id, GameObjectMaterialEnum.PlayerChest, [0, -0.14, 0]);
+        this.createAttachedHitbox(leftArmJoint, new BoxGeometry(0.16, 0.42, 0.16), config.id, GameObjectMaterialEnum.PlayerUpperLimb, [0, -0.22, 0]);
+        this.createAttachedHitbox(rightArmJoint, new BoxGeometry(0.16, 0.42, 0.16), config.id, GameObjectMaterialEnum.PlayerUpperLimb, [0, -0.22, 0]);
+        this.createAttachedHitbox(leftLegJoint, new BoxGeometry(0.2, 0.56, 0.2), config.id, GameObjectMaterialEnum.PlayerLowerLimb, [0, -0.3, 0]);
+        this.createAttachedHitbox(rightLegJoint, new BoxGeometry(0.2, 0.56, 0.2), config.id, GameObjectMaterialEnum.PlayerLowerLimb, [0, -0.3, 0]);
+
+        const { weaponMesh, muzzleMesh, weaponMat, muzzleMat } = this.createWeaponVisual(weapon);
+        const weaponAnchor = rightHand || rightArmJoint;
+        weaponMesh.position.set(-0.02, 0.09, 0.15);
+        weaponMesh.rotation.set(0.1, Math.PI, -1.35);
+        muzzleMesh.position.set(0.74, 0.01, 0);
+        muzzleMesh.visible = false;
+        weaponMesh.add(muzzleMesh);
+        weaponAnchor.add(weaponMesh);
+        this.tagPart(weaponMesh, config.id, GameObjectMaterialEnum.PlayerChest);
+
+        const aimMat = new MeshBasicMaterial({
+            color: config.team === 'CT' ? 0x89d0ff : 0xffa377,
+            transparent: true,
+            opacity: 0.46,
+            depthWrite: false,
+        });
+        const aimTipMat = new MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.74,
+            depthWrite: false,
+        });
+        const aimIndicator = new Group();
+        aimIndicator.position.set(0, 1.22, 0.08);
+        const aimBeam = new Mesh(new BoxGeometry(0.04, 0.04, 1.45), aimMat);
+        aimBeam.position.set(0, 0.01, 0.72);
+        const aimTip = new Mesh(new BoxGeometry(0.11, 0.11, 0.11), aimTipMat);
+        aimTip.position.set(0, 0.01, 1.46);
+        aimIndicator.add(aimBeam, aimTip);
+        root.add(aimIndicator);
+
+        const teamColor = config.team === 'CT' ? '#89d0ff' : '#ffae9a';
+        const nameTag = this.createNameTagSprite(config.name, teamColor);
+        nameTag.position.set(0, 2.2, 0);
+        root.add(nameTag);
+
+        const shieldSprite = this.createShieldSprite();
+        shieldSprite.position.set(0, 1.25, 0);
+        shieldSprite.visible = false;
+        root.add(shieldSprite);
+
+        const materials = [...tintableMaterials, weaponMat, muzzleMat, aimMat, aimTipMat];
+        const baseColors = materials.map(mat => mat.color.getHex());
+        const baseOpacities = materials.map(mat => mat.opacity ?? 1);
+        const baseTransparent = materials.map(mat => !!mat.transparent);
+        return {
+            root,
+            headJoint,
+            leftArmJoint,
+            rightArmJoint,
+            leftLegJoint,
+            rightLegJoint,
+            weaponMesh,
+            muzzleMesh,
+            aimIndicator,
+            aimBeam,
+            aimTip,
+            nameTag,
+            shieldSprite,
+            materials,
+            baseColors,
+            baseOpacities,
+            baseTransparent,
+        };
+    }
+
+    private cloneTintableMaterial(material: TintableMaterial | undefined) {
+        if (!material?.clone) return material;
+        const cloned = material.clone() as TintableMaterial;
+        if ('side' in cloned) (cloned as Material & { side?: number }).side = DoubleSide;
+        return cloned;
+    }
+
+    private findRigNode(root: Object3D, candidates: string[]) {
+        for (let i = 0; i < candidates.length; i++) {
+            const exact = root.getObjectByName(candidates[i]);
+            if (exact) return exact;
+        }
+
+        const lowered = candidates.map(value => value.toLowerCase());
+        let matched: Object3D | null = null;
+        root.traverse((child) => {
+            if (matched) return;
+            const childName = `${child.name || ''}`.toLowerCase();
+            if (!childName) return;
+            if (lowered.some(candidate => childName.includes(candidate))) matched = child;
+        });
+        return matched;
+    }
+
+    private getPreviewStyleNodeKey(node: Object3D, root: Object3D) {
+        const parts = [];
+        let current: Object3D | null = node;
+        while (current && current !== root) {
+            parts.push(`${current.name || current.type || 'node'}`);
+            current = current.parent;
+        }
+        return parts.reverse().join('/');
+    }
+
+    private createPrimitiveRig(config: BotConfig, weapon: WeaponProfile): BotRig {
         const root = new Group();
         root.name = config.name;
         root.visible = false;
@@ -883,8 +1275,29 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         const bellyMat = new MeshBasicMaterial({ color: config.team === 'CT' ? 0x294869 : 0x6e2b24 });
         const limbMat = new MeshBasicMaterial({ color: 0x3a3a3a });
         const weaponMat = new MeshBasicMaterial({ color: weapon.color });
-        const muzzleMat = new MeshBasicMaterial({ color: 0xf0d75a });
+        const muzzleMat = new MeshBasicMaterial({
+            color: 0xf0d75a,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+        });
+        const aimMat = new MeshBasicMaterial({
+            color: config.team === 'CT' ? 0x89d0ff : 0xffa377,
+            transparent: true,
+            opacity: 0.46,
+            depthWrite: false,
+        });
+        const aimTipMat = new MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.74,
+            depthWrite: false,
+        });
         const teamColor = config.team === 'CT' ? '#89d0ff' : '#ffae9a';
+        const materials = [skinMat, chestMat, bellyMat, limbMat, weaponMat, muzzleMat, aimMat, aimTipMat];
+        const baseColors = materials.map(mat => mat.color.getHex());
+        const baseOpacities = materials.map(mat => mat.opacity ?? 1);
+        const baseTransparent = materials.map(mat => !!mat.transparent);
 
         const headJoint = new Group();
         headJoint.position.set(0, 1.5, 0);
@@ -958,6 +1371,15 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         muzzleMesh.visible = false;
         rightArmJoint.add(muzzleMesh);
 
+        const aimIndicator = new Group();
+        aimIndicator.position.set(0, 1.22, 0.08);
+        const aimBeam = new Mesh(new BoxGeometry(0.04, 0.04, 1.45), aimMat);
+        aimBeam.position.set(0, 0.01, 0.72);
+        const aimTip = new Mesh(new BoxGeometry(0.11, 0.11, 0.11), aimTipMat);
+        aimTip.position.set(0, 0.01, 1.46);
+        aimIndicator.add(aimBeam, aimTip);
+        root.add(aimIndicator);
+
         const nameTag = this.createNameTagSprite(config.name, teamColor);
         nameTag.position.set(0, 2.2, 0);
         root.add(nameTag);
@@ -968,7 +1390,416 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         root.add(shieldSprite);
 
         root.add(headJoint, chest, belly, torsoHitbox, leftArmJoint, rightArmJoint, leftLegJoint, rightLegJoint);
-        return { root, headJoint, leftArmJoint, rightArmJoint, leftLegJoint, rightLegJoint, weaponMesh, muzzleMesh, nameTag, shieldSprite };
+        return {
+            root,
+            headJoint,
+            leftArmJoint,
+            rightArmJoint,
+            leftLegJoint,
+            rightLegJoint,
+            weaponMesh,
+            muzzleMesh,
+            aimIndicator,
+            aimBeam,
+            aimTip,
+            nameTag,
+            shieldSprite,
+            materials,
+            baseColors,
+            baseOpacities,
+            baseTransparent,
+        };
+    }
+
+    private restoreRigMaterialState(rig: BotRig) {
+        for (let i = 0; i < rig.materials.length; i++) {
+            const material = rig.materials[i];
+            material.transparent = rig.baseTransparent[i];
+            material.opacity = rig.baseOpacities[i];
+        }
+    }
+
+    private createWeaponVisual(weapon: WeaponProfile) {
+        const weaponMat = new MeshBasicMaterial({ color: weapon.color });
+        const muzzleMat = new MeshBasicMaterial({
+            color: 0xf0d75a,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+        });
+        const weaponMesh = new Mesh(new BoxGeometry(0.52, 0.12, 0.14), weaponMat);
+        const barrel = new Mesh(new BoxGeometry(0.34, 0.06, 0.06), weaponMat);
+        barrel.position.set(0.35, 0.0, 0.0);
+        weaponMesh.add(barrel);
+
+        const stock = new Mesh(new BoxGeometry(0.18, 0.1, 0.12), weaponMat);
+        stock.position.set(-0.33, 0.0, 0.0);
+        weaponMesh.add(stock);
+
+        const frontSight = new Mesh(new BoxGeometry(0.06, 0.08, 0.04), weaponMat);
+        frontSight.position.set(0.49, 0.07, 0.0);
+        weaponMesh.add(frontSight);
+
+        const muzzleMesh = new Mesh(new BoxGeometry(0.06, 0.06, 0.06), muzzleMat);
+        return { weaponMesh, muzzleMesh, weaponMat, muzzleMat };
+    }
+
+    private createAttachedHitbox(parent: Object3D, geometry: BoxGeometry, botId: string, material: GameObjectMaterialEnum, position: [number, number, number]) {
+        const hitboxMat = new MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+        const hitbox = new Mesh(geometry, hitboxMat);
+        hitbox.position.set(position[0], position[1], position[2]);
+        this.tagPart(hitbox, botId, material);
+        parent.add(hitbox);
+        return hitbox;
+    }
+
+    private clearCombatTags(root: Object3D) {
+        root.traverse((child: any) => {
+            if (!child?.isMesh) return;
+            delete child.userData['EnemyBotId'];
+            delete child.userData['GameObjectMaterialEnum'];
+            this.meshToBotId.delete(child.uuid);
+        });
+    }
+
+    private clearCorpses() {
+        if (!this.corpses.length) return;
+        for (let i = 0; i < this.corpses.length; i++) {
+            this.scene.remove(this.corpses[i].rig.root);
+        }
+        this.corpses.length = 0;
+    }
+
+    private clearDroppedWeapons() {
+        if (!this.droppedWeapons.length) return;
+        for (let i = 0; i < this.droppedWeapons.length; i++) {
+            this.scene.remove(this.droppedWeapons[i].mesh);
+        }
+        this.droppedWeapons.length = 0;
+    }
+
+    private createDroppedWeaponMesh(weapon: WeaponProfile) {
+        const weaponMat = new MeshBasicMaterial({
+            color: weapon.color,
+            transparent: true,
+            opacity: 1,
+        });
+        const weaponMesh = new Mesh(new BoxGeometry(0.52, 0.12, 0.14), weaponMat);
+        const barrel = new Mesh(new BoxGeometry(0.34, 0.06, 0.06), weaponMat.clone());
+        barrel.position.set(0.35, 0, 0);
+        weaponMesh.add(barrel);
+        const stock = new Mesh(new BoxGeometry(0.18, 0.1, 0.12), weaponMat.clone());
+        stock.position.set(-0.33, 0, 0);
+        weaponMesh.add(stock);
+        const sight = new Mesh(new BoxGeometry(0.06, 0.08, 0.04), weaponMat.clone());
+        sight.position.set(0.49, 0.07, 0);
+        weaponMesh.add(sight);
+        return weaponMesh;
+    }
+
+    private createDroppedWeaponFromInstance(weaponInstance: WeaponInterface) {
+        const entry = getWeaponEntry(`${weaponInstance.weaponId || ''}`);
+        const color = entry?.weaponId === 'awp'
+            ? 0x514b33
+            : entry?.weaponId === 'mp9'
+                ? 0x2b3b44
+                : entry?.weaponId === 'usp_s'
+                    ? 0x51565e
+                    : entry?.weaponId === 'm9'
+                        ? 0x8a8f97
+                        : 0x30353f;
+        return this.createDroppedWeaponMesh({
+            weaponName: weaponInstance.weaponName,
+            baseDamage: 0,
+            armorPen: 0,
+            rangeModifier: 1,
+            burstMin: 1,
+            burstMax: 1,
+            shotDelay: 0.1,
+            burstCooldownMin: 0.1,
+            burstCooldownMax: 0.1,
+            spreadStanding: 0,
+            spreadMoving: 0,
+            recoilPerShot: 0,
+            recoilRecover: 0,
+            color,
+        });
+    }
+
+    private spawnDroppedWeapon(weaponInstance: WeaponInterface | null | undefined, position: Vector3, yaw: number, launchDir?: Vector3) {
+        if (!weaponInstance) return null;
+        const slot = mapIventorySlotByWeaponClassficationEnum(weaponInstance.weaponClassificationEnum);
+        const mesh = this.createDroppedWeaponFromInstance(weaponInstance);
+        mesh.position.copy(position).add(new Vector3(0, 0.16, 0));
+        if (launchDir && launchDir.lengthSq() > 0.0001) {
+            mesh.position.addScaledVector(launchDir.clone().setY(0).normalize(), 0.24);
+        }
+        mesh.rotation.set(1.18, yaw, Math.random() * 0.6 - 0.3);
+        mesh.userData['DroppedWeapon'] = true;
+        mesh.userData['WeaponId'] = weaponInstance.weaponId || weaponInstance.weaponName;
+        this.scene.add(mesh);
+        const dropped = {
+            mesh,
+            weaponInstance,
+            slot,
+            removeAt: GameContext.GameLoop.Clock.getElapsedTime() + DROPPED_WEAPON_LIFETIME_SECONDS,
+        };
+        this.droppedWeapons.push(dropped);
+        return dropped;
+    }
+
+    public spawnDebugDroppedWeapon(weaponId: string) {
+        const safeWeaponId = `${weaponId || ''}`.trim().toLowerCase();
+        if (!safeWeaponId) return null;
+        const weapon = createWeaponById(safeWeaponId);
+        if (!weapon) return null;
+        const camera = GameContext.Cameras.PlayerCamera;
+        const forward = this.v1.set(0, 0, -1).applyQuaternion(camera.quaternion).setY(0);
+        if (forward.lengthSq() < 0.0001) forward.set(0, 0, -1);
+        forward.normalize();
+        const spawnPos = camera.position.clone().addScaledVector(forward, 1.0);
+        spawnPos.y = Math.max(spawnPos.y, camera.position.y - 0.42);
+        return this.spawnDroppedWeapon(weapon, spawnPos, camera.rotation.y, forward);
+    }
+
+    public spawnTestDummyAhead() {
+        const camera = GameContext.Cameras.PlayerCamera;
+        const forward = this.v1.set(0, 0, -1).applyQuaternion(camera.quaternion).setY(0);
+        if (forward.lengthSq() < 0.0001) forward.set(0, 0, -1);
+        forward.normalize();
+        const spawnPos = camera.position.clone().addScaledVector(forward, 5.0);
+        spawnPos.y = Math.max(spawnPos.y, camera.position.y - 1.55);
+        const elapsed = GameContext.GameLoop.Clock.getElapsedTime();
+
+        let bot = this.bots.get('test_dummy');
+        if (!bot) {
+            bot = this.createTestDummyBot();
+            this.bots.set(bot.id, bot);
+            this.scene.add(bot.rig.root);
+        }
+
+        bot.anchorPosition.copy(spawnPos);
+        this.respawnTestDummy(bot, elapsed);
+        return bot;
+    }
+
+    private updateDroppedWeapons(elapsed: number) {
+        if (!this.droppedWeapons.length) return;
+        const next: DroppedWeaponData[] = [];
+        for (let i = 0; i < this.droppedWeapons.length; i++) {
+            const item = this.droppedWeapons[i];
+            if (elapsed >= item.removeAt) {
+                this.scene.remove(item.mesh);
+                continue;
+            }
+
+            const fade01 = MathUtils.clamp((item.removeAt - elapsed) / 2.2, 0, 1);
+            item.mesh.traverse((child: any) => {
+                if (!child?.isMesh) return;
+                const material = child.material as MeshBasicMaterial;
+                material.transparent = true;
+                material.opacity = fade01;
+            });
+            next.push(item);
+        }
+        this.droppedWeapons = next;
+    }
+
+    private tryPickupDroppedWeapon() {
+        const movement = this.localPlayer.movementController;
+        const inventory = this.localPlayer.inventorySystem;
+        if (!movement?.playerCollider || !inventory) return;
+
+        const playerPos = movement.playerCollider.end.clone();
+        let bestIndex = -1;
+        let bestDistance = DROPPED_WEAPON_PICKUP_DISTANCE;
+        for (let i = 0; i < this.droppedWeapons.length; i++) {
+            const dist = this.droppedWeapons[i].mesh.position.distanceTo(playerPos);
+            if (dist < bestDistance) {
+                bestDistance = dist;
+                bestIndex = i;
+            }
+        }
+        if (bestIndex < 0) return;
+
+        const picked = this.droppedWeapons.splice(bestIndex, 1)[0];
+        this.scene.remove(picked.mesh);
+        const replaced = inventory.replaceWeapon(picked.weaponInstance);
+        if (replaced?.replaced) {
+            this.spawnDroppedWeapon(
+                replaced.replaced,
+                picked.mesh.position.clone(),
+                GameContext.Cameras.PlayerCamera.rotation.y,
+            );
+        }
+    }
+
+    public getFocusedDroppedWeaponInfo(): DroppedWeaponPromptInfo | null {
+        const movement = this.localPlayer.movementController;
+        if (!movement?.playerCollider || this.localPlayer.health <= 0) return null;
+
+        const camera = GameContext.Cameras.PlayerCamera;
+        const origin = camera.position;
+        const forward = this.v1.set(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+        let best: DroppedWeaponPromptInfo = null;
+        let bestScore = 0.92;
+
+        for (let i = 0; i < this.droppedWeapons.length; i++) {
+            const item = this.droppedWeapons[i];
+            const toWeapon = this.v2.copy(item.mesh.position).sub(origin);
+            const distance = toWeapon.length();
+            if (distance > DROPPED_WEAPON_PICKUP_DISTANCE + 0.65) continue;
+            toWeapon.normalize();
+            const facing = forward.dot(toWeapon);
+            if (facing < bestScore) continue;
+            bestScore = facing;
+            best = {
+                weaponName: `${item.weaponInstance.weaponName || item.weaponInstance.weaponId || 'WEAPON'}`,
+                distance,
+            };
+        }
+
+        return best;
+    }
+
+    private spawnCorpseFromBot(bot: BotAgent, elapsed: number, impactDir?: Vector3, headshot = false) {
+        const corpseRig = this.createRig(
+            { id: `corpse_${bot.id}_${Math.floor(elapsed * 1000)}`, name: bot.name, team: bot.team, difficulty: bot.difficulty },
+            bot.weapon,
+        );
+        this.clearCombatTags(corpseRig.root);
+        corpseRig.nameTag.visible = false;
+        corpseRig.shieldSprite.visible = false;
+        corpseRig.aimIndicator.visible = false;
+        corpseRig.muzzleMesh.visible = false;
+        corpseRig.root.visible = true;
+        corpseRig.root.position.copy(bot.rig.root.position);
+        corpseRig.root.rotation.copy(bot.rig.root.rotation);
+        corpseRig.headJoint.rotation.copy(bot.rig.headJoint.rotation);
+        corpseRig.leftArmJoint.rotation.copy(bot.rig.leftArmJoint.rotation);
+        corpseRig.rightArmJoint.rotation.copy(bot.rig.rightArmJoint.rotation);
+        corpseRig.leftLegJoint.rotation.copy(bot.rig.leftLegJoint.rotation);
+        corpseRig.rightLegJoint.rotation.copy(bot.rig.rightLegJoint.rotation);
+        corpseRig.weaponMesh.rotation.copy(bot.rig.weaponMesh.rotation);
+        corpseRig.weaponMesh.position.copy(bot.rig.weaponMesh.position);
+        corpseRig.root.userData['Corpse'] = true;
+        this.scene.add(corpseRig.root);
+        const launchDir = (impactDir && impactDir.lengthSq() > 0.0001)
+            ? impactDir.clone().setY(0).normalize().multiplyScalar(-1)
+            : new Vector3(Math.sin(bot.rig.root.rotation.y), 0, Math.cos(bot.rig.root.rotation.y)).multiplyScalar(-1);
+        this.spawnDroppedWeapon(bot.weaponInstance, bot.rig.root.position.clone(), bot.rig.root.rotation.y, launchDir);
+        this.corpses.push({
+            rig: corpseRig,
+            spawnedAt: elapsed,
+            removeAt: elapsed + getRuntimeTuningSnapshot().effects.corpseLifetimeSeconds,
+            initialPosition: bot.rig.root.position.clone(),
+            initialYaw: bot.rig.root.rotation.y,
+            fallSide: Math.random() < 0.5 ? -1 : 1,
+            isPlayer: false,
+            headshot,
+            launchDir,
+            launchDistance: headshot ? 0.9 : 0.46,
+            settleDrop: headshot ? 0.22 : 0.12,
+            droppedWeapon: null,
+        });
+    }
+
+    private spawnPlayerCorpse(elapsed: number, impactDir?: Vector3, headshot = false) {
+        const yaw = GameContext.Cameras.PlayerCamera.rotation.y;
+        const weapon = this.localPlayer.inventorySystem?.currentWeapon
+            ? this.pickWeapon(PLAYER_TEAM, 'NORMAL')
+            : WEAPONS.M4A1S;
+        const corpseRig = this.createRig(
+            { id: `corpse_player_${Math.floor(elapsed * 1000)}`, name: 'YOU', team: PLAYER_TEAM, difficulty: 'NORMAL' },
+            weapon,
+        );
+        this.clearCombatTags(corpseRig.root);
+        corpseRig.nameTag.visible = false;
+        corpseRig.shieldSprite.visible = false;
+        corpseRig.aimIndicator.visible = false;
+        corpseRig.muzzleMesh.visible = false;
+        corpseRig.root.visible = true;
+        corpseRig.root.position.copy(this.playerDeathPos).add(new Vector3(0, -PLAYER_STANDING_END_OFFSET + 0.1, 0));
+        corpseRig.root.rotation.set(0, yaw, 0);
+        corpseRig.root.userData['Corpse'] = true;
+        this.scene.add(corpseRig.root);
+        const launchDir = (impactDir && impactDir.lengthSq() > 0.0001)
+            ? impactDir.clone().setY(0).normalize().multiplyScalar(-1)
+            : new Vector3(Math.sin(yaw), 0, Math.cos(yaw)).multiplyScalar(-1);
+        this.spawnDroppedWeapon(cloneWeaponInstanceWithAmmo(this.localPlayer.inventorySystem?.currentWeapon), corpseRig.root.position.clone(), yaw, launchDir);
+        this.corpses.push({
+            rig: corpseRig,
+            spawnedAt: elapsed,
+            removeAt: elapsed + getRuntimeTuningSnapshot().effects.corpseLifetimeSeconds,
+            initialPosition: corpseRig.root.position.clone(),
+            initialYaw: yaw,
+            fallSide: Math.random() < 0.5 ? -1 : 1,
+            isPlayer: true,
+            headshot,
+            launchDir,
+            launchDistance: headshot ? 0.78 : 0.4,
+            settleDrop: headshot ? 0.2 : 0.1,
+            droppedWeapon: null,
+        });
+    }
+
+    private updateCorpses(elapsed: number) {
+        if (!this.corpses.length) return;
+        const next: CorpseData[] = [];
+        for (let i = 0; i < this.corpses.length; i++) {
+            const corpse = this.corpses[i];
+            if (elapsed >= corpse.removeAt) {
+                this.scene.remove(corpse.rig.root);
+                continue;
+            }
+
+            const fallT = MathUtils.clamp((elapsed - corpse.spawnedAt) / CORPSE_FALL_DURATION_SECONDS, 0, 1);
+            const fallEase = 1 - Math.pow(1 - fallT, 3);
+            const arc = Math.sin(fallT * Math.PI) * (corpse.headshot ? 0.18 : 0.08);
+
+            corpse.rig.root.position.copy(corpse.initialPosition);
+            corpse.rig.root.position.addScaledVector(corpse.launchDir, corpse.launchDistance * fallEase);
+            corpse.rig.root.position.y += arc - fallEase * (0.08 + corpse.settleDrop);
+            corpse.rig.root.rotation.set(
+                corpse.headshot ? -0.48 * fallEase : 0.18 * fallEase,
+                corpse.initialYaw + corpse.fallSide * (corpse.headshot ? 0.28 : 0.12) * fallEase,
+                corpse.fallSide * (corpse.headshot ? 1.46 : 1.02) * fallEase,
+            );
+            corpse.rig.headJoint.rotation.x = corpse.headshot ? -1.48 * fallEase : -0.96 * fallEase;
+            corpse.rig.headJoint.rotation.z = corpse.fallSide * (corpse.headshot ? 0.72 : 0.38) * fallEase;
+            corpse.rig.leftArmJoint.rotation.x = -0.32 - (corpse.headshot ? 1.72 : 1.16) * fallEase;
+            corpse.rig.leftArmJoint.rotation.z = corpse.fallSide * 0.86 * fallEase;
+            corpse.rig.rightArmJoint.rotation.x = -0.54 - (corpse.headshot ? 1.94 : 1.32) * fallEase;
+            corpse.rig.rightArmJoint.rotation.z = corpse.fallSide * -0.58 * fallEase;
+            corpse.rig.leftLegJoint.rotation.x = 0.18 + (corpse.headshot ? 1.08 : 0.72) * fallEase;
+            corpse.rig.leftLegJoint.rotation.z = corpse.fallSide * 0.34 * fallEase;
+            corpse.rig.rightLegJoint.rotation.x = -0.16 - (corpse.headshot ? 0.9 : 0.42) * fallEase;
+            corpse.rig.rightLegJoint.rotation.z = corpse.fallSide * -0.26 * fallEase;
+            corpse.rig.weaponMesh.rotation.x = 0.18 + (corpse.headshot ? 1.2 : 0.86) * fallEase;
+            corpse.rig.weaponMesh.rotation.y = -0.08 - corpse.fallSide * 0.3 * fallEase;
+            corpse.rig.weaponMesh.rotation.z = corpse.fallSide * (corpse.headshot ? 0.74 : 0.46) * fallEase;
+            corpse.rig.weaponMesh.position.set(0.18, -0.08 + 0.02 * (1 - fallEase), -0.1);
+            const groundPoint = this.sampleGroundPoint(
+                corpse.rig.root.position.x,
+                corpse.rig.root.position.z,
+                this.navBounds.isEmpty() ? corpse.initialPosition.y + 10 : this.navBounds.max.y + 10,
+                this.navBounds.isEmpty() ? corpse.initialPosition.y - 10 : this.navBounds.min.y - 10,
+            );
+            if (groundPoint) {
+                corpse.rig.root.position.y = Math.max(groundPoint.y + 0.03, corpse.rig.root.position.y);
+            } else {
+                corpse.rig.root.position.y = Math.max(corpse.initialPosition.y - 0.04, corpse.rig.root.position.y);
+            }
+
+            const fade01 = MathUtils.clamp((corpse.removeAt - elapsed) / Math.max(0.05, getRuntimeTuningSnapshot().effects.corpseFadeSeconds), 0, 1);
+            for (let m = 0; m < corpse.rig.materials.length; m++) {
+                corpse.rig.materials[m].transparent = true;
+                corpse.rig.materials[m].opacity = fade01;
+            }
+
+            next.push(corpse);
+        }
+        this.corpses = next;
     }
 
     private createNameTagSprite(name: string, colorHex: string) {
@@ -1089,6 +1920,7 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         this.playerRespawnAt = -1;
         this.lastKillerName = '';
         this.lastKillerBotId = '';
+        this.clearDroppedWeapons();
         this.respawnPlayer();
         this.respawnBots(elapsed);
     }
@@ -1099,6 +1931,23 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
 
     private tickBots(dt: number, elapsed: number) {
         this.bots.forEach(bot => {
+            if (bot.isTestDummy) {
+                if (!bot.alive) {
+                    if (elapsed >= bot.respawnAt) this.respawnTestDummy(bot, elapsed);
+                    return;
+                }
+                bot.velocity.set(0, 0, 0);
+                bot.path = [];
+                bot.pathCursor = 0;
+                bot.intent = 'ANCHOR';
+                bot.kick = Math.max(0, bot.kick - dt * 3.5);
+                this.animateBot(bot, dt, elapsed, bot.rig.root.position);
+                return;
+            }
+            if (!this.isRuntimeBotActive(bot)) {
+                this.deactivateBot(bot);
+                return;
+            }
             if (!bot.alive) {
                 if (elapsed >= bot.respawnAt) this.respawnBot(bot, elapsed);
                 return;
@@ -1118,8 +1967,9 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
 
             if (elapsed >= bot.nextDecisionAt) this.decideIntent(bot, target, canSee, distance, elapsed);
 
+            const runtimeProfile = this.getBotRuntimeProfile(bot);
             if (canSee) {
-                const lockGain = (0.75 + bot.profile.tracking * 0.9) * dt;
+                const lockGain = (0.75 + (bot.profile.tracking * runtimeProfile.trackingMul) * 0.9) * runtimeProfile.aimLockMul * dt;
                 bot.aimLock = Math.min(1, bot.aimLock + lockGain);
             } else {
                 bot.aimLock = Math.max(0, bot.aimLock - dt * 1.65);
@@ -1150,6 +2000,7 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
 
         this.bots.forEach(other => {
             if (!other.alive || other.id === bot.id) return;
+            if (!this.isRuntimeBotActive(other)) return;
             if (elapsed < other.spawnProtectedUntil) return;
             const dist = bot.rig.root.position.distanceTo(other.rig.root.position);
             const los = this.hasLineOfSight(bot.rig.root.position, other.rig.root.position);
@@ -1176,16 +2027,20 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
     }
 
     private decideIntent(bot: BotAgent, target: TargetInfo, canSee: boolean, distance: number, elapsed: number) {
-        if (!canSee && elapsed - bot.lastSeenAt > 2.2) bot.intent = 'PUSH';
-        else if (distance < bot.profile.engageMin * (0.9 + (1 - bot.profile.bravery) * 0.2)) bot.intent = 'RETREAT';
-        else if (distance > bot.profile.engageMax * (0.95 + (1 - bot.profile.bravery) * 0.15)) bot.intent = 'PUSH';
-        else if (Math.random() < 0.18 + bot.profile.bravery * 0.12) bot.intent = 'FLANK';
-        else bot.intent = 'ANCHOR';
+        const runtime = this.getBotRuntimeProfile(bot);
+        const bravery = MathUtils.clamp(bot.profile.bravery * runtime.aggression / Math.max(0.35, runtime.defense), 0.08, 0.95);
+        const engageMin = bot.profile.engageMin * MathUtils.lerp(1.18, 0.88, runtime.aggression - 0.5);
+        const engageMax = bot.profile.engageMax * MathUtils.lerp(0.9, 1.18, runtime.aggression - 0.5);
+        if (!canSee && elapsed - bot.lastSeenAt > 1.9) bot.intent = 'PUSH';
+        else if (distance < engageMin * (1.04 + (1 - bravery) * 0.28)) bot.intent = 'RETREAT';
+        else if (distance > engageMax * (1.02 + (1 - bravery) * 0.22)) bot.intent = 'PUSH';
+        else if (Math.random() < 0.06 + bravery * 0.06 + runtime.tactical * 0.05) bot.intent = 'FLANK';
+        else bot.intent = canSee ? 'ANCHOR' : 'PUSH';
 
         const node = this.selectGoalNode(bot, target);
         if (node !== -1) bot.targetNode = node;
 
-        bot.nextDecisionAt = elapsed + MathUtils.randFloat(0.28, 0.72);
+        bot.nextDecisionAt = elapsed + MathUtils.randFloat(0.44, 1.08) / Math.max(0.35, runtime.tactical);
     }
 
     private selectGoalNode(bot: BotAgent, target: TargetInfo) {
@@ -1349,24 +2204,44 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         }
 
         bot.rig.root.position.set(bot.collider.start.x, bot.collider.start.y - BOT_COLLIDER_RADIUS, bot.collider.start.z);
-        bot.recoil = Math.max(0, bot.recoil - bot.weapon.recoilRecover * dt);
+        const tuning = getRuntimeTuningSnapshot();
+        bot.recoil = Math.max(0, bot.recoil - (bot.weapon.recoilRecover / Math.max(0.1, tuning.weapons[`${bot.weaponInstance.weaponId || ''}`]?.recoilMultiplier || 1)) * dt);
         bot.kick = Math.max(0, bot.kick - 3.8 * dt);
+        bot.hitGlowStrength = Math.max(0, bot.hitGlowStrength - dt * tuning.effects.botGlowDecay);
 
         if (!bot.onFloor && bot.rig.root.position.y < -22) this.forceRespawn(bot, elapsed);
     }
 
     private turnBot(bot: BotAgent, targetPos: Vector3, dt: number) {
+        const tuning = this.getBotRuntimeProfile(bot);
         this.v1.copy(targetPos).sub(bot.rig.root.position).setY(0);
         if (this.v1.lengthSq() < 0.0001) return;
         const desiredYaw = Math.atan2(this.v1.x, this.v1.z);
         const currentYaw = bot.rig.root.rotation.y;
         const delta = Math.atan2(Math.sin(desiredYaw - currentYaw), Math.cos(desiredYaw - currentYaw));
-        const step = Math.min(1, bot.profile.turnSpeed * dt);
-        bot.rig.root.rotation.y = currentYaw + delta * step;
+        const speed01 = MathUtils.clamp(bot.speed / Math.max(0.001, bot.profile.moveSpeed), 0, 1);
+        const maxTurnRate = bot.profile.turnSpeed * tuning.turnSpeedMul * MathUtils.lerp(0.72, 1.15, 1 - speed01);
+        const clampedDelta = MathUtils.clamp(delta, -maxTurnRate * dt, maxTurnRate * dt);
+        bot.rig.root.rotation.y = currentYaw + clampedDelta;
     }
 
     private fireBot(bot: BotAgent, target: TargetInfo, canSee: boolean, distance: number, dt: number, elapsed: number) {
-        const wp = bot.weapon;
+        const runtime = getRuntimeTuningSnapshot();
+        const botTune = this.getBotRuntimeProfile(bot);
+        const weaponTune = runtime.weapons[`${bot.weaponInstance.weaponId || ''}`] || runtime.weapons.ak47;
+        const preset = getBotWeaponPreset(`${bot.weaponInstance.weaponId || bot.weapon.weaponName || 'ak47'}`);
+        const wp = {
+            ...bot.weapon,
+            burstMin: Math.max(1, Math.round(preset.burstMin * botTune.burstMul)),
+            burstMax: Math.max(1, Math.round(preset.burstMax * botTune.burstMul)),
+            shotDelay: preset.shotDelay * botTune.reactionMul,
+            burstCooldownMin: preset.burstCooldownMin * botTune.cooldownMul,
+            burstCooldownMax: preset.burstCooldownMax * botTune.cooldownMul,
+            spreadStanding: preset.spreadStanding * botTune.spreadMul * weaponTune.spreadMultiplier,
+            spreadMoving: preset.spreadMoving * botTune.spreadMul * weaponTune.spreadMultiplier,
+            recoilPerShot: preset.recoilPerShot * weaponTune.recoilMultiplier,
+            recoilRecover: preset.recoilRecover / Math.max(0.1, weaponTune.recoilMultiplier),
+        };
         if (!canSee || distance > bot.profile.engageMax) {
             bot.burstShotsLeft = 0;
             return;
@@ -1378,41 +2253,56 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         this.v2.set(Math.sin(bot.rig.root.rotation.y), 0, Math.cos(bot.rig.root.rotation.y)).normalize();
         const facing01 = MathUtils.clamp((this.v1.dot(this.v2) + 1) * 0.5, 0, 1);
         if (facing01 < 0.24) return;
-        const requiredLock = 0.2 + (1 - bot.profile.tracking) * 0.14;
+        const tracking = bot.profile.tracking * botTune.trackingMul;
+        const aggression = botTune.aggression;
+        const defense = botTune.defense;
+        const requiredLock = (0.2 + (1 - tracking) * 0.14) / Math.max(0.2, botTune.aimLockMul);
         if (bot.aimLock < requiredLock) return;
 
         if (elapsed < bot.nextBurstAt) return;
 
         if (bot.burstShotsLeft <= 0) {
-            bot.burstShotsLeft = MathUtils.randInt(wp.burstMin, wp.burstMax);
-            bot.nextShotAt = Math.max(elapsed, bot.nextShotAt) + bot.profile.reactionSeconds * 0.22;
+            bot.burstShotsLeft = MathUtils.randInt(
+                Math.max(1, wp.burstMin - 1),
+                Math.max(Math.max(1, wp.burstMin - 1), wp.burstMax - 1),
+            );
+            bot.nextShotAt = Math.max(elapsed, bot.nextShotAt) + (bot.profile.reactionSeconds * botTune.reactionMul) * MathUtils.randFloat(0.42, 0.7);
         }
         if (elapsed < bot.nextShotAt) return;
 
         bot.nextShotAt = elapsed + wp.shotDelay;
         bot.burstShotsLeft = Math.max(0, bot.burstShotsLeft - 1);
-        if (bot.burstShotsLeft === 0) bot.nextBurstAt = elapsed + MathUtils.randFloat(wp.burstCooldownMin, wp.burstCooldownMax);
+        if (bot.burstShotsLeft === 0) {
+            bot.nextBurstAt = elapsed + MathUtils.randFloat(wp.burstCooldownMin * 1.25, wp.burstCooldownMax * 1.55);
+        }
 
         bot.recoil = Math.min(1.4, bot.recoil + wp.recoilPerShot);
         bot.kick = Math.min(1.0, bot.kick + 0.45);
         bot.muzzleUntil = elapsed + 0.045;
 
         const moveFactor = MathUtils.clamp(bot.speed / Math.max(0.001, bot.profile.moveSpeed), 0, 1);
+        if (moveFactor > 0.34 && distance > bot.profile.engageMin * 0.9) {
+            bot.nextShotAt += 0.04 + moveFactor * 0.05;
+            return;
+        }
+        const effectiveEngageMin = bot.profile.engageMin * MathUtils.lerp(0.92, 1.08, defense - 0.5);
+        const effectiveEngageMax = bot.profile.engageMax * MathUtils.lerp(0.88, 1.18, aggression - 0.5);
         const spread = wp.spreadStanding + moveFactor * wp.spreadMoving + bot.recoil;
-        const rangePenalty = MathUtils.clamp((distance - bot.profile.engageMin) / Math.max(1, bot.profile.engageMax), 0, 1);
+        const rangePenalty = MathUtils.clamp((distance - effectiveEngageMin) / Math.max(1, effectiveEngageMax), 0, 1);
         const strafePenalty = MathUtils.clamp(Math.abs(Math.sin(bot.strafePhase + elapsed * 2.2)) * 0.08, 0, 0.08);
-        let hitChance = 0.05 + (bot.profile.tracking * 0.55);
-        hitChance += facing01 * 0.12;
-        hitChance += bot.aimLock * 0.18;
-        hitChance -= spread * 0.52;
-        hitChance -= rangePenalty * 0.3;
+        let hitChance = 0.03 + (tracking * 0.42);
+        hitChance += facing01 * 0.08;
+        hitChance += bot.aimLock * 0.14;
+        hitChance -= spread * 0.58;
+        hitChance -= rangePenalty * 0.34;
         hitChance -= strafePenalty;
-        if (target.kind === 'player' && distance <= 8) hitChance += 0.03;
-        if (moveFactor > 0.45) hitChance -= 0.08;
-        hitChance = MathUtils.clamp(hitChance, 0.04, 0.8);
+        if (target.kind === 'player' && distance <= 7) hitChance += 0.015;
+        if (moveFactor > 0.22) hitChance -= 0.1;
+        if (bot.intent === 'RETREAT') hitChance -= 0.08 * defense;
+        hitChance = MathUtils.clamp(hitChance * botTune.hitChanceMul, 0.025, 0.56);
         if (Math.random() > hitChance) return;
 
-        const hsChance = MathUtils.clamp(0.01 + bot.profile.tracking * 0.08 + bot.aimLock * 0.06 + facing01 * 0.04 - spread * 0.2, 0.005, 0.18);
+        const hsChance = MathUtils.clamp(0.008 + tracking * 0.05 + bot.aimLock * 0.04 + facing01 * 0.025 - spread * 0.22, 0.003, 0.1);
         const headshot = Math.random() < hsChance;
         const part = headshot
             ? GameObjectMaterialEnum.PlayerHead
@@ -1427,14 +2317,15 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         bot.aimLock = Math.max(0, bot.aimLock - (0.06 + dt * 0.22));
 
         if (target.kind === 'player') {
-            this.applyDamageToPlayer(damage, bot.name, wp.weaponName, headshot);
+            this.applyDamageToPlayer(damage, bot, wp.weaponName, headshot);
             return;
         }
 
         if (!target.bot) return;
         if (elapsed < target.bot.spawnProtectedUntil) return;
         const botDamage = this.calculateDamage(wp.weaponName, part, distance, target.bot.armor, target.bot.hasHelmet);
-        const killed = this.applyDamageToBot(target.bot, botDamage, elapsed);
+        const impactDir = this.v1.copy(target.position).sub(bot.rig.root.position).setY(0).normalize();
+        const killed = this.applyDamageToBot(target.bot, botDamage, elapsed, headshot, impactDir);
         if (killed) {
             KillFeedEvent.detail.killerName = bot.name;
             KillFeedEvent.detail.victimName = target.name;
@@ -1444,10 +2335,11 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         }
     }
 
-    private applyDamageToPlayer(damage: DamageBreakdown, killerName: string, weaponName: string, headshot: boolean) {
+    private applyDamageToPlayer(damage: DamageBreakdown, attackerBot: BotAgent, weaponName: string, headshot: boolean) {
         if (this.intermissionActive) return;
         if (this.localPlayer.health <= 0 || this.roundPhase !== 'live' || !this.matchEnabled) return;
         if (this.isPlayerSpawnProtected(GameContext.GameLoop.Clock.getElapsedTime())) return;
+        const killerName = attackerBot?.name || 'BOT';
         const hpDamage = Math.max(1, damage.healthDamage);
         if (damage.armorDamage > 0) {
             this.localPlayer.armor = Math.max(0, this.localPlayer.armor - damage.armorDamage);
@@ -1463,6 +2355,9 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         PlayerDamagedEvent.detail.armor = this.localPlayer.armor;
         PlayerDamagedEvent.detail.headshot = headshot;
         PlayerDamagedEvent.detail.attackerName = killerName;
+        PlayerDamagedEvent.detail.attackerX = attackerBot?.rig?.root?.position?.x || 0;
+        PlayerDamagedEvent.detail.attackerY = attackerBot?.rig?.root?.position?.y || 0;
+        PlayerDamagedEvent.detail.attackerZ = attackerBot?.rig?.root?.position?.z || 0;
         GameLogicEventPipe.dispatchEvent(PlayerDamagedEvent);
 
         if (before > 0 && this.localPlayer.health <= 0) {
@@ -1472,6 +2367,8 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
             this.localPlayer.deaths += 1;
             this.playerDeathPos.copy(this.getPlayerTargetPosition());
             const now = GameContext.GameLoop.Clock.getElapsedTime();
+            this.v1.copy(attackerBot?.rig?.root?.position || this.playerDeathPos).sub(this.playerDeathPos).setY(0);
+            this.spawnPlayerCorpse(now, this.v1, headshot);
             this.playerRespawnAt = now + PLAYER_RESPAWN_SECONDS;
             this.lastKillerName = killerName;
             const killerBot = this.findBotByName(killerName);
@@ -1493,8 +2390,11 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         }
     }
 
-    private applyDamageToBot(bot: BotAgent, damage: DamageBreakdown, elapsed: number) {
+    private applyDamageToBot(bot: BotAgent, damage: DamageBreakdown, elapsed: number, headshot = false, impactDir?: Vector3) {
         if (!bot.alive) return false;
+        const fx = getRuntimeTuningSnapshot().effects;
+        bot.hitGlowUntil = elapsed + fx.botGlowDuration;
+        bot.hitGlowStrength = Math.min(1.6, bot.hitGlowStrength + ((headshot ? 1 : 0.72) * fx.botGlowIntensity));
         if (damage.armorDamage > 0) {
             bot.armor = Math.max(0, bot.armor - damage.armorDamage);
             if (bot.armor <= 0) bot.hasHelmet = false;
@@ -1503,10 +2403,28 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         bot.hp -= Math.max(1, damage.healthDamage);
         if (bot.hp > 0) return false;
 
+        if (bot.isTestDummy) {
+            bot.hp = 0;
+            bot.armor = 0;
+            bot.hasHelmet = false;
+            bot.alive = false;
+            bot.rig.root.visible = false;
+            bot.path = [];
+            bot.pathCursor = 0;
+            bot.currentNode = -1;
+            bot.targetNode = -1;
+            bot.velocity.set(0, 0, 0);
+            bot.respawnAt = elapsed + TEST_DUMMY_RESPAWN_SECONDS;
+            bot.spawnProtectedUntil = 0;
+            bot.outOfBoundsSince = -1;
+            return true;
+        }
+
         bot.hp = 0;
         bot.armor = 0;
         bot.hasHelmet = false;
         bot.alive = false;
+        this.spawnCorpseFromBot(bot, elapsed, impactDir, headshot);
         bot.rig.root.visible = false;
         bot.path = [];
         bot.pathCursor = 0;
@@ -1527,15 +2445,58 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
 
         const aimBase = -0.95;
         const aimAdj = MathUtils.clamp((bot.profile.engageMax - bot.rig.root.position.distanceTo(lookAt)) / bot.profile.engageMax, -0.3, 0.25);
+        const aimVector = this.v1.copy(lookAt).sub(bot.rig.root.position);
+        const flatAimLen = Math.max(0.001, Math.hypot(aimVector.x, aimVector.z));
+        const desiredYaw = Math.atan2(aimVector.x, aimVector.z);
+        const yawDelta = Math.atan2(
+            Math.sin(desiredYaw - bot.rig.root.rotation.y),
+            Math.cos(desiredYaw - bot.rig.root.rotation.y),
+        );
+        const localAimYaw = MathUtils.clamp(yawDelta, -0.85, 0.85);
+        const localAimPitch = MathUtils.clamp(Math.atan2(aimVector.y - 1.12, flatAimLen), -0.6, 0.38);
+        const aimAlpha = MathUtils.clamp(0.3 + bot.aimLock * 0.7 + bot.kick * 0.18, 0.28, 1);
+        const fx = getRuntimeTuningSnapshot().effects;
+        const muzzleFlash = MathUtils.clamp((bot.muzzleUntil - elapsed) / 0.045, 0, 1);
+        const hitFlash = MathUtils.clamp((bot.hitGlowUntil - elapsed) / Math.max(0.02, fx.botGlowDuration), 0, 1) * bot.hitGlowStrength;
 
         bot.rig.leftLegJoint.rotation.x = swing * 0.85;
         bot.rig.rightLegJoint.rotation.x = antiSwing * 0.85;
-        bot.rig.leftArmJoint.rotation.x = antiSwing * 0.45 + 0.15;
-        bot.rig.rightArmJoint.rotation.x = aimBase + aimAdj - bot.kick * 0.36;
-        bot.rig.headJoint.rotation.x = Math.sin(bot.walkCycle * 0.5) * 0.06 + bot.kick * 0.08;
-        bot.rig.headJoint.rotation.y = Math.sin((elapsed + bot.strafePhase) * 1.2) * 0.07;
-        bot.rig.weaponMesh.rotation.z = -bot.kick * 0.18;
-        bot.rig.muzzleMesh.visible = elapsed <= bot.muzzleUntil;
+        bot.rig.leftArmJoint.rotation.x = antiSwing * 0.45 + 0.15 - localAimPitch * 0.18;
+        bot.rig.leftArmJoint.rotation.y = localAimYaw * 0.22;
+        bot.rig.rightArmJoint.rotation.x = aimBase + aimAdj - localAimPitch * 0.72 - bot.kick * 0.52;
+        bot.rig.rightArmJoint.rotation.y = localAimYaw * 0.72;
+        bot.rig.headJoint.rotation.x = localAimPitch * 0.52 + Math.sin(bot.walkCycle * 0.5) * 0.04 + bot.kick * 0.12;
+        bot.rig.headJoint.rotation.y = localAimYaw * 0.68;
+        bot.rig.weaponMesh.rotation.z = -bot.kick * 0.26;
+        bot.rig.weaponMesh.rotation.x = -localAimPitch * 0.22 + bot.kick * 0.12;
+        bot.rig.weaponMesh.rotation.y = -0.08 + localAimYaw * 0.42;
+        bot.rig.weaponMesh.position.set(0.26 - bot.kick * 0.1, -0.16 + bot.kick * 0.03, -0.2);
+        bot.rig.muzzleMesh.visible = muzzleFlash > 0.01;
+        bot.rig.muzzleMesh.scale.set(1 + muzzleFlash * 2.4, 1 + muzzleFlash * 1.5, 1 + muzzleFlash * 3.4);
+        bot.rig.muzzleMesh.position.set(0.67 + muzzleFlash * 0.06, -0.16 - localAimPitch * 0.08, -0.2);
+        bot.rig.muzzleMesh.rotation.y = localAimYaw * 0.42;
+        bot.rig.muzzleMesh.rotation.x = -localAimPitch * 0.2;
+        (bot.rig.muzzleMesh.material as MeshBasicMaterial).opacity = muzzleFlash * 0.96;
+        bot.rig.aimIndicator.rotation.x = -localAimPitch * 0.84;
+        bot.rig.aimIndicator.rotation.y = localAimYaw;
+        bot.rig.aimIndicator.scale.set(1, 1, 0.9 + bot.aimLock * 0.35 + muzzleFlash * 0.2);
+        (bot.rig.aimBeam.material as MeshBasicMaterial).opacity = MathUtils.clamp(0.2 + aimAlpha * 0.55, 0.2, 0.82);
+        (bot.rig.aimTip.material as MeshBasicMaterial).opacity = MathUtils.clamp(0.3 + aimAlpha * 0.62 + muzzleFlash * 0.25, 0.3, 1);
+        for (let i = 0; i < bot.rig.materials.length; i++) {
+            const mat = bot.rig.materials[i];
+            const base = bot.rig.baseColors[i];
+            mat.transparent = bot.rig.baseTransparent[i];
+            mat.opacity = bot.rig.baseOpacities[i];
+            const baseR = (base >> 16) & 255;
+            const baseG = (base >> 8) & 255;
+            const baseB = base & 255;
+            const glowMix = MathUtils.clamp(hitFlash * (i < 5 ? 0.95 : 0.55), 0, 1);
+            mat.color.setRGB(
+                MathUtils.lerp(baseR / 255, 1, glowMix),
+                MathUtils.lerp(baseG / 255, 0.96, glowMix),
+                MathUtils.lerp(baseB / 255, 0.96, glowMix),
+            );
+        }
         bot.rig.nameTag.visible = bot.alive;
 
         const spawnProtected = elapsed <= bot.spawnProtectedUntil;
@@ -1595,6 +2556,10 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
 
     private respawnBots(elapsed: number) {
         this.bots.forEach(bot => {
+            if (!this.isRuntimeBotActive(bot)) {
+                this.deactivateBot(bot);
+                return;
+            }
             this.respawnBot(bot, elapsed);
         });
     }
@@ -1604,6 +2569,9 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         const safeNode = (node >= 0 && node < this.navNodes.length) ? node : this.resolveFallbackSpawnNode();
         if (safeNode < 0 || safeNode >= this.navNodes.length) return;
         this.teleportToNode(bot, safeNode);
+        const nextWeaponId = this.pickWeaponId(bot.team, bot.difficulty);
+        bot.weapon = this.pickWeapon(bot.team, bot.difficulty);
+        bot.weaponInstance = createWeaponById(nextWeaponId);
         const armorLoadout = this.getBotArmorLoadout(bot.difficulty);
         bot.spawnNode = safeNode;
         bot.targetNode = safeNode;
@@ -1614,6 +2582,7 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         bot.hasHelmet = armorLoadout.hasHelmet;
         bot.alive = true;
         bot.rig.root.visible = true;
+        this.restoreRigMaterialState(bot.rig);
         bot.intent = 'ANCHOR';
         bot.nextDecisionAt = elapsed + MathUtils.randFloat(0.1, 0.42);
         bot.nextRepathAt = elapsed;
@@ -1631,6 +2600,41 @@ export class EnemyBotSystem implements CycleInterface, LoopInterface {
         bot.respawnAt = elapsed + BOT_RESPAWN_SECONDS;
         bot.spawnProtectedUntil = elapsed + BOT_SPAWN_PROTECTION_SECONDS;
         bot.outOfBoundsSince = -1;
+    }
+
+    private respawnTestDummy(bot: BotAgent, elapsed: number) {
+        bot.hp = TEST_DUMMY_HP;
+        bot.armor = 0;
+        bot.hasHelmet = false;
+        bot.alive = true;
+        bot.onFloor = true;
+        bot.rig.root.visible = true;
+        this.restoreRigMaterialState(bot.rig);
+        bot.rig.root.position.copy(bot.anchorPosition);
+        bot.rig.root.rotation.set(0, 0, 0);
+        bot.velocity.set(0, 0, 0);
+        bot.path = [];
+        bot.pathCursor = 0;
+        bot.currentNode = -1;
+        bot.targetNode = -1;
+        bot.intent = 'ANCHOR';
+        bot.nextDecisionAt = Number.POSITIVE_INFINITY;
+        bot.nextRepathAt = Number.POSITIVE_INFINITY;
+        bot.nextShotAt = Number.POSITIVE_INFINITY;
+        bot.nextBurstAt = Number.POSITIVE_INFINITY;
+        bot.burstShotsLeft = 0;
+        bot.aimLock = 0;
+        bot.recoil = 0;
+        bot.kick = 0;
+        bot.muzzleUntil = 0;
+        bot.outOfBoundsSince = -1;
+        bot.collider.start.set(bot.anchorPosition.x, bot.anchorPosition.y + BOT_COLLIDER_RADIUS, bot.anchorPosition.z);
+        bot.collider.end.set(bot.anchorPosition.x, bot.anchorPosition.y + BOT_COLLIDER_HEIGHT - BOT_COLLIDER_RADIUS, bot.anchorPosition.z);
+        bot.lastSeenPos.copy(bot.anchorPosition);
+        bot.lastSamplePos.copy(bot.anchorPosition);
+        bot.sampleTimer = 0;
+        bot.respawnAt = elapsed + TEST_DUMMY_RESPAWN_SECONDS;
+        bot.spawnProtectedUntil = 0;
     }
 
     private getBotArmorLoadout(difficulty: DifficultyName) {

@@ -17,6 +17,10 @@ export class InventorySystem implements CycleInterface, LoopInterface {
     nowEquipInventory: InventorySlotEnum = InventorySlotEnum.Hands;
     lastEquipInventory: InventorySlotEnum = InventorySlotEnum.Malee;
 
+    get currentWeapon() {
+        return this.weapons.get(this.nowEquipInventory) || null;
+    }
+
     init(): void {
         this.weapons.set(InventorySlotEnum.Hands, null);
         this.switchEquipment(InventorySlotEnum.Hands);
@@ -74,10 +78,11 @@ export class InventorySystem implements CycleInterface, LoopInterface {
      */
     replaceWeapon(weaponInstance: WeaponInterface) {
         const belongInventory = mapIventorySlotByWeaponClassficationEnum(weaponInstance.weaponClassificationEnum);
+        const replaced = this.weapons.get(belongInventory) || null;
         this.weapons.set(belongInventory, weaponInstance);
         this.rememberWeaponSpawnAmmo(weaponInstance);
         this.applyEquipTransition(this.nowEquipInventory, belongInventory, true);
-        return belongInventory;
+        return { slot: belongInventory, replaced };
     }
 
     applyLoadoutPack(weaponsBySlot: Map<InventorySlotEnum, WeaponInterface>, equipSlot: InventorySlotEnum = InventorySlotEnum.Primary) {
@@ -116,6 +121,14 @@ export class InventorySystem implements CycleInterface, LoopInterface {
             }
             weapon.lastFireTime = 0;
             weapon.active = false;
+        });
+    }
+
+    rebuildSpawnAmmoCache() {
+        this.weaponSpawnAmmo.clear();
+        this.weapons.forEach((weapon) => {
+            if (!weapon) return;
+            this.rememberWeaponSpawnAmmo(weapon);
         });
     }
 

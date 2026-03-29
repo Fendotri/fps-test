@@ -1,7 +1,7 @@
 import { GameContext } from '@src/core/GameContext';
 import { dealWithWeaponTexture } from '@src/core/lib/threejs_common';
 import { WeaponClassificationEnum } from '@src/gameplay/abstract/WeaponClassificationEnum';
-import { DoubleSide, MeshBasicMaterial, Vector3 } from 'three';
+import { DoubleSide, MeshBasicMaterial, Object3D, Vector3 } from 'three';
 import { SemiAutomaticWeapon } from '../abstract/SemiAutomaticWeapon';
 
 const requiredResources = ['AWP_1', 'AWP_equip', 'AWP_reload', 'AWP_fire', 'AWP_hold'];
@@ -17,12 +17,25 @@ export class AWP extends SemiAutomaticWeapon {
         const missing = requiredResources.filter(key => !GameContext.GameResources.resourceMap.has(key));
         if (missing.length) throw new Error(`[AWP] Missing resources: ${missing.join(', ')}`);
 
-        const skinnedMesh = GameContext.GameResources.resourceMap.get('AWP_1');
-        // Placeholder texture until dedicated AWP texture is added.
-        const texture = GameContext.GameResources.textureLoader.load('/weapons/weapon.AK47.jpg');
-        dealWithWeaponTexture(texture);
-        const material = new MeshBasicMaterial({ map: texture, side: DoubleSide });
-        (skinnedMesh as THREE.SkinnedMesh).material = material;
+        const weaponObject = GameContext.GameResources.resourceMap.get('AWP_1') as Object3D;
+        const isSingleSkinnedMesh = !!(weaponObject as any)?.isSkinnedMesh;
+        if (isSingleSkinnedMesh) {
+            const texture = GameContext.GameResources.textureLoader.load('/weapons/weapon.AK47.jpg');
+            dealWithWeaponTexture(texture);
+            const material = new MeshBasicMaterial({ map: texture, side: DoubleSide });
+            (weaponObject as THREE.SkinnedMesh).material = material;
+        } else {
+            weaponObject?.traverse((child: any) => {
+                if (!child?.isMesh) return;
+                child.visible = true;
+                child.frustumCulled = false;
+                const materials = Array.isArray(child.material) ? child.material : [child.material];
+                materials.filter(Boolean).forEach((material: any) => {
+                    if ('side' in material) material.side = DoubleSide;
+                    if ('needsUpdate' in material) material.needsUpdate = true;
+                });
+            });
+        }
 
         this.weaponClassificationEnum = WeaponClassificationEnum.SniperRifle;
         this.weaponId = 'awp';

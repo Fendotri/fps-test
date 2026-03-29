@@ -1,5 +1,6 @@
 import { MathUtils } from 'three';
 import { GameObjectMaterialEnum } from '@src/gameplay/abstract/GameObjectMaterialEnum';
+import { getRuntimeWeaponTune } from '@src/gameplay/tuning/RuntimeTuning';
 import sprayPatternFromGifJson from './sprayPattern.fromGif.csgo128.json';
 
 export type HitgroupName = 'HEAD' | 'CHEST' | 'STOMACH' | 'ARM' | 'LEG';
@@ -1072,7 +1073,47 @@ export const seedFromWeapon = (weaponIdOrName: string, weaponUUID?: string) => {
 
 export const resolveCombatProfile = (weaponIdOrName: string): CombatProfile => {
     const normalized = normalizedId(weaponIdOrName);
-    return PROFILE_BY_ALIAS.get(normalized) || PROFILE_BY_ALIAS.get('default')!;
+    const baseProfile = PROFILE_BY_ALIAS.get(normalized) || PROFILE_BY_ALIAS.get('default')!;
+    const tune = getRuntimeWeaponTune(baseProfile.id);
+    return {
+        ...baseProfile,
+        rpm: tune.rpm,
+        tracerSpeed: tune.tracerSpeed,
+        damage: {
+            ...baseProfile.damage,
+            baseDamage: tune.damage * tune.damageMultiplier,
+        },
+        accuracy: {
+            ...baseProfile.accuracy,
+            standInaccuracy: baseProfile.accuracy.standInaccuracy * tune.spreadMultiplier,
+            moveInaccuracy: baseProfile.accuracy.moveInaccuracy * tune.spreadMultiplier,
+            airInaccuracy: baseProfile.accuracy.airInaccuracy * tune.spreadMultiplier,
+            landingPenalty: baseProfile.accuracy.landingPenalty * tune.spreadMultiplier,
+            recoilPerShot: baseProfile.accuracy.recoilPerShot * tune.recoilMultiplier,
+            recoilSpreadGain: baseProfile.accuracy.recoilSpreadGain * tune.recoilMultiplier,
+            recoilMax: baseProfile.accuracy.recoilMax * Math.max(0.35, tune.recoilMultiplier),
+            recoveryRate: baseProfile.accuracy.recoveryRate / Math.max(0.1, tune.recoilMultiplier),
+        },
+        recoil: {
+            ...baseProfile.recoil,
+            basePitch: baseProfile.recoil.basePitch * tune.recoilMultiplier,
+            patternPitch: baseProfile.recoil.patternPitch * tune.recoilMultiplier,
+            patternYaw: baseProfile.recoil.patternYaw * tune.recoilMultiplier,
+            movementKickScale: baseProfile.recoil.movementKickScale * tune.recoilMultiplier,
+            cameraRecoverRate: baseProfile.recoil.cameraRecoverRate / Math.max(0.1, tune.recoilMultiplier),
+        },
+        movement: {
+            ...baseProfile.movement,
+            speed: tune.speed,
+        },
+        bot: {
+            ...baseProfile.bot,
+            spreadStanding: baseProfile.bot.spreadStanding * tune.spreadMultiplier,
+            spreadMoving: baseProfile.bot.spreadMoving * tune.spreadMultiplier,
+            recoilPerShot: baseProfile.bot.recoilPerShot * tune.recoilMultiplier,
+            recoilRecover: baseProfile.bot.recoilRecover / Math.max(0.1, tune.recoilMultiplier),
+        },
+    };
 };
 
 export const shotIntervalFromRpm = (rpm: number) => 60 / Math.max(1, Number(rpm) || 600);
@@ -1185,8 +1226,8 @@ export const computeShot = (args: {
     const effectiveRecoverLine = timedReset ? 0 : Math.max(0, args.recoverLine);
 
     let inaccuracy = movement.onFloor ? accuracy.standInaccuracy : accuracy.airInaccuracy;
-    const moveRatio = MathUtils.clamp(movement.speed01, 0, 1.65);
-    const movePenalty = moveRatio * accuracy.moveInaccuracy * (movement.walking ? accuracy.walkMultiplier : 1);
+    const moveRatio = MathUtils.clamp(movement.speed01, 0, 1.2);
+    const movePenalty = moveRatio * accuracy.moveInaccuracy * (movement.walking ? Math.max(0.42, accuracy.walkMultiplier * 0.92) : 0.82);
     inaccuracy += movePenalty;
     if (movement.crouching) {
         const crouchMul = MathUtils.clamp(accuracy.crouchMultiplier, 0.2, 1.8);
@@ -1195,9 +1236,9 @@ export const computeShot = (args: {
     }
     if (!movement.onFloor) {
         const verticalSpeedAbs = Math.abs(Number(movement.verticalSpeed) || 0);
-        const verticalPenalty = MathUtils.clamp(verticalSpeedAbs / 8.5, 0, 1.35);
-        const airbornePenalty = Math.min(0.45, movement.airborneTime * 0.32);
-        inaccuracy += (0.34 + (verticalPenalty * 0.66) + airbornePenalty) * accuracy.airInaccuracy;
+        const verticalPenalty = MathUtils.clamp(verticalSpeedAbs / 9.5, 0, 1.0);
+        const airbornePenalty = Math.min(0.24, movement.airborneTime * 0.18);
+        inaccuracy += (0.16 + (verticalPenalty * 0.28) + airbornePenalty) * accuracy.airInaccuracy;
     }
     inaccuracy += MathUtils.clamp(movement.landingImpact, 0, 1.4) * accuracy.landingPenalty;
     inaccuracy += Math.min(accuracy.recoilMax, effectiveRecoverLine) * accuracy.recoilSpreadGain;
@@ -1208,7 +1249,7 @@ export const computeShot = (args: {
     if (firstShotStable) inaccuracy *= accuracy.firstShotMultiplier;
     const spreadDistanceScale = MathUtils.clamp(Math.sqrt(120 / accurateRange), 0.74, 1.45);
     const spreadBase = inaccuracy * spreadDistanceScale;
-    const spreadVisualScale = 5.2;
+    const spreadVisualScale = 4.1;
     const spreadComputed = spreadBase * spreadVisualScale;
 
     const spraySeedIndex = Math.floor((effectiveRecoilIndex * 1000) + (effectiveRecoverLine * 120));
@@ -1243,7 +1284,7 @@ export const computeShot = (args: {
     const randomX = Math.cos(randomAngle) * randomRadius;
     const randomY = Math.sin(randomAngle) * randomRadius;
 
-    const spreadClamp = Math.max(0.0004, spreadComputed * 2.15);
+    const spreadClamp = Math.max(0.0004, spreadComputed * 1.45);
     const spreadX = MathUtils.clamp(patternBiasX + randomX, -spreadClamp, spreadClamp);
     const spreadY = MathUtils.clamp(patternBiasY + randomY, -spreadClamp, spreadClamp);
 

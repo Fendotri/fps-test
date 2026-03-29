@@ -67,8 +67,17 @@ export type LoadoutProfile = {
 export type WeaponCatalogItem = {
     weaponId: string;
     displayName: string;
+    description?: string;
     category: string;
     priceCoin: number;
+    rarity?: string;
+    dropWeight?: number;
+    iconPath?: string;
+    modelPath?: string;
+    modelPosition?: [number, number, number];
+    modelRotation?: [number, number, number];
+    modelScale?: [number, number, number];
+    enabled?: boolean;
     slot: LoadoutSlot;
     placeholderRig: 'ak' | 'usp' | 'm9' | string;
     stats: {
@@ -169,6 +178,13 @@ export type SocialUserEntry = {
     lastSeenAt: string | null;
 };
 
+export type MatchRoomGameConfig = {
+    mode: string;
+    durationSeconds: number;
+    fillBots: boolean;
+    startedAt: string | null;
+};
+
 export type SquadRoomState = {
     id: string;
     label: string;
@@ -178,6 +194,7 @@ export type SquadRoomState = {
     capacity: number;
     memberCount: number;
     isHost: boolean;
+    game?: MatchRoomGameConfig;
     members: SocialUserEntry[];
     createdAt: string;
     updatedAt: string;
@@ -410,7 +427,11 @@ export type CaseDrop = {
 export type CaseCatalogItem = {
     id: string;
     title: string;
+    description?: string;
+    offerId?: string;
     openPriceCoin: number;
+    priceCoin?: number;
+    enabled?: boolean;
     drops: CaseDrop[];
 };
 
@@ -558,7 +579,10 @@ const parseJsonResponse = async (response: Response) => {
 
 const request = async <T>(path: string, options: RequestOptions = {}): Promise<T> => {
     const method = options.method || 'GET';
-    const headers: Record<string, string> = { ...(options.headers || {}) };
+    const headers: Record<string, string> = {
+        'ngrok-skip-browser-warning': 'true',
+        ...(options.headers || {}),
+    };
     if (options.body !== undefined) headers['Content-Type'] = 'application/json';
     if (options.token) headers.Authorization = `Bearer ${options.token}`;
 
@@ -696,6 +720,24 @@ export const backendApi = {
         });
     },
 
+    async createMatchRoom(token: string, payload: {
+        visibility: 'public' | 'private';
+        forceNew?: boolean;
+        label?: string;
+        capacity?: number;
+        game?: {
+            mode?: string;
+            durationSeconds?: number;
+            fillBots?: boolean;
+        };
+    }) {
+        return request<{ ok: boolean; reason: string; social: SocialSnapshot }>('/api/social/squad/create', {
+            method: 'POST',
+            token,
+            body: payload,
+        });
+    },
+
     async setSquadVisibility(token: string, visibility: 'public' | 'private') {
         return request<{ ok: boolean; reason: string; social: SocialSnapshot }>('/api/social/squad/visibility', {
             method: 'POST',
@@ -710,6 +752,10 @@ export const backendApi = {
             token,
             body: { partyId },
         });
+    },
+
+    async listPublicMatchRooms() {
+        return request<{ rooms: SquadRoomState[]; serverTime?: string }>('/api/social/squad/public');
     },
 
     async respondSquadInvite(token: string, inviteId: string, action: 'accept' | 'decline' | 'cancel') {
@@ -915,6 +961,40 @@ export const backendApi = {
                 'x-admin-key': adminKey,
             },
             body: payload,
+        });
+    },
+
+    async getLiveopsConfig(adminKey: string) {
+        return request<{ ok: boolean; liveops: any }>('/api/liveops/config', {
+            headers: {
+                'x-admin-key': adminKey,
+            },
+        });
+    },
+
+    async uploadLiveopsAsset(adminKey: string, payload: {
+        target: 'weapon-icon' | 'weapon-model' | 'player-icon' | 'player-model' | 'player-animation';
+        entityId: string;
+        fileName: string;
+        mimeType?: string;
+        dataBase64: string;
+    }) {
+        return request<{ ok: boolean; publicPath: string; fileName: string; bytes: number }>('/api/liveops/upload-asset', {
+            method: 'POST',
+            headers: {
+                'x-admin-key': adminKey,
+            },
+            body: payload,
+        });
+    },
+
+    async listLiveopsAssets(adminKey: string, payload: { target: 'weapon-icon' | 'weapon-model' | 'player-icon' | 'player-model' | 'player-animation'; entityId: string }) {
+        const target = encodeURIComponent(`${payload?.target || ''}`.trim());
+        const entityId = encodeURIComponent(`${payload?.entityId || ''}`.trim());
+        return request<{ ok: boolean; assets: Array<{ fileName: string; publicPath: string }> }>(`/api/liveops/assets?target=${target}&entityId=${entityId}`, {
+            headers: {
+                'x-admin-key': adminKey,
+            },
         });
     },
 

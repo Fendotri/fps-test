@@ -1,6 +1,8 @@
 import { GameContext } from '@src/core/GameContext';
 import { CycleInterface } from '@src/core/inferface/CycleInterface';
 import { LoopInterface } from '@src/core/inferface/LoopInterface';
+import { EnemyBotSystem } from '@src/gameplay/bot/EnemyBotSystem';
+import { OnlineRoomSystem } from '@src/gameplay/online/OnlineRoomSystem';
 import { HitDamageEvent, KillFeedEvent, GameLogicEventPipe, PlayerDamagedEvent, PlayerDiedEvent, PlayerRespawnedEvent } from '@src/gameplay/pipes/GameLogicEventPipe';
 import { LocalPlayer } from '@src/gameplay/player/LocalPlayer';
 import { getModeRules } from '@src/gameplay/modes/modeRules';
@@ -107,7 +109,12 @@ export class HUDLayer implements CycleInterface, LoopInterface {
     private damagePopupHost: HTMLDivElement;
     private killCardHost: HTMLDivElement;
     private hitFxOverlay: HTMLDivElement;
+    private damageVignette: HTMLDivElement;
+    private damageDirection: HTMLDivElement;
     private scopeOverlay: HTMLDivElement;
+    private pickupPromptEl: HTMLDivElement;
+    private pickupPromptLabelEl: HTMLDivElement;
+    private pickupPromptHintEl: HTMLDivElement;
     private roundRewardEl: HTMLDivElement;
     private deathOverlay: HTMLDivElement;
     private deathKillerValue: HTMLSpanElement;
@@ -145,6 +152,11 @@ export class HUDLayer implements CycleInterface, LoopInterface {
     private popupSeed = 0;
     private cardSeed = 0;
     private hitFxUntil = 0;
+    private damageVignetteUntil = 0;
+    private damageVignetteStrength = 0;
+    private damageDirectionUntil = 0;
+    private damageDirectionAngle = 0;
+    private damageDirectionStrength = 0;
     private roundRewardUntil = 0;
     private deathRespawnAt = 0;
     private localDamageByVictim = new Map<string, number>();
@@ -155,11 +167,6 @@ export class HUDLayer implements CycleInterface, LoopInterface {
 
     private scoreboardRows: ScoreRow[] = [
         { id: 'local', name: 'YOU', title: 'Rookie', nameColor: 'default', avatar: DEFAULT_AVATAR_ID, avatarFrame: 'default', kills: 0, deaths: 0, assists: 0, damage: 0, score: 0, elo: 0, premierTier: 'unranked', calibrated: false, ping: 18, local: true },
-        { id: 'bot_alex', name: 'BOT_ALEX', title: 'Sharpshooter', nameColor: 'blue', avatar: 'hawk_eye', avatarFrame: 'steel', kills: 0, deaths: 0, assists: 0, damage: 0, score: 0, elo: 12450, premierTier: 'blue', calibrated: true, ping: 24 },
-        { id: 'bot_mira', name: 'BOT_MIRA', title: 'Entry Fragger', nameColor: 'purple', avatar: 'captain_royal', avatarFrame: 'royal', kills: 0, deaths: 0, assists: 0, damage: 0, score: 0, elo: 18700, premierTier: 'purple', calibrated: true, ping: 28 },
-        { id: 'bot_ivan', name: 'BOT_IVAN', title: 'Rookie', nameColor: 'cyan', avatar: 'dust_raider', avatarFrame: 'default', kills: 0, deaths: 0, assists: 0, damage: 0, score: 0, elo: 8350, premierTier: 'cyan', calibrated: true, ping: 20 },
-        { id: 'bot_nova', name: 'BOT_NOVA', title: 'Predator', nameColor: 'pink', avatar: 'night_viper', avatarFrame: 'neon', kills: 0, deaths: 0, assists: 0, damage: 0, score: 0, elo: 24200, premierTier: 'pink', calibrated: true, ping: 31 },
-        { id: 'bot_shade', name: 'BOT_SHADE', title: 'Legend', nameColor: 'gold', avatar: 'premier_ace', avatarFrame: 'legend', kills: 0, deaths: 0, assists: 0, damage: 0, score: 0, elo: 30500, premierTier: 'gold', calibrated: true, ping: 26 },
     ];
 
     private lastHealth = '';
@@ -188,6 +195,15 @@ export class HUDLayer implements CycleInterface, LoopInterface {
             </div>
 
             <div class="cs2-hitfx" id="hud-hitfx"></div>
+            <div class="cs2-damage-vignette" id="hud-damage-vignette"></div>
+            <div class="cs2-damage-direction" id="hud-damage-direction">
+                <div class="cs2-damage-arrow"></div>
+            </div>
+            <div class="cs2-pickup-prompt hidden" id="hud-pickup-prompt">
+                <div class="cs2-pickup-kicker">GROUND WEAPON</div>
+                <div class="cs2-pickup-name" id="hud-pickup-name">AK-47</div>
+                <div class="cs2-pickup-hint" id="hud-pickup-hint">Press <span>E</span> to swap</div>
+            </div>
             <div class="cs2-round-reward hidden" id="hud-round-reward"></div>
             <div class="cs2-damage-popups" id="hud-damage-popups"></div>
             <div class="cs2-kill-cards" id="hud-kill-cards"></div>
@@ -266,7 +282,12 @@ export class HUDLayer implements CycleInterface, LoopInterface {
         this.damagePopupHost = this.hudRoot.querySelector('#hud-damage-popups') as HTMLDivElement;
         this.killCardHost = this.hudRoot.querySelector('#hud-kill-cards') as HTMLDivElement;
         this.hitFxOverlay = this.hudRoot.querySelector('#hud-hitfx') as HTMLDivElement;
+        this.damageVignette = this.hudRoot.querySelector('#hud-damage-vignette') as HTMLDivElement;
+        this.damageDirection = this.hudRoot.querySelector('#hud-damage-direction') as HTMLDivElement;
         this.scopeOverlay = this.hudRoot.querySelector('#hud-scope-overlay') as HTMLDivElement;
+        this.pickupPromptEl = this.hudRoot.querySelector('#hud-pickup-prompt') as HTMLDivElement;
+        this.pickupPromptLabelEl = this.hudRoot.querySelector('#hud-pickup-name') as HTMLDivElement;
+        this.pickupPromptHintEl = this.hudRoot.querySelector('#hud-pickup-hint') as HTMLDivElement;
         this.roundRewardEl = this.hudRoot.querySelector('#hud-round-reward') as HTMLDivElement;
         this.deathOverlay = this.hudRoot.querySelector('#hud-death-overlay') as HTMLDivElement;
         this.deathKillerValue = this.hudRoot.querySelector('#hud-death-killer') as HTMLSpanElement;
@@ -366,6 +387,12 @@ export class HUDLayer implements CycleInterface, LoopInterface {
             const damage = Math.max(0, Math.floor(Number(e.detail.damage) || 0));
             if (damage <= 0) return;
             const attacker = `${e.detail.attackerName || ''}`;
+            this.applyIncomingDamageFx({
+                damage,
+                attackerX: Number(e.detail.attackerX) || 0,
+                attackerZ: Number(e.detail.attackerZ) || 0,
+                headshot: !!e.detail.headshot,
+            });
             if (!attacker) return;
             const row = this.scoreboardRows.find(item => item.name === attacker);
             if (!row) return;
@@ -403,11 +430,14 @@ export class HUDLayer implements CycleInterface, LoopInterface {
 
         this.updateRoundTimer(elapsed);
         this.syncBottomHud();
+        this.updatePickupPrompt();
         this.pruneKillFeed(elapsed);
         this.pruneDamagePopups(elapsed);
         this.updateHitFx(elapsed);
+        this.updateIncomingDamageFx(elapsed);
         this.updateRoundReward(elapsed);
         this.updateDeathOverlay(elapsed);
+        this.syncScoreboardRoster();
         this.syncLocalScoreRow();
     }
 
@@ -438,6 +468,7 @@ export class HUDLayer implements CycleInterface, LoopInterface {
         localRow.avatar = `${detail?.auth?.progression?.cosmetics?.avatar || DEFAULT_AVATAR_ID}`;
         localRow.avatarFrame = `${detail?.auth?.progression?.cosmetics?.avatarFrame || 'default'}`;
 
+        this.syncScoreboardRoster();
         this.resetRoundStats();
         this.renderScoreboard();
         this.killFeedItems = [];
@@ -453,7 +484,44 @@ export class HUDLayer implements CycleInterface, LoopInterface {
         this.hideRoundReward();
         this.hideRoundEndOverlay();
         this.hideDeathOverlay();
+        this.hidePickupPrompt();
+        this.resetIncomingDamageFx();
         this.applyScopeOverlayState(false, 'none');
+    }
+
+    private syncScoreboardRoster() {
+        const local = this.getLocalRow();
+        const nextRows = new Map<string, ScoreRow>();
+        nextRows.set(local.id, local);
+
+        const botRows = EnemyBotSystem.getInstance().getScoreboardRoster();
+        const remoteRows = OnlineRoomSystem.getInstance()?.getScoreboardRoster?.() || [];
+        const sourceRows = [...botRows, ...remoteRows];
+
+        for (let i = 0; i < sourceRows.length; i += 1) {
+            const source = sourceRows[i];
+            const existing = this.scoreboardRows.find((row) => row.id === source.id);
+            nextRows.set(source.id, {
+                id: source.id,
+                name: source.name,
+                title: source.title,
+                nameColor: source.nameColor,
+                avatar: source.avatar,
+                avatarFrame: source.avatarFrame,
+                kills: existing?.kills || 0,
+                deaths: existing?.deaths || 0,
+                assists: existing?.assists || 0,
+                damage: existing?.damage || 0,
+                score: existing?.score || 0,
+                elo: source.elo,
+                premierTier: source.premierTier,
+                calibrated: source.calibrated,
+                ping: source.ping,
+                local: false,
+            });
+        }
+
+        this.scoreboardRows = Array.from(nextRows.values());
     }
 
     private stopMatch() {
@@ -475,6 +543,8 @@ export class HUDLayer implements CycleInterface, LoopInterface {
         this.hideRoundReward();
         this.hideRoundEndOverlay();
         this.hideDeathOverlay();
+        this.hidePickupPrompt();
+        this.resetIncomingDamageFx();
         this.applyScopeOverlayState(false, 'none');
     }
 
@@ -785,6 +855,83 @@ export class HUDLayer implements CycleInterface, LoopInterface {
         this.hitFxOverlay.classList.toggle('active', active);
     }
 
+    private updatePickupPrompt() {
+        if (!this.matchLive) {
+            this.hidePickupPrompt();
+            return;
+        }
+
+        const info = EnemyBotSystem.getInstance().getFocusedDroppedWeaponInfo();
+        if (!info) {
+            this.hidePickupPrompt();
+            return;
+        }
+
+        this.pickupPromptLabelEl.textContent = `${info.weaponName}`.toUpperCase();
+        this.pickupPromptHintEl.innerHTML = `Press <span>E</span> to swap`;
+        this.pickupPromptEl.classList.remove('hidden');
+    }
+
+    private hidePickupPrompt() {
+        if (!this.pickupPromptEl) return;
+        this.pickupPromptEl.classList.add('hidden');
+    }
+
+    private applyIncomingDamageFx(detail: { damage: number; attackerX: number; attackerZ: number; headshot: boolean }) {
+        const elapsed = GameContext.GameLoop.Clock.getElapsedTime();
+        const camera = GameContext.Cameras.PlayerCamera;
+        const camPos = camera.position;
+        const dx = detail.attackerX - camPos.x;
+        const dz = detail.attackerZ - camPos.z;
+        const worldAngle = Math.atan2(dx, dz);
+        const localAngle = worldAngle - camera.rotation.y;
+        const strength = Math.min(1, (detail.damage / 42) + (detail.headshot ? 0.24 : 0.08));
+
+        this.damageVignetteStrength = Math.max(this.damageVignetteStrength, strength);
+        this.damageVignetteUntil = elapsed + 0.42 + strength * 0.18;
+        this.damageDirectionStrength = Math.max(this.damageDirectionStrength, strength);
+        this.damageDirectionAngle = localAngle;
+        this.damageDirectionUntil = elapsed + 0.7;
+    }
+
+    private updateIncomingDamageFx(elapsed: number) {
+        const vignetteActive = elapsed <= this.damageVignetteUntil;
+        const directionActive = elapsed <= this.damageDirectionUntil;
+
+        if (this.damageVignette) {
+            this.damageVignette.classList.toggle('active', vignetteActive);
+            this.damageVignette.style.setProperty('--damage-vignette-alpha', `${(this.damageVignetteStrength * 0.8).toFixed(3)}`);
+        }
+
+        if (this.damageDirection) {
+            this.damageDirection.classList.toggle('active', directionActive);
+            this.damageDirection.style.transform = `translate(-50%, -50%) rotate(${this.damageDirectionAngle}rad)`;
+            this.damageDirection.style.setProperty('--damage-dir-alpha', `${(0.2 + this.damageDirectionStrength * 0.78).toFixed(3)}`);
+        }
+
+        if (!vignetteActive) this.damageVignetteStrength = Math.max(0, this.damageVignetteStrength - 0.06);
+        else this.damageVignetteStrength = Math.max(0, this.damageVignetteStrength - 0.018);
+
+        if (!directionActive) this.damageDirectionStrength = Math.max(0, this.damageDirectionStrength - 0.08);
+        else this.damageDirectionStrength = Math.max(0, this.damageDirectionStrength - 0.02);
+    }
+
+    private resetIncomingDamageFx() {
+        this.damageVignetteUntil = 0;
+        this.damageVignetteStrength = 0;
+        this.damageDirectionUntil = 0;
+        this.damageDirectionStrength = 0;
+        if (this.damageVignette) {
+            this.damageVignette.classList.remove('active');
+            this.damageVignette.style.setProperty('--damage-vignette-alpha', '0');
+        }
+        if (this.damageDirection) {
+            this.damageDirection.classList.remove('active');
+            this.damageDirection.style.setProperty('--damage-dir-alpha', '0');
+            this.damageDirection.style.transform = 'translate(-50%, -50%) rotate(0rad)';
+        }
+    }
+
     private showRoundReward(
         rewardBreakdown: { placement: number; win: number; kill: number; total: number },
         placement: number,
@@ -949,6 +1096,7 @@ export class HUDLayer implements CycleInterface, LoopInterface {
     }
 
     private renderScoreboard() {
+        this.syncScoreboardRoster();
         const rows = this.getSortedRows();
         const localRow = this.getLocalRow();
         const localRank = rows.findIndex(row => row.id === localRow.id) + 1;

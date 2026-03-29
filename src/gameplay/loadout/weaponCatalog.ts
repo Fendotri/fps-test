@@ -63,6 +63,17 @@ type WeaponStats = {
 export type WeaponCatalogEntry = {
     weaponId: string;
     displayName: string;
+    description?: string;
+    category?: string;
+    priceCoin?: number;
+    rarity?: string;
+    dropWeight?: number;
+    iconPath?: string;
+    modelPath?: string;
+    modelPosition?: [number, number, number];
+    modelRotation?: [number, number, number];
+    modelScale?: [number, number, number];
+    enabled?: boolean;
     slot: LoadoutSlot;
     placeholderRig: 'ak' | 'usp' | 'm9';
     stats: WeaponStats;
@@ -116,7 +127,7 @@ export const DEFAULT_FFA_LOADOUT: LoadoutProfile = {
     knife: 'm9',
 };
 
-export const WEAPON_CATALOG: WeaponCatalogEntry[] = [
+export const BASE_WEAPON_CATALOG: WeaponCatalogEntry[] = [
     {
         weaponId: 'glock18',
         displayName: 'Glock-18',
@@ -265,7 +276,31 @@ export const WEAPON_CATALOG: WeaponCatalogEntry[] = [
     },
 ];
 
-const CATALOG_BY_ID = new Map(WEAPON_CATALOG.map((item) => [item.weaponId, item]));
+export const WEAPON_CATALOG: WeaponCatalogEntry[] = BASE_WEAPON_CATALOG.map((item) => ({
+    ...item,
+    enabled: item.enabled !== false,
+}));
+
+const CATALOG_BY_ID = new Map<string, WeaponCatalogEntry>();
+
+const rebuildCatalogIndex = () => {
+    CATALOG_BY_ID.clear();
+    WEAPON_CATALOG.forEach((item) => {
+        CATALOG_BY_ID.set(toKey(item.weaponId), item);
+    });
+};
+
+rebuildCatalogIndex();
+
+export const replaceWeaponCatalog = (entries: WeaponCatalogEntry[]) => {
+    WEAPON_CATALOG.splice(0, WEAPON_CATALOG.length, ...entries.map((item) => ({
+        ...item,
+        enabled: item.enabled !== false,
+        stats: makeStats(item.stats),
+    })));
+    rebuildCatalogIndex();
+    return WEAPON_CATALOG;
+};
 
 export const getWeaponEntry = (weaponId: string) => CATALOG_BY_ID.get(toKey(weaponId));
 

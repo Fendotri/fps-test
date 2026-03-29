@@ -7,6 +7,9 @@ import crossFrag from '@assets/shaders/crosshair/cross.frag?raw'
 
 import { GameContext } from '@src/core/GameContext'
 import { CycleInterface } from '@src/core/inferface/CycleInterface'
+import { LoopInterface } from '@src/core/inferface/LoopInterface'
+import { MovementController } from '@src/gameplay/input/controllers/MovementController'
+import { GameLogicEventPipe, WeaponFireEvent } from '@src/gameplay/pipes/GameLogicEventPipe'
 import { BufferAttribute, BufferGeometry, Color, CustomBlending, DoubleSide, Mesh, ShaderMaterial } from 'three'
 
 const indexes = new Uint16Array([0, 2, 1, 2, 3, 1]);
@@ -21,7 +24,7 @@ const geom = new BufferGeometry();
  * 2. 在场景中塞4个PlaneMesh, 并用正交相机渲染4个planeMesh
  * 3. 定义PlaneMesh的shader, 用GPU计算准星位置并显示
  */
-export class CrosshairLayer implements CycleInterface {
+export class CrosshairLayer implements CycleInterface, LoopInterface {
 
     scene: THREE.Scene;
     camera: THREE.Camera;
@@ -35,6 +38,8 @@ export class CrosshairLayer implements CycleInterface {
     crosshairdot = false; // 中心点
     crosshairgap = .01; // 分离度
     crosshairstyle = 4; // 0默认 1默认静态 2经典 3经典动态 4经典静态
+    private dynamicGap = this.crosshairgap;
+    private shotKick = 0;
 
     uniforms: {};
     private scopeHidden = false;
@@ -102,6 +107,39 @@ export class CrosshairLayer implements CycleInterface {
             this.applyVisibilityState();
         });
 
+        GameLogicEventPipe.addEventListener(WeaponFireEvent.type, () => {
+            this.shotKick = Math.min(0.028, this.shotKick + 0.0065);
+        });
+
+    }
+
+    callEveryFrame(deltaTime?: number): void {
+        const dt = Math.min(0.05, Math.max(0.001, deltaTime || 0.016));
+        const movement = MovementController.getSnapshot();
+        const moveRatio = Math.min(1.35, Math.max(0, movement.speed01));
+
+        let targetGap = 0.0085;
+
+        if (movement.walking) targetGap += 0.0035;
+        else targetGap += moveRatio * 0.0165;
+
+        if (movement.crouching) targetGap *= movement.onFloor ? 0.68 : 0.92;
+
+        if (!movement.onFloor) {
+            const airPenalty = 0.022 + Math.min(0.018, movement.airborneTime * 0.03);
+            const verticalPenalty = Math.min(0.012, Math.abs(movement.verticalSpeed) * 0.0012);
+            targetGap += airPenalty + verticalPenalty;
+        }
+
+        targetGap += Math.min(0.01, movement.landingImpact * 0.012);
+        targetGap += this.shotKick;
+
+        const blendSpeed = movement.onFloor
+            ? (movement.crouching ? 18 : 14)
+            : 10;
+        this.dynamicGap += (targetGap - this.dynamicGap) * Math.min(1, dt * blendSpeed);
+        this.shotKick = Math.max(0, this.shotKick - dt * 0.038);
+        this.setGap(this.dynamicGap);
     }
 
 
